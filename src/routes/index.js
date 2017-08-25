@@ -22,12 +22,24 @@ router.post('/register', function(req, res, next) {
         passport.authenticate('local')(req, res, function () {
             req.session.save(function (err) {
                 if (err) {
-                    return next(err);
+                    console.log(err);
+                    
                 }
-                res.redirect('/');
+           //     res.redirect('/');
             });
         });
     });
+
+    console.log(req.body);
+    var team = (new Team({teamName: req.body.teamName, description: req.body.description, category: req.body.category, status: 'Invalid', creationDate: new moment().utc()}))
+    team.save(function(err, team) {
+        if (err) {
+            console.log(err);
+            console.log("^^^ DB ERROR ^^^");
+            return res.render('teamSignUp', {error : err.message});
+        }
+        res.redirect('/');
+    })
 });
 
 router.get('/login', function(req, res) {
