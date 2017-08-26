@@ -36,10 +36,16 @@ router.post('/register', function(req, res, next) {
         if (err) {
             console.log(err);
             console.log("^^^ DB ERROR ^^^");
-            return res.render('teamSignUp', {error : err.message});
+            res.render('/register', {error : err.message});
+        } else { 
+            res.redirect('/feed');
+
         }
-        res.redirect('/');
     })
+});
+
+router.get('/feed', function(req, res) {
+    res.render('feed', {user : req.user});
 });
 
 router.get('/login', function(req, res) {
@@ -47,7 +53,7 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/login', passport.authenticate('local'), function(req, res) {
-    res.redirect('/teamSignUp');
+    res.redirect('/feed');
 });
 
 router.get('/teamSignUp', function(req, res) {
