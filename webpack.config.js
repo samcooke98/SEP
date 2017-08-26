@@ -3,7 +3,7 @@ const NodemonPlugin = require( 'nodemon-webpack-plugin' )
 
 const PATHS = {
     app: path.join(__dirname, './src/app.js'),
-    build: path.join(__dirname, 'bin'),
+    build: path.join(__dirname, 'build/'),
   };
 
 module.exports = {
@@ -14,17 +14,12 @@ module.exports = {
     },
     target: 'node',
     module: {
-         loaders: [{
+         rules: [{
              test: /\.js$/,
              exclude: /node_modules/,
-             loader: 'babel-loader'
+             use: {
+                 loader: 'babel-loader'
+             }
          }]
-     },
-    resolve: {
-        extensions: ['.js'],
-    },
-
-    plugins: [
-        new NodemonPlugin()
-    ]
+     }
 }

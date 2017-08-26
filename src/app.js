@@ -1,7 +1,8 @@
 var dotenv = require('dotenv').config();
+import express from "express";
 
 // dependencies
-var express = require('express');
+
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -13,7 +14,7 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var jade = require('jade');
 var app = express();
 
 // view engine setup
@@ -78,4 +79,9 @@ app.use(function(err, req, res, next) {
     });
 });
 
+
+app.listen( process.env.PORT || 3000, () => { 
+    console.log( "Listening on port" + ( process.env.PORT || 3000));
+
+})
 module.exports = app;
