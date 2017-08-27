@@ -11,7 +11,7 @@ const fromEmail = helper.email('');
 const getMailReq = (mailObj) = SGConnection.emptyRequest({
     method: "POST",
     path: "/v3/mail/send",
-    body: mail.json()
+    body: mailObj.json()
 })
 
 const getMime = (isHtml) => isHtml ? "text/html" : "text/plain"
