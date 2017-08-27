@@ -1,4 +1,4 @@
-// var nodemailer = require('nodemailer');
+require('dotenv').config();
 import { mail as helper } from "sendgrid";
 import sendGrid from "sendgrid";
 import q from "q";
