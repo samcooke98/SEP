@@ -1,31 +1,50 @@
-var nodemailer = require('nodemailer');
+// var nodemailer = require('nodemailer');
+import { mail as helper } from "sendgrid";
+import sendGrid from "sendgrid";
+import q from "q";
 
+const SGConnection = sendGrid(process.env.SENDGRID_API_KEY);
 
+//TODO: What is this? Ask Vish
+const fromEmail = helper.email('');
 
+const getMailReq = (mailObj) = SGConnection.emptyRequest({
+    method: "POST",
+    path: "/v3/mail/send",
+    body: mail.json()
+})
 
+const getMime = (isHtml) => isHtml ? "text/html" : "text/plain"
+const debugLog = (msg) => {if (process.env.NODE_ENV !== "production") console.log(msg) }  
+const debugWarn = (msg) => {if (process.env.NODE_ENV !== "production") console.warn(msg) }  
 
-var transporter = nodemailer.createTransport({
-  service: 'hotmail', 
-  auth: {
-      user: '', 
-      pass: ''
-  }
-});
-
-
-var mailOptions = {
-    from: 'joseph_habib1998@hotmail.com', 
-    to: '', 
-    subject: 'TeamShare - Please validate your account',
-    text: 'click _here_ to validate your email and get started!'
+/**
+ * Call this function send emails
+ * @param {String} to - String of the email to send to  
+ * @param {String} subject - Subject line of the email
+ * @param {String} body - The content of the email 
+ * @param {Bool} isHtml - Should the email be sent with HTMl encoding? or is the text plain? 
+ * @returns {Promise} - A promise that resolves with the response, or rejects with the error. 
+ */
+export function sendEmail(to, subject, body, isHtml) {
+    let deferred = q.defer();
     
-};
+    let mail = helper.mail(
+        fromEmail, 
+        subject, 
+        new helper.Email(to), 
+        new helper.Content(getMime(isHtml), body)
+    );
 
-transporter.sendMail(mailOptions, function(err, info) {
-    if (err) {
-        console.log(err);
-    }
-    else {
-        console.log('Email sent: ' + info.response);
-    }
-});
+    SGConnection.API(getMailReq(mail), (err, response) => { 
+        if(err) {
+            deferred.reject(err);
+            debugWarn(err);
+        }else {
+            deferred.resolve(response);
+        }
+    })
+
+    return deferred.promise;
+}
+
