@@ -1,13 +1,18 @@
 import Link from "../models/invitationLinks.js";
+import User from "../models/account.js";
 import cuid from "cuid";
 import moment from "moment";
+import passport from "passport";
+
+
+
 /**
  * Returns an error if the 
  * @param {Express Request Object} req 
  * @param {Express Response Object} res 
  */
 export function getLink(req, res) {
-    console.log("Here Line 10");
+    console.log(req.user);
     let id = req.params.id; //The req must have an ID 
     Link.findOne({ urlID: id }).exec((err, link) => {
         if (err) {
@@ -17,13 +22,25 @@ export function getLink(req, res) {
             console.warn("-- Error Follows --");
             console.warn(err);
         } else { 
-            if (link.checkValidity()) { 
-                //Return a success view
-                console.log("IS VALID");
-                res.send("It worked");
+            console.log(link);
+            if(!link) 
+                res.send("Invalid Link");
+            else if (link.checkValidity()) {
+                //Add user to team
+                User.findById(req.user._id, (err,user) => {
+                    console.log(user.teams.indexOf(link.teamID))
+                    if(user.teams.indexOf(link.teamID) !== -1) {
+                        //User can't join the same team twice
+                        res.send("You've already joined this team");
+                    } else {
+                        user.teams.push(link.teamID);
+                        user.save();                 
+                        res.send("You joined the team");  
+                    }
+                }) 
             } else { 
                 console.log("IS EXPIRED");
-                res.send("Expired Link!");
+                res.render("error", {message: "Invalid Link!", error: { status: '', stack: '' }})
                 //Notify that the link is now invalid has timed out
             }
         }
