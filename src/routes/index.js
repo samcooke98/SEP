@@ -15,6 +15,7 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', function (req, res, next) {
+
     Account.register(new Account({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName }), req.body.password, function (err, account) {
         if (err) {
             return res.render('register', { error: err.message });
@@ -29,20 +30,21 @@ router.post('/register', function (req, res, next) {
                 //     res.redirect('/');
             });
         });
+
+
+        console.log(req.body);
+        var team = (new Team({ owner: account._id, teamName: req.body.teamName, description: req.body.description, category: req.body.category, status: 'Invalid', creationDate: new moment().utc() }))
+        team.save(function (err, team) {
+            if (err) {
+                console.log(err);
+                console.log("^^^ DB ERROR ^^^");
+                res.render('/register', { error: err.message });
+            } else {
+                res.redirect('/feed');
+
+            }
+        })
     });
-
-    console.log(req.body);
-    var team = (new Team({ teamName: req.body.teamName, description: req.body.description, category: req.body.category, status: 'Invalid', creationDate: new moment().utc() }))
-    team.save(function (err, team) {
-        if (err) {
-            console.log(err);
-            console.log("^^^ DB ERROR ^^^");
-            res.render('/register', { error: err.message });
-        } else {
-            res.redirect('/feed');
-
-        }
-    })
 });
 
 
@@ -54,7 +56,7 @@ router.get('/login', function (req, res) {
     res.render('login', { user: req.user });
 });
 
-router.post('/login', passport.authenticate('local', { successReturnToOrRedirect: '/', failureRedirect: '/login' }))
+router.post('/login', passport.authenticate('local', { successReturnToOrRedirect: '/feed', failureRedirect: '/login' }))
 
 router.get('/teamSignUp', function (req, res) {
     res.render('teamSignUp', { user: req.user });
