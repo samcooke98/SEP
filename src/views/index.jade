@@ -2,9 +2,11 @@ extends layout
 
 block content
   if (!user)
-    a(href="/login") Login
+    h1
+      a(href="/login") Login
     br
-    a(href="/register") Register
+    h1
+      a(href="/register") Register
   if (user)
     p You are currently logged in as #{user.username}
     p should they be redirected to their team since 1 user can only have 1 team?
