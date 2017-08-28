@@ -6,12 +6,12 @@ import q from "q";
 const SGConnection = sendGrid(process.env.SENDGRID_API_KEY);
 
 //TODO: What is this? Ask Vish
-const fromEmail = helper.email('');
+const fromEmail = helper.Email('sam@mediforms.com.au');
 
-const getMailReq = (mailObj) = SGConnection.emptyRequest({
+const getMailReq = (mailObj) => SGConnection.emptyRequest({
     method: "POST",
     path: "/v3/mail/send",
-    body: mailObj.json()
+    body: mailObj.toJSON()
 })
 
 const getMime = (isHtml) => isHtml ? "text/html" : "text/plain"
@@ -29,7 +29,7 @@ const debugWarn = (msg) => {if (process.env.NODE_ENV !== "production") console.w
 export function sendEmail(to, subject, body, isHtml) {
     let deferred = q.defer();
     
-    let mail = helper.mail(
+    let mail = helper.Mail(
         fromEmail, 
         subject, 
         new helper.Email(to), 
