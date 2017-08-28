@@ -5,5 +5,27 @@ body {
 
 a {
   color: #00B7FF;
+
+}
+
+h1{
+  vertical-align: middle;
+  text-align: center;
+}
+
+desc{
+  vertical-align: middle;
+  text-align: center;
+}
+
+.container{
+  vertical-align: middle;
+  text-align: center;
+}
+
+form {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
 }
 

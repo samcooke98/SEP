@@ -1,13 +1,21 @@
 extends layout
 
 block content
-  if (!user)
-    h1
-      a(href="/login") Login
-    br
-    h1
-      a(href="/register") Register
-  if (user)
-    p You are currently logged in as #{user.username}
-    p should they be redirected to their team since 1 user can only have 1 team?
-    a(href="/logout") Logout
+  .container
+    if (!user)
+      h1 Welcome to TeamShare!
+      br
+      desc Looking for a way to maximise collaboration and information sharing between members of your team? Look no further. TeamShare is an interactive and centralised platform aimed at facilitating resource sharing and collaboration in any team, giving you the ability to share articles and annotate for further discussion. 
+      br
+      br
+      a(href='/login') 
+        button.btn.btn-primary(type='button') Login
+      &nbsp;
+      a(href='/register') 
+        button.btn.btn-primary(type="button") Register
+        
+    if (user)
+      h1 TeamShare
+      p You are currently logged in as #{user.username}
+      p should they be redirected to their team since 1 user can only have 1 team?
+      a(href="/logout") Logout
