@@ -7,7 +7,9 @@ a {
   color: #00B7FF;
 
 }
-
+body{
+    background: url("../playstation-pattern.png");
+}
 h1{
   vertical-align: middle;
   text-align: center;
@@ -20,12 +22,21 @@ desc{
 
 .container{
   vertical-align: middle;
-  text-align: center;
+  margin: 0 auto;
+}
+.center{
+    text-align:center
+}
+.enterForm{
+    display: block;
+  margin: auto;
+  max-width:400px;
+  border-radius: 2px;
 }
 
 form {
-  display: inline-block;
-  vertical-align: middle;
-  text-align: center;
+  display: block;
+  margin: auto;
+  /* text-align: center; */
 }
 

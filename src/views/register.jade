@@ -3,28 +3,30 @@ extends layout
 block content
   .container
     h1 Register Account
-    p.lead Register an account for your team today!
-    br
-    form(role='form', action="/register",method="post", style='max-width: 300px;')
-      .form-group
-          input.form-control(type='email', name="username", placeholder='Email...' required = 'required')
-      .form-group
-          input.form-control(type='text', name="firstName", placeholder='First Name...' required = 'required')
-      .form-group
-          input.form-control(type='text', name="lastName", placeholder='Last Name...' required = 'required')
-      .form-group
-        input.form-control(type='password', name="password", placeholder='Password...' required = 'required')
-      h1 Team Registration
-      p.lead Register your team today!
-      .form-group
-        input.form-control(type='text', name="teamName", placeholder='Team Name...' required = 'required')
-      .form-group
-        input.form-control(type='text', name="description", placeholder='Team Description...')
-      .form-group
-        input.form-control(type='text', name='category', placeholder='Team Category...')
-
-      button.btn.btn-default(type='submit') Submit
-      &nbsp;
-      a(href='/')
-        button.btn.btn-primary(type="button") Cancel
-     
+    .enterForm
+      .panel.panel-default
+        .panel-heading Register an account for your team today!
+        .panel-body
+          form(role='form', action="/register",method="post", style='max-width: 300px;')
+            h4 Team Leader
+            .form-group
+                input.form-control(type='email', name="username", placeholder='Email...' required = 'required')
+            .form-group
+                input.form-control(type='text', name="firstName", placeholder='First Name...' required = 'required')
+            .form-group
+                input.form-control(type='text', name="lastName", placeholder='Last Name...' required = 'required')
+            .form-group
+              input.form-control(type='password', name="password", placeholder='Password...' required = 'required')
+            h4 Team Registration
+            .form-group
+              input.form-control(type='text', name="teamName", placeholder='Team Name...' required = 'required')
+            .form-group
+              input.form-control(type='text', name="description", placeholder='Team Description...')
+            .form-group
+              input.form-control(type='text', name='category', placeholder='Team Category...')
+      
+            button.btn.btn-primary(type='submit') Submit
+            &nbsp;
+            a(href='/')
+              button.btn.btn-default(type="button") Cancel
+           

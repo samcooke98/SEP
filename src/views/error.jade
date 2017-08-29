@@ -1,8 +1,11 @@
 extends layout
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
-  a(href="/")
-    p Return Home
+  .container
+    .enterForm
+      h1= message
+      h2= error.status
+      if(error !== '')
+        pre #{error.stack}
+      a(href="/")
+        p.center Return Home
