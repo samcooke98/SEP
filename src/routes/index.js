@@ -9,7 +9,11 @@ import * as ResetLinkController from "../controllers/ResetLinkController.js";
 import { ensureLoggedIn } from "connect-ensure-login"
 
 router.get('/', function (req, res) {
-    res.render('index', { user: req.user });
+    if(req.user != undefined)
+        res.redirect('/feed');
+        // res.render('index', { user: req.user });
+    else 
+        res.render('index');
 });
 
 router.get('/register', function (req, res) {
