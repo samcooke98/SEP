@@ -4,8 +4,8 @@ var passportLocalMongoose = require('passport-local-mongoose');
 
 var Account = new Schema({
     username: String,
-    hash: Buffer,
-    salt: Buffer,
+    hash: String,
+    salt: String,
     firstName: String, 
     lastName: String,
     teams: [{type:Schema.ObjectId, ref:'Team'}] //TODO: Ensure unique-ness ($addToSet)
