@@ -48,24 +48,21 @@ router.post('/register', function (req, res, next) {
                 }
                 //     res.redirect('/');
             });
+            var team = (new Team({ owner: account._id, teamName: req.body.teamName, description: req.body.description, category: req.body.category, status: 'Invalid', creationDate: new moment().utc() }))
+            team.save(function (err, team) {
+                if (err) {
+                    console.log(err);
+                    console.log("^^^ DB ERROR ^^^");
+                    res.render('/register', { error: err.message });
+                } else {
+                    //Add the team to the user
+                    account.teams.push(team._id);
+                    account.save();
+                    res.redirect('/feed');
+    
+                }
+            })
         });
-
-
-        console.log(req.body);
-        var team = (new Team({ owner: account._id, teamName: req.body.teamName, description: req.body.description, category: req.body.category, status: 'Invalid', creationDate: new moment().utc() }))
-        team.save(function (err, team) {
-            if (err) {
-                console.log(err);
-                console.log("^^^ DB ERROR ^^^");
-                res.render('/register', { error: err.message });
-            } else {
-                //Add the team to the user
-                account.teams.push(team._id);
-                account.save();
-                res.redirect('/feed');
-
-            }
-        })
     });
 });
 
