@@ -6,34 +6,43 @@ block content
     if(!confirm)
       if(!snt)
         br
-        p Please enter your registered email below
-        form(role='form', action="/reset",method="post", style='max-width: 300px;')
-          .form-group
-              input.form-control(type='email', name="username", placeholder='Current Email' required='required')
-          button.btn.btn-primary(type='submit') Submit
-          span &nbsp;
-          a(href='/')
-            button.btn.btn-default(type="button") Cancel
-        p You will receive an e-mail with a link to reset your password.
+        div.enterForm
+          .panel.panel-default
+            .panel-heading Please enter your registered email below
+            .panel-body
+               form(role='form', action="/reset",method="post")
+                 .form-group
+                     input.form-control(type='email', name="username", placeholder='Current Email' required='required')
+                 button.btn.btn-primary(type='submit') Submit
+                 span &nbsp;
+                 a(href='/')
+                   button.btn.btn-default(type="button") Cancel
+               br
+               p You will receive an e-mail with a link to reset your password.
       else
-        div.well
-          p If you are registered at &nbsp;
-            b #{email}
-            span &nbsp;
-            |you have been sent an email.
-          p Please follow the instructions to reset your password.
-          a(href='/')
-            button.btn.btn-primary OK
+        div.enterForm
+          div.well
+            p If you are registered at &nbsp;
+              b #{email}
+              span &nbsp;
+              |you have been sent an email.
+            p Please follow the instructions to reset your password.
+            a(href='/')
+              button.btn.btn-primary OK
     else
       br
-      div.well
-        p Password recovery for:
+      div.well.well-sm.enterForm.center
+        span Password recovery for:
           b #{username}
           |.
-      p Please enter your new password below:
-      form(role='form', action="/reset/confirmAction",method="post", style='max-width: 300px;')
-            .form-group
-              input.form-control(type='password', name="password", placeholder='New Password' required='required')
-              input(type="hidden", name="RID", value='#{RID}')
-              br
-              button.btn.btn-primary(type='submit') Submit
+      br
+      div.enterForm
+        .panel.panel-default
+              .panel-heading Please enter your new password below:
+              .panel-body
+                 form(role='form', action="/reset/confirmAction",method="post")
+                       .form-group
+                         input.form-control(type='password', name="password", placeholder='New Password' required='required')
+                         input(type="hidden", name="RID", value='#{RID}')
+                         br
+                         button.btn.btn-primary(type='submit') Submit

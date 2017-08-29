@@ -6,7 +6,7 @@ import q from "q";
 const SGConnection = sendGrid(process.env.SENDGRID_API_KEY);
 
 //TODO: What is this? Ask Vish
-const fromEmail = helper.Email('sam@mediforms.com.au');
+const fromEmail = helper.Email('noreply@teamshare.com.au');
 
 const getMailReq = (mailObj) => SGConnection.emptyRequest({
     method: "POST",
