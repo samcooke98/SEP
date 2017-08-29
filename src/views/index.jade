@@ -13,12 +13,13 @@ block content
         br
         p TeamShare is an interactive and centralised platform aimed at facilitating resource sharing and collaboration in any team, giving you the ability to share articles and annotate for further discussion. 
         br
-        a(href='/login') 
-          button.btn.btn-primary(type='button') Login
-        &nbsp;
-        a(href='/register') 
-          button.btn.btn-primary(type="button") Register
-        br
+        div.buttons
+          a(href='/login') 
+            button.btn.btn-primary(type='button') Login
+          &nbsp;
+          a(href='/register') 
+            button.btn.btn-primary(type="button") Register
+          br
       if (user)
         h1 TeamShare
         p You are currently logged in as #{user.username}

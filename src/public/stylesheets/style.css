@@ -15,7 +15,6 @@ h1{
 
 desc{
   vertical-align: middle;
-  text-align: center;
 }
 
 .container{
@@ -30,11 +29,13 @@ desc{
   margin: auto;
   max-width:400px;
   border-radius: 25px;
-  text-align: center;
   background-color: #FFFFFF;
   border: 2px solid #BCC0CA;
   padding: 20px; 
 }
+
+.enterForm > h1 { text-align:center;}
+div.buttons { text-align:center; }
 
 .feed{
   display: block;
