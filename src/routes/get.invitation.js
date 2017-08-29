@@ -7,7 +7,8 @@ import { ensureLoggedIn } from "connect-ensure-login"
 var router = Router();
 
 //
-router.route("/invite/:id").get(ensureLoggedIn(), LinkController.getLink);
+router.route("/invite/:id").get(LinkController.registerOrContinue, LinkController.getLink);
+router.route("/invite/:urlID").post(LinkController.createAccount);
 
 //Create link for the team's mongoID
 //TODO: In the future, we should write a func similiar to ensureLoggedIn but to check if they are teamOwner
