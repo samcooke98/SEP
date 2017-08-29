@@ -1,0 +1,12 @@
+extends layout
+
+block content  
+    .container 
+        h1 Invite People to Your Team
+        p Don't be lonely, invite your team members!
+
+        form(role='form', action='/invite', method='post', style='max-width:360px')
+            .form-group
+                textarea.form-control(name='emails',style='width:360px; height: 200px; font-family: Arial', placeholder='email@domain.com;email2@domain.com') 
+                input(type='hidden', name='id', value="#{id}")
+            button.btn.btn-default(type='submit') Submit

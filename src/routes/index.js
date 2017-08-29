@@ -15,8 +15,8 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', function (req, res, next) {
-
-    Account.register(new Account({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName }), req.body.password, function (err, account) {
+    let newUser = new Account({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName });
+    Account.register(newUser, req.body.password, function (err, account) {
         if (err) {
             return res.render('register', { error: err.message });
         }
@@ -40,6 +40,9 @@ router.post('/register', function (req, res, next) {
                 console.log("^^^ DB ERROR ^^^");
                 res.render('/register', { error: err.message });
             } else {
+                //Add the team to the user
+                account.teams.push(team._id);
+                account.save();
                 res.redirect('/feed');
 
             }
@@ -49,7 +52,21 @@ router.post('/register', function (req, res, next) {
 
 
 router.get('/feed', ensureLoggedIn(), function (req, res) {
-    res.render('feed', { user: req.user.firstName + ' ' + req.user.lastName });
+    Account.findById(req.user._id, (err, user) => { 
+        console.log(user);
+        user.populate( 'teams', (err, userPopulated) => {
+            let ownedTeams = [];
+            let memberTeams = [];
+
+            for( var team of userPopulated.teams) { 
+                console.log(team);
+                if(team.owner.equals(userPopulated._id)) 
+                    ownedTeams.push(team);
+                else memberTeams.push(team);
+            }
+            res.render('feed', { user: req.user.firstName + ' ' + req.user.lastName, ownedTeams: ownedTeams, memberTeams: memberTeams });            
+        })
+    })
 });
 
 router.get('/login', function (req, res) {

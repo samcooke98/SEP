@@ -7,6 +7,12 @@ block content
    p ---------\
    p=user
    p ---------\
+   h2 Teams 
+   ul 
+    for team in ownedTeams
+        a(href="createInvite/#{team._id}")= team.teamName
+    for team in memberTeams 
+        li= team.teamName 
    p display list of posts below:
    p -------\
 

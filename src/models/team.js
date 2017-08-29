@@ -7,6 +7,7 @@ var teamSchema = new Schema({
     category: {type: 'String', required:false},
     status: {type: 'String', required:false},
     creationDate: {type: 'Date', default: Date.now},
+    owner: {type: Schema.ObjectId, required: true }
 
 });
 
