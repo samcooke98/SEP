@@ -9,7 +9,8 @@
     "copy:public": "copyfiles -u 2 ./src/public/**/* ./build/public",
     "dev": "babel-watch ./src/app.js",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
