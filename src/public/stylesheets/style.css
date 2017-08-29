@@ -1,18 +1,16 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: url("../playstation-pattern.png");
 }
 
 a {
   color: #00B7FF;
 
 }
-body{
-    background: url("../playstation-pattern.png");
-}
+
 h1{
   vertical-align: middle;
-  text-align: center;
 }
 
 desc{
@@ -28,15 +26,31 @@ desc{
     text-align:center
 }
 .enterForm{
-    display: block;
+  display: block;
   margin: auto;
   max-width:400px;
-  border-radius: 2px;
+  border-radius: 25px;
+  text-align: center;
+  background-color: #FFFFFF;
+  border: 2px solid #BCC0CA;
+  padding: 20px; 
+}
+
+.feed{
+  display: block;
+  margin: auto;
+  border-radius: 25px;
+  text-align: left;
+  background-color: #FFFFFF;
+  border: 2px solid #BCC0CA;
+  padding: 20px; 
 }
 
 form {
   display: block;
   margin: auto;
+
   /* text-align: center; */
 }
+
 

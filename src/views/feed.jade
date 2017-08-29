@@ -2,19 +2,17 @@ extend layout
 
 block content
  .container
- 
-   h1 Welcome to your team feed!
-   p ---------\
-   p=user
-   p ---------\
-   h2 Teams 
-   ul 
-    for team in ownedTeams
-        a(href="createInvite/#{team._id}")= team.teamName
-    for team in memberTeams 
-        li= team.teamName 
-   p display list of posts below:
-   p -------\
+    .feed
+        - var name = user.substr(0, user.indexOf(' '))  
+        h1 Welcome To Your Team Feed, #{name}!
+        h2 Teams 
+        ul 
+            for team in ownedTeams
+                a(href="createInvite/#{team._id}")= team.teamName
+            for team in memberTeams 
+                li= team.teamName 
+        p display list of posts below:
+        p -------\
 
-  a(href="/logout")
-    button.btn.btn-default(type='submit') Logout
+        a(href="/logout")
+            button.btn.btn-default(type='submit') Logout

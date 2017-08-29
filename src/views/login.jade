@@ -2,13 +2,14 @@ extends layout
 
 block content
   .container
-    h1 Login
-    if(message)
-      .enterForm
-        div.well
-          span #{message}
-      br
     .enterForm
+      h1 Login
+      if(message)
+        .enterForm
+          div.well
+            span #{message}
+        br
+      br
       .panel.panel-default
         .panel-heading Log in to your team!
         .panel-body
