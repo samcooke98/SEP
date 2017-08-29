@@ -47,4 +47,3 @@ export function sendEmail(to, subject, body, isHtml) {
 
     return deferred.promise;
 }
-
