@@ -44,6 +44,7 @@ export function createAccount(req, res) {
                         }
                     });
                     account.teams.push(link.teamID);
+                    account.save();
                     res.redirect('/feed');
                 });
             });
