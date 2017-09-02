@@ -3,27 +3,53 @@ import React from 'react';
 import { Route } from 'react-router';
 
 
-import HelloWorld from "./components/HelloWorld.js";
+import HelloWorld from "./components/HelloWorld";
+import LoginContainer from "./containers/LoginContainer";
+import IndexPageContainer from "./containers/IndexPageContainer";
+import RegistrationContainer from "./containers/RegistrationContainer"
+import FeedView from "./containers/FeedView.js";
+import TeamManagement from "./containers/TeamManagement.js"
+import InvitePage from "./containers/InvitePage.js";
+import ResetContainer from "./containers/ResetContainer.js";
+import PasswordResetContainer from "./containers/PasswordResetContainer.js";
 
 export const routes = [
     {
-        path: "/about",
-        component: (props) => <div> About page </div> 
+        path: "/",
+        component: IndexPageContainer,
+        exact: true
     },
     {
-        path: '/',
-        component: HelloWorld,
-        routes: [ 
-            {
-                path:"/taco/bus", 
-                component: () => <div> Hello Page </div> 
-            },
-            {
-                path: "/taco/abc", 
-                component: () => <div> def </div> 
-            }
-        ]
+        path: '/login',
+        component: LoginContainer
     },
+    {
+        path: '/register', 
+        component: RegistrationContainer
+    }, 
+    {
+        path: '/createinvite/:id', 
+        component: TeamManagement
+    },
+    { 
+        path: "/invite/:id", 
+        component: InvitePage
+    }, { 
+        path: "/resetpassword",
+        component: ResetContainer  
+    },
+    {
+        path: "/reset/confirm/:id",
+        component: PasswordResetContainer
+    },
+    { 
+        path: "/feed", 
+        component: FeedView 
+    },
+    { 
+        path: "/",
+        component: () => <h1> 404 </h1> 
+    }
     // {
     //     path: '/tacos',
     //     component: Tacos,

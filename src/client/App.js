@@ -18,7 +18,6 @@ export default function App(props) {
                 <meta charSet="utf-8" />
                 <title>Reloaded</title> 
             </Helmet> 
-            Hot reloading ss
             <Switch>
                 {routes.map((route, i) => (
                     <RouteWithSubRoutes key={i} {...route} />

@@ -7,6 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
 	entry: [
+		'babel-polyfill',
 		'./src/server/index.js',
 	],
 	output: {
@@ -22,6 +23,7 @@ module.exports = {
 		__dirname: false
 	},
 	watch: true, 
+	devtool: "source-map",
 	module: {
 		rules: [
 			{

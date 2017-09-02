@@ -5,7 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const webpack = require('webpack');
 
 module.exports = {
-	entry: ['./src/client/index.js', 'webpack-hot-middleware/client'],
+	entry: ['babel-polyfill', './src/client/index.js', 'webpack-hot-middleware/client'],
 	output: {
 		filename: 'client.bundle.js',
 		path: path.resolve(__dirname, 'build/static/')

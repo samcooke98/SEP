@@ -4,6 +4,6 @@
         "react"
     ],
     "plugins":[
-        "react-hot-loader/babel"
+        "react-hot-loader/babel", "syntax-async-functions","transform-regenerator", "transform-class-properties"
     ]
 }
