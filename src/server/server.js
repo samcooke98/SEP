@@ -81,11 +81,17 @@ app.use(express.static(path.join(__dirname, 'static')))
 
 //Import API routes
 // import EgRouter from "./routes/post.eg.js";
-import {UserManagementRoutes, InvitationRoutes } from "./routes";
+//TODO: Dynamic 
+// import {UserManagementRoutes, InvitationRoutes } from "./routes";
+import * as Routes from "./routes";
 
-
-app.use('/api', UserManagementRoutes);
-app.use('/api', InvitationRoutes);
+for(var route in Routes) {
+    console.log(Routes[route]);
+    app.use('/api', Routes[route]);
+    
+}
+// app.use('/api', UserManagementRoutes);
+// app.use('/api', InvitationRoutes);
 
 
 //Only SSR when in production (for now)
