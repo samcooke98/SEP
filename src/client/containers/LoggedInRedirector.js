@@ -1,9 +1,10 @@
 /*
-* Helper Component that connects to state, and redirects if a user is logged in. 
+* Helper Component that connects to state, and redirects if a user is logged in, or redirects to login 
 */
 import React from "react";
 import { withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import Input from 'react-toolbox/lib/input';
 
 
 class FooterContainer extends React.Component {
@@ -16,7 +17,7 @@ class FooterContainer extends React.Component {
         if(this.props.loggedIn) 
             return <Redirect to={this.props.to || "/feed"}/> 
         else 
-            return null; 
+            return null ; 
     }
 }
 

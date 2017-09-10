@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import { Switch } from "react-router-dom";
 import {Helmet} from "react-helmet";
     
-import { routes, RouteWithSubRoutes } from './routes';
+import { routes, RouteWithSubRoutes } from './Routes';
 
 
 export default function App(props) {
@@ -18,12 +18,12 @@ export default function App(props) {
                 <meta charSet="utf-8" />
                 <title>Reloaded</title> 
             </Helmet> 
-            <Switch>
+            {/* <Switch> */}
                 {routes.map((route, i) => (
                     <RouteWithSubRoutes key={i} {...route} />
                 ))
                 }
-            </Switch>
+            {/* </Switch> */}
         </div>
 
                 )

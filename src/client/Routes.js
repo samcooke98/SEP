@@ -12,44 +12,46 @@ import TeamManagement from "./containers/TeamManagement.js"
 import InvitePage from "./containers/InvitePage.js";
 import ResetContainer from "./containers/ResetContainer.js";
 import PasswordResetContainer from "./containers/PasswordResetContainer.js";
+import BaseContainer from "./containers/BaseContainer.js";
 
 export const routes = [
     {
         path: "/",
-        component: IndexPageContainer,
-        exact: true
+        component: BaseContainer,
+        routes: [
+            {
+                path: "/feed",
+                component: FeedView
+            },
+            {
+                path: '/login',
+                component: LoginContainer
+            },
+            {
+                path: '/test',
+                component: () => <div> Hello </div>
+            },
+            {
+                path: '/register',
+                component: RegistrationContainer
+            },
+            {
+                path: '/createinvite/:id',
+                component: TeamManagement
+            },
+            {
+                path: "/invite/:id",
+                component: InvitePage
+            }, {
+                path: "/resetpassword",
+                component: ResetContainer
+            },
+            {
+                path: "/reset/confirm/:id",
+                component: PasswordResetContainer
+            },
+        ]
     },
-    {
-        path: '/login',
-        component: LoginContainer
-    },
-    {
-        path: '/register', 
-        component: RegistrationContainer
-    }, 
-    {
-        path: '/createinvite/:id', 
-        component: TeamManagement
-    },
-    { 
-        path: "/invite/:id", 
-        component: InvitePage
-    }, { 
-        path: "/resetpassword",
-        component: ResetContainer  
-    },
-    {
-        path: "/reset/confirm/:id",
-        component: PasswordResetContainer
-    },
-    { 
-        path: "/feed", 
-        component: FeedView 
-    },
-    { 
-        path: "/",
-        component: () => <h1> 404 </h1> 
-    }
     // {
     //     path: '/tacos',
     //     component: Tacos,

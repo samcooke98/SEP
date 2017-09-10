@@ -7,10 +7,11 @@ var teamSchema = new Schema({
     category: {type: 'String', required:false},
     status: {type: 'String', required:false},
     creationDate: {type: 'Date', default: Date.now},
-    owner: {type: Schema.ObjectId, required: true }
+    owner: {type: Schema.ObjectId, required: true },
+
+    // resources: [{type: Schema.ObjectId, ref: "Resource"}]
 
 });
-
 
 
 module.exports = mongoose.model('Team', teamSchema);
