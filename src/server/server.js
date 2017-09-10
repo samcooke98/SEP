@@ -8,7 +8,7 @@ import ReactDOMServer from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import React from "react";
 
-import App from "../client/App.js";
+// import App from "../client/App.js";
 
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -110,6 +110,8 @@ app.use((req, res, next) => {
     if(process.env.NODE_ENV == "production") {
         const context = {};
         
+        var App = require('../client/App.js');
+
         //TODO: We also want to check if the router matches, cause if it doesn't we should return 404
     
         let html = ReactDOMServer.renderToString(
@@ -144,6 +146,10 @@ const generateHTML = (reactDOM, preloadedState, helmet) => {
     ${helmet.title.toString()}
     ${helmet.meta.toString()}
     ${helmet.link.toString()}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <style>html, body{margin:0;padding:0;}</style>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     </head>
     <body ${helmet.bodyAttributes.toString()}>
     <div id='root-app'>${reactDOM}</div>

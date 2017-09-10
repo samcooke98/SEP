@@ -12,7 +12,7 @@ export async function createResource(url, title, description, userID, teamID) {
         if (newRes) {
             // var team = await get(teamID);
             // await team.addResource(newRes._id);
-            return sendPayload("Success");
+            return sendPayload(newRes);
         }
     } catch (err) {
         console.log(err);
@@ -34,3 +34,13 @@ export async function getID(resourceID) {
         return sendPayload(err);
     }
 }
+
+export async function getFromTeam( teamID ) { 
+    try { 
+        let res = await Resource.find({ team: teamID });
+        return sendPayload(res);
+    } catch (err) { 
+        return sendPayload(err);
+    }
+}
+

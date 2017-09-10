@@ -14,7 +14,7 @@ router.get("/testresource", (req, res) => {
 router.post("/resource", isLoggedIn, canDo, async (req, res) => {
     try {
         // If we get to here, we try to insert the Resource (failure reasons: url already exists)
-        var result = await ResourceController.createResource(req.body.url, req.body.description, req.user._id, req.body.team)
+        var result = await ResourceController.createResource(req.body.url, req.body.title, req.body.description, req.user._id, req.body.team)
         res.json(result);
     } catch (err) {
         next(err); //Apparently error-handling will handle it? 
@@ -25,6 +25,19 @@ router.post("/resource", isLoggedIn, canDo, async (req, res) => {
 router.get("/resource/:id", isLoggedIn, async (req, res) => {
     var result = await ResourceController.getID(req.params.id);
     res.json(result);
+})
+
+router.get("/resource", isLoggedIn, async (req, res) => {
+    let team = req.query.team;
+    if (!team) {
+        //todo: handle appropriate 
+        //Team should be a selection of the users
+        team = req.user.teams[0] || req.user.teams[0]._id
+    } else {
+        var result = await ResourceController.getFromTeam(team);
+        res.json(result);
+    }
+
 })
 
 
