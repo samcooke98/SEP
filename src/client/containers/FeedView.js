@@ -4,7 +4,7 @@
 import React from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { getUserDetails, createResource, getResources } from "../redux/actions.js";
+import { getUserDetails, createResource, getResources, deleteResource } from "../redux/actions.js";
 
 import { Button, IconButton } from 'react-toolbox/lib/button';
 import ResourceForm from "../components/ResourceForm.js";
@@ -44,6 +44,10 @@ class FeedView extends React.Component {
         }
     }
 
+    remove = (id) => {
+        this.props.rmResource(id)
+    }
+
     componentDidMount() {
         //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
         let teams = this.props.user.teams.map((val) => this.props.teams[val]);
@@ -72,13 +76,15 @@ class FeedView extends React.Component {
                 <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
 
                     { /*TODO: Show only teams that user belongs to, Sort the order */
-                        (Object.entries(this.props.resources)).map((val) => {
+                        this.props.resourceIDs.map((id) => {
+                            let resource = this.props.resources[id]
                             return <LinkCard
-                                title={val[1].title || ''}
-                                subtitle={val[1].url}
-                                text={val[1].description}
-                                url={val[1].url}
-                                key={val[1]._id}
+                                title={resource.title || ''}
+                                subtitle={resource.url}
+                                text={resource.description}
+                                url={resource.url}
+                                key={resource._id}
+                                removeFunc={this.remove.bind(this, resource._id)}
                             />
                         })
                     }
@@ -96,7 +102,7 @@ const mapStateToProps = (state) => {
         user: user,
         teams: state.data.teams,
         resources: state.data.resources || {},
-        ui: state.ui.resources || {}
+        resourceIDs: state.ui.resources || []
         // resources: (state.data || {}).resources
     }
 }
@@ -105,7 +111,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getUser: () => dispatch(getUserDetails()),
         createResource: (url, title, description, team) => dispatch(createResource(url, title, description, team)),
-        getResources: (teamID) => dispatch(getResources(teamID))
+        getResources: (teamID) => dispatch(getResources(teamID)),
+        rmResource: (id) => dispatch(deleteResource(id)),
     }
 }
 

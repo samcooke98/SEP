@@ -7,7 +7,7 @@
 // https://github.com/reduxactions/redux-actions
 
 import { createAction } from "redux-actions";
-import { post, get } from "../utils/api.js";
+import { post, get, del} from "../utils/api.js";
 import * as normalizr from "../utils/normalizr";
 import * as actionTypes from "./actionTypes.js";
 
@@ -84,6 +84,10 @@ export const getResources = createAction(actionTypes.GET_RESOURCE, async (teamID
         (payload) => normalize( normalizr.normalizeResources, payload) 
     )
 })
+
+export const deleteResource = createAction(actionTypes.DELETE_RESOURCE, async (resourceID) => {
+    return del( `resource/${resourceID}`);
+}, (resourceID) => ({ id: resourceID}) ) //Create a meta part, containing the resource that was deleted
 
 
 

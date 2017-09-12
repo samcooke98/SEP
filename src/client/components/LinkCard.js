@@ -20,6 +20,7 @@ export default class LinkCard extends React.PureComponent {
                 <CardActions>
                     <Button flat label="Open" />
                     <Button flat label="Comment" onClick={this.comment} />
+                    <Button icon="delete" accent label='delete' onClick={this.props.removeFunc} /> 
                 </CardActions>
 
             </Card>
@@ -28,5 +29,10 @@ export default class LinkCard extends React.PureComponent {
 
     comment = (evt) => {
         open(this.props.url.concat('/comments'));
+    }
+
+
+    delete = () => { 
+        console.log("TODO");
     }
 }
