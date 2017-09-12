@@ -25,7 +25,8 @@ class FooterContainer extends React.Component {
 const mapStateToProps = (state) => {
     console.log(state)
     return {
-        loggedIn: state.loggedIn
+        // loggedInY: state.misc.loggedIn
+        loggedIn:false
     }
 }
 //Typically would implement actions

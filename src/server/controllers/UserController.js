@@ -26,7 +26,7 @@ export function registerUser(req, res) {
             //TODO: This should probably be in the team Controller
 
             var team = (new Team({ owner: account._id, teamName: req.body.teamName, description: req.body.description, category: req.body.category, status: 'Invalid', creationDate: new moment().utc() }))
-            team.save(function (err, team) {
+            team.save( async function (err, team) {
                 if (err) {
                     console.log(err);
                     console.log("^^^ DB ERROR ^^^");
@@ -35,7 +35,7 @@ export function registerUser(req, res) {
                     //Add the team to the user
                     account.teams.push(team._id);
                     account.save();
-                    res.json(sendPayload(account));
+                    res.json(sendPayload(await getDetails(req.user._id)));
                 }
             })
         });
@@ -71,9 +71,8 @@ export function logout(req, res) {
 }
 
 
-export async function getDetails(req, res) {
-    var user = await User.findById(req.user._id);
-    user.populate('teams',(err, result) => 
-        res.json(result)
-    )
-}   
+
+export async function getDetails(id) {
+    var user = await User.findById(id);
+    return user.populate('teams').execPopulate()
+}

@@ -7,72 +7,97 @@ import { connect } from "react-redux";
 
 import { getInviteInfo, joinTeam } from "../redux/actions.js";
 
+import Input from "react-toolbox/lib/input";
+import Button from "react-toolbox/lib/button";
+
 class InviteContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            password: '',
-            confirmPassword: '',
+            email: { value: '', error: '' },
+            password: { value: '', error: '' },
+            passwordConfirm: { value: '', error: '' },
+            firstname: { value: '', error: '' },
+            lastname: { value: '', error: '' },
+            submitted: false
         }
     }
 
-    handleChange = (evt) => {
-        const target = evt.target;
-        const value = target.value;
-        const name = target.name;
-        this.setState({ [name]: value })
+    handleChange = (name, value) => {
+        this.setState({ [name]: { value, error: this.state[name].error } })
+    }
+
+
+    clearErrors = () => {
+        for (var container in this.state) {
+            this.setState({ [container]: { ...this.state[container], error: "" } })
+        }
     }
 
     submitForm = (evt) => {
         evt.preventDefault();
         //Confirm password's match
-        if(this.state.password == this.state.confirmPassword)
-            this.props.submit( this.state.email, this.state.firstname, this.state.lastname, this.state.password, this.props.match.params.id )
-        else
-            console.warn("Password's don't match");
-        //TODO: Actually display a message saying this
-        //username, firstname,lastname, password
+        if (this.state.password.value == this.state.passwordConfirm.value) {
+            this.clearErrors();
+            this.props.submit(this.state.email.value, this.state.firstname.value, this.state.lastname.value, this.state.password.value, this.props.match.params.id)
+        }
+        else {
+            this.setState({
+                password: { ...this.state.password, error: "The passwords do not match" },
+                passwordConfirm: { ...this.state.passwordConfirm, error: "The passwords do not match" }
+            })
+        }
+        //TODO: Validate username, firstname,lastname, password
     }
 
-    render() {
-        if (!this.props.teams) {
-            this.props.getInfo(this.props.match.params.id)
-            return <div> Loading </div>
-        } else {
-            return (
-                <div>
-                    You have been invited to join team: {this.props.teams.teamName}
+    componentWillMount() {
+        console.log('Will Mount');
+        this.props.getInfo(this.props.match.params.id);
+    }
 
-                    <form>
-                        First Name:<br />
-                        <input type='text' name='firstname' value={this.state.firstname} onChange={this.handleChange} />
-                        <br />
-
-                        Last Name:<br/> 
-                        <input type='text' name='lastname' value={this.state.lastname} onChange={this.handleChange}/> 
-                        <br/> 
-
-                        Email:<br/>
-                        <input type='text' name='email' value={this.state.email} onChange={this.handleChange} />
-                        <br />
-                        Password:<br/>
-                        <input type='password' name='password' value={this.state.password} onChange={this.handleChange} /> <br/>
-                        Confirm Password:<br/>
-                        <input type='password' name='confirmPassword' value={this.state.confirmPassword} onChange={this.handleChange} /> <br/>
-
-                        <input type='submit' onClick={this.submitForm}/> 
-                    </form>
-
-                </div >
-            )
+    componentWillUpdate( nextProps, nextState ) {
+        if(nextProps.worked && this.state.submitted) { 
+            console.log(nextProps);
+            console.log(this.props);
+            //Render Success Page 
+            nextProps.history.push("/feed");
         }
     }
+
+    //TODO: What if the user is already loggedIn? 
+    render() {
+        if (this.props.invitedID == undefined) return <div> Loading </div>
+        return (
+            <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
+                <h1> Join the team: "{(this.props.teams[this.props.invitedID]).teamName}" on TeamShare </h1>
+
+                <form>
+                    <Input type='text' name='email' label='Email' value={this.state.email.value} error={this.state.email.error} onChange={this.handleChange.bind(this, "email")} />
+                    <Input type='password' name='password' label='Password' value={this.state.password.value} error={this.state.password.error} onChange={this.handleChange.bind(this, "password")} />
+                    <Input type='password' name='passwordConfirm' label="Confirm Password" value={this.state.passwordConfirm.value}
+                        onChange={this.handleChange.bind(this, "passwordConfirm")} error={this.state.passwordConfirm.error}
+                    />
+                    <Input type='text' name='firstname' label="First Name" value={this.state.firstname.value} error={this.state.firstname.error} onChange={this.handleChange.bind(this, "firstname")} />
+                    <Input type='text' name='lastname' label="Last Name" value={this.state.lastname.value} error={this.state.lastname.error} onChange={this.handleChange.bind(this, "lastname")} />
+
+
+                    <Button label='Submit' raised primary onClick={this.submitForm} />
+                </form>
+
+            </div >
+        )
+    }
+
 }
 
 
 const mapStateToProps = (state) => {
     return {
-        teams: state.teams
+        teams: state.data.teams,
+        invitedID: state.ui.invitedID,
+        worked: state.ui.joinTeam,
+        error: state.ui.joinTeamMsg
+
     }
 }
 //Typically would implement actions
