@@ -2,6 +2,7 @@ import { Router } from "express";
 import { isLoggedIn, canDo } from "../utils/request.js"
 import * as ResourceController from "../controllers/resourceController.js";
 import * as TeamController from "../controllers/TeamController.js";
+import { sendError, sendPayload } from "../utils/apiResponse.js";
 
 
 var router = Router();
@@ -32,14 +33,17 @@ router.get("/resource", isLoggedIn, async (req, res) => {
     if (!team) {
         //todo: handle appropriate 
         //Team should be a selection of the users
-        team = req.user.teams[0] || req.user.teams[0]._id
+        team = req.user.teams[0] && req.user.teams[0]._id
     } else {
         var result = await ResourceController.getFromTeam(team);
         res.json(result);
     }
-
 })
 
-
+router.delete("/resource/:id", isLoggedIn, async (req, res) => { 
+    let resourceID = req.params.id;
+    var result = await ResourceController.remove(resourceID, req.user._id);
+    res.json(result);
+})
 
 export default router; 

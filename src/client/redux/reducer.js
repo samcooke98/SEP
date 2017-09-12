@@ -30,6 +30,11 @@ var functionalReducers = {
             misc: {
                 ...state.misc,
                 worked: true
+            },
+            ui: {
+                ...state.ui,
+                resources: [ ...(state.ui && state.ui.resources || []), action.payload.payload.result] 
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             }
         }),
         onFail: (state, action) => ({
@@ -40,7 +45,8 @@ var functionalReducers = {
         onSuccess: (state, action) => ({
             ui: {
                 ...state.ui,
-                result: action.payload.payload.result
+                resources: [ ...(state.ui && state.ui.resources || []), ...action.payload.payload.result] 
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             }
         }),
         onFail: (state, action) => ({
@@ -80,6 +86,13 @@ var functionalReducers = {
     [actionTypes.JOIN_TEAM]: { 
         onSuccess: (state,action) => ({ui: { ...state.ui, joinTeam: true,joinTeamMsg: ''}, misc: { ...state.ui, loggedIn: true, userID: action.payload.payload.result }}),
         onFail:    (state,action) => ({ui: { ...state.ui, joinTeam: false, joinTeamMsg: action.payload}}),
+    },
+    [actionTypes.DELETE_RESOURCE]: { 
+        onSuccess: (state, action) => ({
+            data: { ...state.data, resources: { ...state.data.resources, [action.meta.id]: {} }}, //Remove the data object (or set it to blank)
+            ui: {...state.ui, resources: state.ui.resources.filter( (val) => val  != action.meta.id )  } //Remove the id from the resources array
+        }), //Remove all instances of the id 
+        onFail:    (state,action) => ({})
     }
 
 
