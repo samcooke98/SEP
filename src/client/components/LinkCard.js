@@ -18,12 +18,15 @@ export default class LinkCard extends React.PureComponent {
                 />
                 <CardText>{this.props.text}</CardText>
                 <CardActions>
-                    <Button label="Action 1" />
+                    <Button flat label="Open" onClick={this.onClick} />
 
                 </CardActions>
 
             </Card>
         )
+    }
 
+    onClick = (evt) => {
+        open(this.props.url)
     }
 }

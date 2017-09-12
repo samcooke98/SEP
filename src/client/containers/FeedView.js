@@ -10,24 +10,28 @@ import { Button, IconButton } from 'react-toolbox/lib/button';
 import ResourceForm from "../components/ResourceForm.js";
 import LinkCard from "../components/LinkCard.js";
 import LoggedInRedirector from "./LoggedInRedirector"
-import {withProtection} from "./Protector.js";
+import { withProtection } from "./Protector.js";
 
 
 class FeedView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            url: ''
+            url: '',
+            title: '',
+            description: '',
+            teams: []
+
         }
     }
 
     handleChange = (value, name, isTeam) => {
-        console.log(value, name);
-        if(isTeam) { 
+        console.log(value, name, isTeam);
+        if (isTeam) {
             var state = Object.assign({}, this.state);
             state.teams[name].checked = value;
             this.setState(state);
-        } else { 
+        } else {
             this.setState({ [name]: value })
         }
 
@@ -35,19 +39,22 @@ class FeedView extends React.Component {
 
     submit = (evt) => {
         console.log(this.props);
-        this.props.createResource(this.state.url, this.state.title, this.state.description, this.state.teamID)
+        for (var team of this.state.teams) {
+            if (team.checked)
+                this.props.createResource(this.state.url, this.state.title, this.state.description, team._id)
+        }
     }
 
-    componentDidMount( ){
+    componentDidMount() {
         //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
         let teams = this.props.user.teams.map((val) => this.props.teams[val]);
         //Create a property to hold if the team is checked or not
-        teams = teams.map( (val) => (val.checked = false, val))
+        teams = teams.map((val) => (val.checked = false, val))
         //Insert it into state 
-        this.setState({teams: teams})
+        this.setState({ teams: teams })
 
         //Get the resources for each team that the user belongs to
-        teams.forEach( (val) => this.props.getResources( val._id ))
+        teams.forEach((val) => this.props.getResources(val._id))
     }
 
     render() {
@@ -59,20 +66,20 @@ class FeedView extends React.Component {
                     url={this.state.url}
                     title={this.state.title}
                     description={this.state.description}
-                    teamID={this.state.teamID}
-                    teams = {this.state.teams}
+                    teams={this.state.teams}
                     handleChange={this.handleChange}
                 />
                 <Button icon='add' floating onMouseUp={this.submit} />
                 <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
-                
-                    { /*TODO: Show only teams that user belongs to, Sort the order */ 
+
+                    { /*TODO: Show only teams that user belongs to, Sort the order */
                         (Object.entries(this.props.resources)).map((val) => {
-                            return <LinkCard 
-                                title={val[1].title ||''}
-                                subtitle={val[1].url} 
-                                text={val[1].description}  
-                                key={val[1]._id}  
+                            return <LinkCard
+                                title={val[1].title || ''}
+                                subtitle={val[1].url}
+                                text={val[1].description}
+                                url={val[1].url}
+                                key={val[1]._id}
                             />
                         })
                     }
