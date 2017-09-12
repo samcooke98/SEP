@@ -53,6 +53,10 @@ export const resetPassConfirm = createAction(actionTypes.RESET_PASS_CONFIRM, asy
     return post(`reset/confirmAction`, { RID, password })
 })
 
+export const comment = createAction(actionTypes.COMMENT, async (username, text, url) => {
+    return post(`${url}/comments`, { username, text, url})
+})
+
 export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID) => {
     return post(`resource`, { url, title, description, team: teamID }).then(
 

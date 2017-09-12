@@ -13,6 +13,7 @@ import InvitePage from "./containers/InvitePage.js";
 import ResetContainer from "./containers/ResetContainer.js";
 import PasswordResetContainer from "./containers/PasswordResetContainer.js";
 import BaseContainer from "./containers/BaseContainer.js";
+import CommentContainer from "./containers/CommentContainer.js";
 
 export const routes = [
 
@@ -47,23 +48,12 @@ export const routes = [
                 path: "/reset/confirm",
                 component: PasswordResetContainer
             },
+            {
+                path: "/:url/comments",
+                component: CommentContainer
+            },
         ]
     },
-
-    // {
-    //     path: '/tacos',
-    //     component: Tacos,
-    //     routes: [
-    //         {
-    //             path: '/tacos/bus',
-    //             component: Bus
-    //         },
-    //         {
-    //             path: '/tacos/cart',
-    //             component: Cart
-    //         }
-    //     ]
-    // }
 ]
 
 // wrap <Route> and use this everywhere instead, then when

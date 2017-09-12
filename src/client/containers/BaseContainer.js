@@ -40,8 +40,6 @@ const NavigationList = [
     }
 ]
 
-console.log(NavigationList);
-
 
 class BaseContainer extends React.Component {
     constructor(props) {
@@ -62,7 +60,6 @@ class BaseContainer extends React.Component {
         }
     }
     render() {
-        console.log(this.props.loggedIn);
         return (
             <Layout>
                 <AppBar title='TeamShare' fixed flat />

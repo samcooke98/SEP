@@ -46,7 +46,6 @@ class RegistrationContainer extends React.Component {
 
 		//Check no fields are empty
 		for (var container in this.state) {
-			console.log(container)
 			if (container == "teamcategory") continue; //Optional field 
 			if (this.state[container].value === '' || this.state[container].value === "") {
 				shouldSubmit = false;
@@ -67,7 +66,7 @@ class RegistrationContainer extends React.Component {
 				passwordConfirm: { ...this.state.passwordConfirm, error: "The passwords do not match" }
 			})
 		}
-		console.log(shouldSubmit);
+
 
 		if (shouldSubmit) {
 			this.props.submitRegistration(
