@@ -16,6 +16,7 @@ class IndexPageContainer extends React.Component {
         return (
             <div>
                 <Link to="/login"> Login </Link> <br/>
+                <h4> Hello </h4> 
                 <Link to="/register"> Register </Link> 
             </div> 
         )

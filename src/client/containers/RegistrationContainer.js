@@ -7,104 +7,168 @@ import { connect } from "react-redux";
 import { register } from "../redux/actions.js"
 import LoggedInRedirector from "./LoggedInRedirector.js";
 
+import Input from 'react-toolbox/lib/input';
+import Button from "react-toolbox/lib/button";
+import Autocomplete from 'react-toolbox/lib/autocomplete';
+var validate = require('validator.js');
+
+const categories = [
+	"Business", "School", "Fun", "Friends"
+]
 
 
 
 class RegistrationContainer extends React.Component {
-    constructor(props) {
-        super(props);
+	constructor(props) {
+		super(props);
 
-        this.state = {
-            email: '',
-            password: '',
-            firstname: '',
-            lastname: "",
-            teamname: "",
-            teamdesc: "",
-            teamcategory: ""
-        }
-    }
+		this.state = {
+			email: { value: '', error: '' },
+			password: { value: '', error: '' },
+			passwordConfirm: { value: '', error: '' },
+			firstname: { value: '', error: '' },
+			lastname: { value: '', error: '' },
+			teamname: { value: '', error: '' },
+			teamdesc: { value: '', error: '' },
+			teamcategory: { value: '', error: '' },
+			success: false
+		}
+	}
 
-    handleChange = (evt) => {
-        const target = evt.target;
-        const value = target.value;
-        const name = target.name;
-        this.setState({ [name]: value })
-    }
+	handleChange = (name, value) => {
+		this.setState({ [name]: { value, error: this.state[name].error } })
+	}
 
-    submitForm = (evt) => { 
-        evt.preventDefault();
+	submitForm = (evt) => {
+		evt.preventDefault();
 
-        var shouldSubmit = true;
+		var shouldSubmit = true;
 
-        //Check no fields are empty
-        for(var value in this.state) { 
-            if(value === '' || value === "") 
-                shouldSubmit = false;
-        }
-        if(shouldSubmit) 
-            this.props.submitRegistration( 
-                this.state.email, this.state.password, this.state.firstname, this.state.lastname, this.state.teamname, this.state.teamdesc, this.state.teamcategory
-            )
-    }
+		//Check no fields are empty
+		for (var container in this.state) {
+			console.log(container)
+			if (container == "teamcategory") continue; //Optional field 
+			if (this.state[container].value === '' || this.state[container].value === "") {
+				shouldSubmit = false;
+				this.setState({ [container]: { ...this.state[container], error: "Cannot be empty" } })
+			}
 
-    render() {
-        //Ideally, these would be all componenets, and this would have no control on the visuals
-        return (
-            <div>
-                <LoggedInRedirector/> 
-                <form>
-                    Email: <br />
-                    <input type='text' name='email' value={this.state.email} onChange={this.handleChange} />
-                    <br />
+		}
 
-                    Password: <br />
-                    <input type='password' name='password' value={this.state.password} onChange={this.handleChange} />
-                    <br />
+		//TODO: Validate email
+		// if(validateEmail(this.state.email) && this.state.email !== "")
+		// 	this.setState( { email: { ...this.state.email, error: "Invalid Email address!"}})
 
-                    First Name: <br />
-                    <input type='text' name='firstname' value={this.state.firstname} onChange={this.handleChange} />
-                    <br />
+		//Check passwords match
+		if (this.state.password.value != this.state.passwordConfirm.value) {
+			shouldSubmit = false;
+			this.setState({
+				password: { ...this.state.password, error: "The passwords do not match" },
+				passwordConfirm: { ...this.state.passwordConfirm, error: "The passwords do not match" }
+			})
+		}
+		console.log(shouldSubmit);
 
-                    First Name: <br />
-                    <input type='text' name='lastname' value={this.state.lastname} onChange={this.handleChange} />
-                    <br />
+		if (shouldSubmit) {
+			this.props.submitRegistration(
+				this.state.email.value,
+				this.state.password.value,
+				this.state.firstname.value,
+				this.state.lastname.value,
+				this.state.teamname.value,
+				this.state.teamdesc.value,
+				this.state.teamcategory.value
+			)
+			//Clear all errors
+			for (var container in this.state) {
+				this.setState({ [container]: { ...this.state[container], error: "" } })
+			}
+		}
+	}
 
-                    --- Team Details --- <br/>
-                    Team Name: <br />
-                    <input type='text' name='teamname' value={this.state.teamname} onChange={this.handleChange} />
-                    <br />
+	clearErrors = () => {
+		for (var container in this.state) {
+			this.setState({ [container]: { ...this.state[container], error: "" } })
+		}
+	}
 
-                    Team description: <br />
-                    <input type='text' name='teamdesc' value={this.state.teamdesc} onChange={this.handleChange} />
-                    <br />
+	handleErrors = (error) => {
+		console.log(error);
+		switch (error.name) {
+			case "UserExistsError":
+				this.setState({ email: { ...this.state.email, error: error.message } })
+				break;
+			default:
+				console.log("Unknown Error");
+		}
+	}
 
-                    Team Category: <br />
-                    <input type='text' name='teamcategory' value={this.state.teamcategory} onChange={this.handleChange} />
-                    <br />
-            <br/> 
-                    <input type='submit' onClick={this.submitForm}/> 
+	componentWillReceiveProps(nextProps) {
+		console.log(nextProps);
+		console.log(this.props);
+		if (nextProps.success && !this.props.success) {
+			this.setState({ success: true })
+			this.clearErrors();
+		} else {
+			this.setState({ success: false })
+			this.handleErrors(nextProps.errorMsg)
+		}
+	}
 
+	render() {
+		console.log(this.state);
+		if (this.state.success)
+			return <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
+				<h1> Thanks for Joining </h1>
+				<p> We just need to confirm your email, in the future. So right now, you can login.  </p>
+			</div>
 
+		return (
+			<div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
+				<LoggedInRedirector />
+				<form>
+					<h2> Your Details </h2>
+					<Input type='text' name='email' label='Email' value={this.state.email.value} error={this.state.email.error} onChange={this.handleChange.bind(this, "email")} />
+					<Input type='password' name='password' label='Password' value={this.state.password.value} error={this.state.password.error} onChange={this.handleChange.bind(this, "password")} />
+					<Input type='password' name='passwordConfirm' label="Confirm Password" value={this.state.passwordConfirm.value}
+						onChange={this.handleChange.bind(this, "passwordConfirm")} error={this.state.passwordConfirm.error}
+					/>
+					<Input type='text' name='firstname' label="First Name" value={this.state.firstname.value} error={this.state.firstname.error} onChange={this.handleChange.bind(this, "firstname")} />
+					<Input type='text' name='lastname' label="Last Name" value={this.state.lastname.value} error={this.state.lastname.error} onChange={this.handleChange.bind(this, "lastname")} />
 
-                </form>
-            </div>
-        )
-    }
+					<h2> Team Details </h2>
+					<Input type='text' name='teamname' label='Team Name' value={this.state.teamname.value} error={this.state.teamname.error} onChange={this.handleChange.bind(this, "teamname")} />
+					<Input type='text' name='teamdesc' label='Team Description' value={this.state.teamdesc.value} error={this.state.teamdesc.error} onChange={this.handleChange.bind(this, "teamdesc")} />
+					<Autocomplete
+						type='text'
+						name='teamcategory'
+						label="Category"
+						value={this.state.teamcategory.value}
+						direction='down'
+						multiple={false}
+						source={categories}
+						onChange={this.handleChange.bind(this, "teamcategory")}
+					/>
+					<Button label='Submit' raised primary onClick={this.submitForm} />
+				</form>
+			</div>
+		)
+	}
 }
 
 
 const mapStateToProps = (state) => {
-    return {
-
-    }
+	return {
+		errorMsg: state.ui.registrationFail,
+		success: state.ui.registrationSuccess
+	}
 }
 const mapDispatchToProps = (dispatch) => {
-    return {
-        submitRegistration: (username, password, firstName, lastName, teamName, description, category) => {
-            register(username, password, firstName, lastName, teamName, description, category)
-        }
-    }
+	return {
+		submitRegistration: (username, password, firstName, lastName, teamName, description, category) => {
+			dispatch(register(username, password, firstName, lastName, teamName, description, category))
+		}
+	}
 }
 
 //withRouter connects to react-router: (https://reacttraining.com/react-router/web/guides/redux-integration) 

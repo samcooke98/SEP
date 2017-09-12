@@ -7,7 +7,7 @@ import { Button } from 'react-toolbox/lib/button'
 export default class LinkCard extends React.PureComponent {
     render() {
         return (
-            <Card style={{ width: '350px' }}>
+            <Card style={{ width: '350px', margin: '1rem' }}>
                 <CardMedia
                     aspectRatio='wide'
                     image='https://placeimg.com/800/450/nature'
@@ -18,12 +18,15 @@ export default class LinkCard extends React.PureComponent {
                 />
                 <CardText>{this.props.text}</CardText>
                 <CardActions>
-                    <Button label="Action 1" />
+                    <Button flat label="Open" onClick={this.onClick} />
 
                 </CardActions>
 
             </Card>
         )
+    }
 
+    onClick = (evt) => {
+        open(this.props.url)
     }
 }

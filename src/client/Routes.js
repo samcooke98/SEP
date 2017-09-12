@@ -15,6 +15,7 @@ import PasswordResetContainer from "./containers/PasswordResetContainer.js";
 import BaseContainer from "./containers/BaseContainer.js";
 
 export const routes = [
+
     {
         path: "/",
         component: BaseContainer,
@@ -28,15 +29,11 @@ export const routes = [
                 component: LoginContainer
             },
             {
-                path: '/test',
-                component: () => <div> Hello </div>
-            },
-            {
                 path: '/register',
                 component: RegistrationContainer
             },
             {
-                path: '/createinvite/:id',
+                path: '/manage',
                 component: TeamManagement
             },
             {
@@ -47,11 +44,12 @@ export const routes = [
                 component: ResetContainer
             },
             {
-                path: "/reset/confirm/:id",
+                path: "/reset/confirm",
                 component: PasswordResetContainer
             },
         ]
     },
+
     // {
     //     path: '/tacos',
     //     component: Tacos,
