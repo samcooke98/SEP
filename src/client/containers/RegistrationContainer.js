@@ -10,7 +10,6 @@ import LoggedInRedirector from "./LoggedInRedirector.js";
 import Input from 'react-toolbox/lib/input';
 import Button from "react-toolbox/lib/button";
 import Autocomplete from 'react-toolbox/lib/autocomplete';
-var validate = require('validator.js');
 
 const categories = [
 	"Business", "School", "Fun", "Friends"
@@ -66,7 +65,11 @@ class RegistrationContainer extends React.Component {
 				passwordConfirm: { ...this.state.passwordConfirm, error: "The passwords do not match" }
 			})
 		}
+<<<<<<< HEAD
 
+=======
+		console.log(shouldSubmit);
+>>>>>>> testing
 
 		if (shouldSubmit) {
 			this.props.submitRegistration(

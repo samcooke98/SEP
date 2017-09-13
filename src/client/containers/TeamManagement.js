@@ -10,20 +10,34 @@ import { withProtection } from "./Protector.js";
 import Button from "react-toolbox/lib/button";
 import Input from "react-toolbox/lib/input";
 
+import isEmail from 'validator/lib/isEmail';
+
 
 class TeamManagement extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: ''
+            value: '',
+            error: '',
         }
     }
 
     submitForm = (teamID) => {
-        this.props.send(
-            teamID,
-            this.state.value
-        )
+        var emails = this.state.value.split(";")
+        emails = emails.map((str) => str.replace(" ", '') )
+        var promises = [];
+        for (var email of emails) {
+            if (!isEmail(email)) {
+                this.setState({ error: "It looks like there are some invalid emails, please check and try again" })
+                return;
+            }
+        }
+        for (var email of emails) {
+            promises.push(sendInvitations(teamID, email).payload);
+        }
+        Promise.all(promises).then((val) => {
+            this.setState({ message: "Sent invitation!" })
+        })
     }
 
     handleChange = (val) => {
@@ -47,12 +61,13 @@ class TeamManagement extends React.Component {
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                 <h1> Team Management </h1>
                 <p> Enter emails that you wish to send invitations to below, then select the team you wish to invite them to </p>
-                <Input label="Emails: (john@smith.com; sally@peach.com) " onChange={this.handleChange.bind(this)} value={this.state.value} /> <br />
+                <Input label="Emails: (john@smith.com; sally@peach.com)" name='email' error={this.state.error} onChange={this.handleChange.bind(this)} value={this.state.value} /> <br />
                 {
                     this.getOwnedTeams().map((val, index) =>
-                        <Button key={index} label={this.props.teams[val].teamName} primary raised onClick={this.submitForm.bind(this, val)} />  
+                        <Button key={index} label={this.props.teams[val].teamName} primary raised onClick={this.submitForm.bind(this, val)} />
                     )
                 }
+                {this.state.message && <h3> {this.state.message} </h3>}
             </div>
         )
     }

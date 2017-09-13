@@ -74,7 +74,10 @@
     "webpack-node-externals": "^1.6.0"
   },
   "scripts": {
-    "test": "jest",
+    "test:unit": "jest",
+    "test:bdd": "cucumber-js",
+    "start:test": "npm run dev",
+    "test": "npm run test:bdd",
     "dev": "webpack --config webpack.config.server.js",
     "build": "npm run build:cli && npm run build:srv",
     "build:srv": "webpack --config webpack.config.server.prod.js",

@@ -6,7 +6,7 @@ import Checkbox from "react-toolbox/lib/checkbox";
 /**
  * Component that renders a form for inputting resource links
  */
-export default class CommentInput extends React.Component {
+export default class ResourceForm extends React.Component {
     render() {
         return (
             <section>

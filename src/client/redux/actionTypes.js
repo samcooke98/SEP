@@ -10,7 +10,10 @@ export const RESET_PASS_CONFIRM = "RESET_PASS_CONFIRM";
 
 export const CREATE_RESOURCE 	= "CREATE_RESOURCE";
 export const GET_RESOURCE 		= "GET_RESOURCE";
-export const COMMENT 		    = "COMMENT";
 export const DELETE_RESOURCE    = "DELETE_RESOURCE";
+
+export const COMMENT 		    = "COMMENT";
+
+
 
 export const JOIN_TEAM          = "JOIN_TEAM";
