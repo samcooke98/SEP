@@ -4,7 +4,10 @@ node_js:
 
 # Setup for Headless Chrome Testing
 before_script:
-  - npm run dev
+  - npm run dev & 
+  - sleep 10
+script: 
+  - npm run test
 
 #Install and Use Chrome
 addons:
