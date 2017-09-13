@@ -17,12 +17,12 @@ module.exports = {
 	},
 	target: 'node',
 	externals: [nodeExternals({
-        whitelist: ['webpack/hot/poll?1000']
-    })],
-	node:{ 
+		whitelist: ['webpack/hot/poll?1000']
+	})],
+	node: {
 		__dirname: false
 	},
-	watch: true, 
+	watch: true,
 	devtool: "source-map",
 	module: {
 		rules: [
@@ -32,15 +32,21 @@ module.exports = {
 				use: {
 					loader: 'babel-loader',
 				}
-			}
+			},
+			{
+				test: /\.(png|svg|jpg|gif)$/,
+				use: [
+					'file-loader'
+				]
+			},
 		]
 	},
 	plugins: [
 		new StartServerPlugin('server.js'),
 		// new webpack.HotModuleReplacementPlugin(),
 		// new webpack.NamedModulesPlugin(),
-        // new webpack.NoEmitOnErrorsPlugin(),
+		// new webpack.NoEmitOnErrorsPlugin(),
 		new CleanWebpackPlugin(path.resolve(__dirname, "build")),
-		
+
 	]
 };

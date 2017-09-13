@@ -1,0 +1,12 @@
+language:  node_js
+node_js:
+  - "7"
+
+# Setup for Headless Chrome Testing
+before_script:
+  - npm run dev
+
+#Install and Use Chrome
+addons:
+  chrome: stable
+dist: trusty

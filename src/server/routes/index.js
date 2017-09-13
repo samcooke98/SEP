@@ -2,11 +2,11 @@
 import UserManagementRoutes from "./userManagement.js"
 import InvitationRoutes from "./invitation.js"
 import resourceRoutes from "./resourceRoutes.js";
-
+import TestRoutes from "./testRoutes.js";
 
 //WE're then going to export all the routes from this folder
 
-export {UserManagementRoutes, InvitationRoutes, resourceRoutes};
+export {UserManagementRoutes, InvitationRoutes, resourceRoutes, TestRoutes};
 
 
 
