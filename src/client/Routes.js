@@ -54,24 +54,6 @@ export const routes = [
             },
         ]
     },
-<<<<<<< HEAD
-=======
-
-    // {
-    //     path: '/tacos',
-    //     component: Tacos,
-    //     routes: [
-    //         {
-    //             path: '/tacos/bus',
-    //             component: Bus
-    //         },
-    //         {
-    //             path: '/tacos/cart',
-    //             component: Cart
-    //         }
-    //     ]
-    // }
->>>>>>> testing
 ]
 
 // wrap <Route> and use this everywhere instead, then when

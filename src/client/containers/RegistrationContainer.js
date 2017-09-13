@@ -65,11 +65,6 @@ class RegistrationContainer extends React.Component {
 				passwordConfirm: { ...this.state.passwordConfirm, error: "The passwords do not match" }
 			})
 		}
-<<<<<<< HEAD
-
-=======
-		console.log(shouldSubmit);
->>>>>>> testing
 
 		if (shouldSubmit) {
 			this.props.submitRegistration(
