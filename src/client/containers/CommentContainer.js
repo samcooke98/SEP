@@ -7,6 +7,8 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { comment } from "../redux/actions.js";
 import CommentInput from "../components/CommentInput.js";
+import { getUserDetails, createComment } from "../redux/actions.js";
+
 
 import Avatar from 'react-toolbox/lib/avatar'
 import Input from 'react-toolbox/lib/input';
@@ -16,24 +18,36 @@ class CommentContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            comment: '',
+            user: '',
+            comments: '',
+            teams: []
 
         }
     }
 
-    submit = (evt) => {
+    submitForm = (evt) => {
+        console.log('hellloooo');
+        // console.log(this.props.user._id);
+        console.log(this.props.comments);
+        console.log(this.props.teams);
+        // this.props.createComment(this.props.user._id, this.state.comment, team._id);
+        
+    }
 
+    handleChange = (value, name, isTeam) => {
+        this.setState({ [name]: value })
+   
     }
 
     render() {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                     <h1>Comments</h1>
-                    <Avatar><img src="https://placeimg.com/80/80/animals"/></Avatar>
                     <CommentInput
                         comment={this.state.comment}
+                        handleChange={this.handleChange}
                     />
-                    <Button icon='add' floating onMouseUp={this.submit}/>
+                    <Button label='Comment' raised primary onMouseUp={this.submitForm}/>
             </div>
         )
     }
@@ -41,13 +55,18 @@ class CommentContainer extends React.Component {
 
 
 const mapStateToProps = (state) => {
+    var user = state.data.users[state.misc.userID];
     return {
-
+        user: user,
+        comments: state.data.comments,
+        teams: state.data.teams
     }
 }
 //Typically would implement actions
 const mapDispatchToProps = (dispatch) => {
     return {
+        getUser: () => dispatch(getUserDetails()),
+        createComment: (userId, comment, teamId) => dispatch(createComment(userId, comment, teamId)),
     }
 }
 
