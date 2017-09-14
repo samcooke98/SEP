@@ -37,6 +37,7 @@ const stylesheet = ({
     container: {
      display: "block",
      position: "relative",
+<<<<<<< HEAD
     //  margin: "auto",
      height: "100%",
     //  width: "25%",
@@ -45,6 +46,16 @@ const stylesheet = ({
     //  borderRadius: "25px",
      padding: "20px",
     //  border: "2px solid #BCC0CA",
+=======
+     margin: "auto",
+     height: "100%",
+     width: "25%",
+     overflow: "hidden",
+     textAlign: "center",
+     borderRadius: "25px",
+     padding: "20px",
+     border: "2px solid #BCC0CA",
+>>>>>>> Fixing UI for landing page
      verticalAlign: "middle",
      backgroundColor: 'white'
      
