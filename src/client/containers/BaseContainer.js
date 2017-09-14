@@ -12,7 +12,7 @@ import { AppBar, Panel, NavDrawer } from 'react-toolbox';
 import { List, ListItem } from "react-toolbox";
 import Navigation from 'react-toolbox/lib/navigation';
 import Link from 'react-toolbox/lib/link';
-
+import IndexPageContainer from "./IndexPageContainer.js"
 
 
 class BaseContainer extends React.Component {
@@ -21,6 +21,7 @@ class BaseContainer extends React.Component {
     }
 
     render() {
+        if (this.props.match.isExact) return <IndexPageContainer/>
         console.log(this.props);
         console.log(this.props.routes);
         //Ideally, these would be all components, and this would have no control on the visuals
