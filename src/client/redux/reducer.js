@@ -1,82 +1,158 @@
 /**
  * Reducers
  */
-import { handleAction } from "redux-actions"
+import { handleAction, handleActions } from "redux-actions"
+import combineReducers from "redux"
+import * as actionTypes from "./actionTypes.js";
+import merge from "lodash/merge";
 
 const initialState = {
-    loggedIn: false,
-    registrationSuccess: null,
+    data: { //Entities are placed in here 
+        users: {},
+        teams: {},
+        resources: {},
+    },
+    ui: {}, //UI Data is placed here -> Like error messages for example
+    misc: { // Anything that doesn't fit above can go here, (or in a new node if you want ) 
+        loggedIn: false,
 
-    resources: {},
-    ui: {}
+    },
+
 }
-
-//Do not mutate the state! 
-
-export default function reducer(state = initialState, action) {
-    console.log(action);
-
-    switch (action.type) {
-        case 'LOGIN':
-            console.log(action)
-            return Object.assign({}, state, { loggedIn: action.payload.success });
-        case 'REGISTER':
-            return Object.assign({}, state, {})
-        case 'GET_USER':
-            console.log(action);
-            return Object.assign({}, state, { userDetails: action.payload });
-        case 'GET_INVITE':
-            console.log(action.payload);
-            return Object.assign({}, state, { teams: action.payload.payload.team })
-        case "CREATE_RESOURCE":
-            console.log(action);
-            if (action.payload.success) {
-                console.log({ resources: action.payload.payload.entities.resources });
-
-                return Object.assign({}, state, { resources: action.payload.payload.entities.resources })
-
-            } else
-                return Object.assign({}, state, { ui: { resources: action.payload.result } })
-        case "GET_RESOURCE":
-            return Object.assign({}, state, {
-
-            })
-        default:
-            console.log("unhandled redux action");
-            return state;
-    }
-}
-    
-
-
-
 
 /**
- * If you want to use modules, uncomment the following
+ * So this array maps action types to a onSuccess and onFail function. 
+ * Entity Normalisation happens regardless, if there is an entity on the payload
  */
-/*
-import {combineReducers} from "redux";
+var functionalReducers = {
+    [actionTypes.CREATE_RESOURCE]: {
+        onSuccess: (state, action) => ({
+            misc: {
+                ...state.misc,
+                worked: true
+            },
+            ui: {
+                ...state.ui,
+                resources: [ ...(state.ui && state.ui.resources || []), action.payload.payload.result] 
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            }
+        }),
+        onFail: (state, action) => ({
 
-import reducer from "./modules/${module}/Reducer.js";
-
-export default combineReducers({ 
-    reducer
-});
-*/
-
-/*
-Moving forward a more efficient redux state may look like: 
-const initialState = {
-    data: { 
-        users: {},
-        resources: {},
-        teams: {},
+        })
     },
-    misc: { 
-        loggedIn: false,
+    [actionTypes.GET_RESOURCE]: {
+        onSuccess: (state, action) => ({
+            ui: {
+                ...state.ui,
+                resources: [ ...(state.ui && state.ui.resources || []), ...action.payload.payload.result] 
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            }
+        }),
+        onFail: (state, action) => ({
+
+        })
+    }, 
+    [actionTypes.REGISTER]: {
+        onSuccess: (state, action) => ({ //Success returns the same as login 
+            ui: {   
+                ...state.ui,
+                registrationSuccess: true,
+                registrationFail: ""
+            }
+        }),
+        onFail: (state, action) => ({
+            ui: {
+                ...state.ui,
+                registrationFail: action.payload.payload,
+                registrationSuccess: false,
+            }
+        }),
     },
-    ui: { 
-        registrationSuccess: null,   
+    // [actionTypes.RESET_PASS]: {  (this doesn't need to be stored in Redux, as far as I can see )
+    //     onSuccess: (state,action) => ({ ui: { ...state.ui, resetPassSent: true, resetPassError: ''}}),
+    //     onFail: (state, action) => ({ui: {...state.ui, resetPassError: action.payload.payload, resetPassSent: false}})
+    // },
+    [actionTypes.GET_INVITE]: { 
+        onSuccess: (state, action) => ({ 
+            ui: { 
+                ...state.ui, getInviteSuccess: true, getInviteMessage: '', invitedID: action.payload.payload.result
+            }, 
+        }), 
+        onFail: (state, action) => ({ 
+            ui: { ...state.ui, getInviteMessage: "Something went wrong", getInviteSuccess:false, invitedID: ''}
+        })
+    },
+    [actionTypes.JOIN_TEAM]: { 
+        onSuccess: (state,action) => ({ui: { ...state.ui, joinTeam: true,joinTeamMsg: ''}, misc: { ...state.ui, loggedIn: true, userID: action.payload.payload.result }}),
+        onFail:    (state,action) => ({ui: { ...state.ui, joinTeam: false, joinTeamMsg: action.payload}}),
+    },
+    [actionTypes.DELETE_RESOURCE]: { 
+        onSuccess: (state, action) => ({
+            data: { ...state.data, resources: { ...state.data.resources, [action.meta.id]: {} }}, //Remove the data object (or set it to blank)
+            ui: {...state.ui, resources: state.ui.resources.filter( (val) => val  != action.meta.id )  } //Remove the id from the resources array
+        }), //Remove all instances of the id 
+        onFail:    (state,action) => ({})
+    }
+
+
+}
+
+export default function rootReducer(state = initialState, action) {
+    console.log(action);
+    switch (action.type) {
+        case actionTypes.LOGIN:
+            return loginReducer(state, action)
+            break;
+        default:
+            if (action.payload && action.payload.payload && action.payload.payload.entities)
+                state = merge({}, state, { data: action.payload.payload.entities })
+    }
+    if (functionalReducers[action.type]) {
+        state = createReducer(state, action, functionalReducers[action.type].onSuccess, functionalReducers[action.type].onFail);
+    } else {
+        console.log("unhandled redux action");
+        console.log(action);
+    }
+    return state;
+}
+
+
+
+
+const createReducer = (state, action, onSuccess, onFail) =>
+    action.payload.success
+        ? { ...state, ...mergeEntities(state, action), ...onSuccess(state, action) /* Add other properties here */ }
+        : { ...state, ...onFail(state, action) } //Error Handling
+
+
+
+//Login is special, it actually raises the correct error 
+const loginReducer = (state, action) => {
+    let payload = action.payload.payload;
+    console.log(action.payload);
+    if (action.payload.success) {
+        console.log('here');
+        return { //ORDER is important. The spread operator does a shallow merge BUT it will overwrite. So call it first
+            ...state,
+            data: merge({}, state.data, payload.entities),
+            misc: { ...state.misc, loggedIn: true, userID: payload.result },
+        }
+    } else {
+        return {
+            ...state,
+            ui: { loginMsg: "Incorrect username or password" }
+
+        }
     }
 }
-*/
+
+/**
+ * Shortcut method to merge entities, returns a new object. 
+ * @param {*} state 
+ * @param {*} action 
+ */
+const mergeEntities = (state, action) =>
+    (action.payload && action.payload.payload && action.payload.payload.entities)
+        ? merge({}, state, { data: action.payload.payload.entities })
+        : state

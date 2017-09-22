@@ -22,22 +22,25 @@ router.post('/reset', function (req, res) {
     res.json(sendPayload("ConditionallySent"));
 });
 
-router.post('/reset/confirmAction', function(req, res) {
+router.post('/reset/confirmAction', function (req, res) {
     //Put new password into the db
-    ResetLinkController.changePassword(req.body.RID,req.body.password,res)
+    ResetLinkController.changePassword(req.body.RID, req.body.password, res)
 });
 
 
 router.get('/feed', isLoggedIn, UserController.getFeed);
 
-router.post("/login", passport.authenticate('local'), (req, res) => {
+router.post("/login", passport.authenticate('local'), async (req, res) => {
     console.log(req.user);
-    res.json(sendPayload("Successfully Logged In"))
+    res.json(sendPayload(await UserController.getDetails(req.user._id)))
 })
 
 router.get("/logout", UserController.logout)
 
-router.get("/user", isLoggedIn, UserController.getDetails)
+router.get("/user", isLoggedIn, async (req, res) => {
+    var data = await UserController.getDetails(req.user._id);
+    res.json(sendPayload(data));
+})
 
 
 

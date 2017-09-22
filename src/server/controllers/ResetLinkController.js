@@ -16,6 +16,10 @@ export function deleteByRID(RID) {
 
 export function changePassword(RID, newPass, res) {
     ResetLink.findOne({ RID: RID }, (err, link) => {
+        if(!link) {
+            return res.json(sendError("Token Expired"));
+        }
+            
         User.findOne({ _id: link.user }, (errT, user) => {
             if (err || errT) {
                 res.json(sendError("Could not perform the action"));
@@ -59,7 +63,6 @@ export function createLink(time, username) {
             bodyText += "Regards, \n\n";
             bodyText += "The TeamShare Team!";
             Mailer.sendEmail(username, "TeamShare: Reset Password", bodyText, false)
-            console.log(link);
             link.save((err) => console.log(err));
             return true;
         } else {

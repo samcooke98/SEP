@@ -37,14 +37,14 @@ const stylesheet = ({
     container: {
      display: "block",
      position: "relative",
-     margin: "auto",
+    //  margin: "auto",
      height: "100%",
-     width: "25%",
+    //  width: "25%",
      overflow: "hidden",
      textAlign: "center",
-     borderRadius: "25px",
+    //  borderRadius: "25px",
      padding: "20px",
-     border: "2px solid #BCC0CA",
+    //  border: "2px solid #BCC0CA",
      verticalAlign: "middle",
      backgroundColor: 'white'
      

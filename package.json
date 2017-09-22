@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.17.2",
     "chromedriver": "^2.32.2",
@@ -14,8 +15,10 @@
     "express": "^4.15.4",
     "express-session": "^1.15.5",
     "fetch-everywhere": "^1.0.5",
+    "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "mongoose": "^4.11.8",
+    "nock": "^9.0.14",
     "normalizr": "^3.2.3",
     "passport": "^0.4.0",
     "passport-local-mongoose": "^4.2.1",
@@ -36,11 +39,13 @@
     "react-toolbox": "^2.0.0-beta.12",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
+    "redux-mock-store": "^1.2.3",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0",
     "sass": "^1.0.0-beta.2",
     "selenium-webdriver": "^3.5.0",
-    "sendgrid": "^5.2.3"
+    "sendgrid": "^5.2.3",
+    "validator": "^8.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -69,7 +74,10 @@
     "webpack-node-externals": "^1.6.0"
   },
   "scripts": {
-    "test": "jest",
+    "test:unit": "jest",
+    "test:bdd": "cucumber-js",
+    "start:test": "npm run dev",
+    "test": "npm run test:bdd",
     "dev": "webpack --config webpack.config.server.js",
     "build": "npm run build:cli && npm run build:srv",
     "build:srv": "webpack --config webpack.config.server.prod.js",

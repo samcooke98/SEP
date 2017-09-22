@@ -35,32 +35,32 @@ export function registerOrContinue(req, res, next) {
  * @param {*} req 
  * @param {*} res 
  */
-export function createAccount(req, res) {
+export async function createAccount(req, res) {
     //Ensure the link is valid
-    Link.findOne({ urlID: req.params.urlID }).exec((err, link) => {
-        if (link.checkValidity()) {
-            //Create the user
-            let newUser = new User({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName });
-            //Create a user
-            User.register(newUser, req.body.password, function (err, account) {
-                if (err) {
-                    return res.json(sendError(err.message));
-                }
-                //Authenticate the user
-                passport.authenticate('local')(req, res, function () {
-                    req.session.save((err) => {
-                        if (err) {
-                            console.log(err);
-                        }
-                    });
-                    account.teams.push(link.teamID);
-                    account.save();
-                    res.json(sendPayload("Joined the team"));
+    let link = await Link.findOne({ urlID: req.params.urlID });
+    if (link.checkValidity()) {
+        //Create the user
+        let newUser = new User({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName });
+        //Create a user
+        User.register(newUser, req.body.password, async (err, account) => {
+            if (err) {
+                return res.json(sendError(err.message));
+            }
+            //Authenticate the user
+            passport.authenticate('local')(req, res, async function () {
+                req.session.save((err) => {
+                    if (err) {
+                        console.log(err);
+                    }
                 });
+                account.teams.push(link.teamID);
+                account.save();
+                res.json(sendPayload(await account.populate('team').execPopulate()));
+
             });
-        } else
-            res.json(sendError("That link has expired, sorry!"))
-    })
+        })
+    } else
+        res.json(sendError("That link has expired, sorry!"))
 }
 
 /**
@@ -81,7 +81,7 @@ export function getLink(req, res) {
         } else {
             console.log(link);
             if (!link)
-                res.send("Invalid Link");
+                res.send(sendError("Invalid Link"));
             else if (link.checkValidity()) {
                 //Add user to team
                 User.findById(req.user._id, (err, user) => {
@@ -142,26 +142,6 @@ export function postLink(req, res) {
     })
 }
 
-
-export function renderInvitePage(req, res) {
-    let teamID = req.params.id;
-    //TODO: Refactor this into a lambda 
-    Team.findById(teamID, (err, team) => {
-        if (!team)
-            res.send("Invalid Team ID");
-        else if (!team.owner.equals(req.user._id)) { //For some reason these are objects? 
-            console.log(team.owner.prototype);
-            console.log(req.user.prototype);
-            console.log(typeof team.owner);
-            console.log(typeof req.user._id);
-            res.send("You aren't allowed to invite users");
-
-        }
-        else
-            res.render('invite', { id: teamID })
-    });
-}
-
 /**
  * 
  * @param {Integer} time - The duration that the link should last in minutes
@@ -178,19 +158,19 @@ export function createLink(time, teamID) {
     return link;
 }
 
-export async function getDetails(req, res) { 
+export async function getDetails(req, res) {
     let urlID = req.params.urlID;
-    let link = await Link.findOne({urlID}).exec();
+    let link = await Link.findOne({ urlID }).exec();
     console.log(link);
     console.log(urlID)
-    if(!link) { 
+    if (!link) {
         res.json(sendError("Invalid Link"));
-    } else if( link.checkValidity() == false ) { 
+    } else if (link.checkValidity() == false) {
         res.json(sendError("Link Expired"));
-    } else { 
-        let team = await Team.findById( link.teamID )
+    } else {
+        let team = await Team.findById(link.teamID)
 
-        res.json(sendPayload({msg: "Valid Link", team: team}));
+        res.json(sendPayload(team));
     }
 }
 

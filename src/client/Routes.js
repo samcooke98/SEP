@@ -13,30 +13,34 @@ import InvitePage from "./containers/InvitePage.js";
 import ResetContainer from "./containers/ResetContainer.js";
 import PasswordResetContainer from "./containers/PasswordResetContainer.js";
 import BaseContainer from "./containers/BaseContainer.js";
+import CommentContainer from "./containers/CommentContainer.js";
 
 export const routes = [
+
     {
         path: "/",
+        exact: true,
         component: BaseContainer,
         routes: [
+            
             {
                 path: "/feed",
+                exact: true,
                 component: FeedView
             },
             {
                 path: '/login',
+                exact: true,
                 component: LoginContainer
             },
             {
-                path: '/test',
-                component: () => <div> Hello </div>
-            },
-            {
                 path: '/register',
+                exact: true,
                 component: RegistrationContainer
             },
             {
-                path: '/createinvite/:id',
+                path: '/manage',
+                exact: true,
                 component: TeamManagement
             },
             {
@@ -47,25 +51,20 @@ export const routes = [
                 component: ResetContainer
             },
             {
-                path: "/reset/confirm/:id",
+                path: "/reset/confirm",
                 component: PasswordResetContainer
+            },
+            {
+                path: "/:url/comments",
+                component: CommentContainer
+            },
+            { 
+                path: "/",
+                exact: true,
+                component: IndexPageContainer
             },
         ]
     },
-    // {
-    //     path: '/tacos',
-    //     component: Tacos,
-    //     routes: [
-    //         {
-    //             path: '/tacos/bus',
-    //             component: Bus
-    //         },
-    //         {
-    //             path: '/tacos/cart',
-    //             component: Cart
-    //         }
-    //     ]
-    // }
 ]
 
 // wrap <Route> and use this everywhere instead, then when
