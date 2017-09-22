@@ -19,22 +19,28 @@ export const routes = [
 
     {
         path: "/",
+        exact: true,
         component: BaseContainer,
         routes: [
+            
             {
                 path: "/feed",
+                exact: true,
                 component: FeedView
             },
             {
                 path: '/login',
+                exact: true,
                 component: LoginContainer
             },
             {
                 path: '/register',
+                exact: true,
                 component: RegistrationContainer
             },
             {
                 path: '/manage',
+                exact: true,
                 component: TeamManagement
             },
             {
@@ -51,6 +57,11 @@ export const routes = [
             {
                 path: "/:url/comments",
                 component: CommentContainer
+            },
+            { 
+                path: "/",
+                exact: true,
+                component: IndexPageContainer
             },
         ]
     },
