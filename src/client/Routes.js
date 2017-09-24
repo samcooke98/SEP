@@ -20,7 +20,7 @@ export const routes = [
 
     {
         path: "/",
-        exact: true,
+        // exact: true,
         component: BaseContainer,
         routes: [
             

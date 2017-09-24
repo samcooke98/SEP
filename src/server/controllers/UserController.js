@@ -88,7 +88,7 @@ export async function addNotification(notifyPayload, userID) {
     console.log("^^^");
     var user = await User.findById(userID);
     //TODO: Currently storing arbitary data - WE must validate the data at some point
-    
+
     //Check if the endpoint already exists 
     if (user.notifications.find((value) => {
         return (value.endpoint == notifyPayload.endpoint)
@@ -106,11 +106,24 @@ export async function addNotification(notifyPayload, userID) {
     }
 }
 
-export async function notify( userID, title, payload ) { 
+export async function removeNotification(endpointURL, userID) {
+    let user = await User.findById(userID);
 
+    for (let index in user.notifications) {
+        let notification = user.notifications[index]
+        if (notification.endpoint == endpointURL) {
+            user.notifications.splice(index, 1);
+            return user.save().exec().then( () => { 
+                return sendPayload("Successfully removed entry")
+                
+            })
+        }
+    }
+    return sendError("Couldn't find endpoint");
 }
 
-export async function getUsersInTeam( teamID ) { 
-    var result = await User.find({teams: teamID }).exec();
+export async function getUsersInTeam(teamID) {
+    var result = await User.find({ teams: teamID }).exec();
     return result;
 }
+

@@ -13,7 +13,6 @@ import { List, ListItem, ListDivider } from "react-toolbox";
 import Navigation from 'react-toolbox/lib/navigation';
 import Link from 'react-toolbox/lib/link';
 import IndexPageContainer from "./IndexPageContainer.js"
-<<<<<<< HEAD
 
 /**
  * Data to populate the navigation list with 
@@ -44,8 +43,6 @@ const NavigationList = [
     },
     link("Settings", "/settings")
 ]
-=======
->>>>>>> Fixing UI for landing page
 
 
 class BaseContainer extends React.Component {
@@ -67,13 +64,6 @@ class BaseContainer extends React.Component {
         }
     }
     render() {
-<<<<<<< HEAD
-=======
-        if (this.props.match.isExact) return <IndexPageContainer/>
-        console.log(this.props);
-        console.log(this.props.routes);
-        //Ideally, these would be all components, and this would have no control on the visuals
->>>>>>> Fixing UI for landing page
         return (
             <Layout>
                 <AppBar title='TeamShare' fixed flat />

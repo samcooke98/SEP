@@ -10,7 +10,7 @@ import { withProtection } from "./Protector.js";
 import Button from "react-toolbox/lib/button";
 import Input from "react-toolbox/lib/input";
 
-import {post } from "../utils/api"
+import { post, del } from "../utils/api"
 
 
 class SettingsContainer extends React.Component {
@@ -35,10 +35,19 @@ class SettingsContainer extends React.Component {
         })
     }
 
-    removePushNotifications = () => { 
-        removeWorkers(); 
+    removePushNotifications = () => {
+        // removeWorkers(); 
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            for (let registration of registrations) {
+                registration.pushManager.getSubscription().then((val) => {
+                    console.log(val.endpoint)
+                    del(`user/notify?endpoint=${encodeURIComponent(val.endpoint)}`)
+                });
+                registration.unregister()
+            }
+        })
         //TODO: We should tell the server that we removed a notification, but we'd have to get the subscription first 
-        this.setState({hasSetup: false})
+        this.setState({ hasSetup: false })
     }
 
     enablePushNotifications = () => {
@@ -48,16 +57,17 @@ class SettingsContainer extends React.Component {
             navigator.serviceWorker.register('./notification.js').then(
                 (registration) => {
                     return registration.pushManager.getSubscription().then((subscription) => {
+                        if (subscription) return subscription;
                         return registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array('BGEPmzJYZExIHNtzZg7k1srPMO0QLL7mg72W9WhgM4peX5U85-LvDGUorbKLmLXdylX1lsPiy2-gnfRV1pLwabI') })
                     }) // - private key
                 }).then((subscription) => {
                     console.log(subscription)
                     console.log(JSON.stringify(subscription))
-                    //Tell the server about our endpointt
+                    //Tell the server about our endpointt   
                     //For now, I'm not going through the Redux Store - In current scope, I don't see any other component\container needing to know if notifications are enabled or not. 
-                    post(`user/notify`, subscription).then( (response) => { 
+                    post(`user/notify`, subscription).then((response) => {
                         console.log(response);
-                        response.success ? this.setState({hasSetup: true}) : this.setState({error: response.payload}) 
+                        response.success ? this.setState({ hasSetup: true }) : this.setState({ error: response.payload })
                     })
                 })
         }
@@ -78,8 +88,8 @@ class SettingsContainer extends React.Component {
                     <Button onClick={this.removePushNotifications} label='Remove Notifications' primary raised />
                 }
                 {/* And if they don't support it, tell them as much */}
-                {!this.state.canHave && 
-                    <p> Oh dear, it looks like your browser doesn't support Push Notifications... </p> 
+                {!this.state.canHave &&
+                    <p> Oh dear, it looks like your browser doesn't support Push Notifications... </p>
                 }
             </div>
         )

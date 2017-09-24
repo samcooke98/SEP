@@ -20,3 +20,7 @@ self.onnotificationclick = function (e) {
     e.notification.close();
     return clients.openWindow(e.notification.data.url);
 }
+
+self.addEventListener('message', function(event){
+
+})
