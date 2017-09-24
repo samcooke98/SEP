@@ -74,8 +74,9 @@ app.use(passport.session());
 
 
 //Setup static files 
-app.use(express.static(path.join(__dirname, 'static')))
-
+app.use(express.static(path.join(__dirname, '../static')))
+console.log("BELOW")
+console.log(path.join(__dirname, '../static'))
 
 //Import API routes
 // import EgRouter from "./routes/post.eg.js";
@@ -84,9 +85,7 @@ app.use(express.static(path.join(__dirname, 'static')))
 import * as Routes from "./routes";
 
 for (var route in Routes) {
-    console.log(Routes[route]);
     app.use('/api', Routes[route]);
-
 }
 
 var userController = require('./controllers/UserController.js')
@@ -160,6 +159,8 @@ const generateHTML = (reactDOM, preloadedState, helmet) => {
     ${helmet.title.toString()}
     ${helmet.meta.toString()}
     ${helmet.link.toString()}
+    <link rel="manifest" href="/manifest.json">
+    
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <style>html, body{margin:0;padding:0;}</style>
