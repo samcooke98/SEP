@@ -28,8 +28,10 @@ export async function notifyTeam(teamID, userID, title, message, url) {
             continue;
         else {
             if (user.notifications && user.notifications.length != 0) {
+                console.log("here");
+                console.log(user.notifications)
                 //TODO: loop through
-                notifySimple(title, message, url, user.notification[0])
+                notifySimple(title, message, url, user.notifications[0])
             }
         }
     }
