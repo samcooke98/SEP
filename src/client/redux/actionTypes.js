@@ -15,3 +15,4 @@ export const DELETE_RESOURCE    = "DELETE_RESOURCE";
 export const JOIN_TEAM          = "JOIN_TEAM";
 
 export const CREATE_COMMENT     = "CREATE_COMMENT";
+export const GET_COMMENTS       = "GET_COMMENTS";

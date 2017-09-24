@@ -26,7 +26,6 @@ class FeedView extends React.Component {
     }
 
     handleChange = (value, name, isTeam) => {
-        console.log(value, name, isTeam);
         if (isTeam) {
             var state = Object.assign({}, this.state);
             state.teams[name].checked = value;
@@ -39,7 +38,6 @@ class FeedView extends React.Component {
 
     submit = (evt) => {
         for (var team of this.state.teams) {
-            console.log(team, '---------------------------------------------');
             if (team.checked)
                 this.props.createResource(this.state.url, this.state.title, this.state.description, team._id)
         }
@@ -54,7 +52,7 @@ class FeedView extends React.Component {
         let teams = this.props.user.teams.map((val) => this.props.teams[val]);
         //Create a property to hold if the team is checked or not
         teams = teams.map((val) => (val.checked = false, val))
-        //Insert it into state 
+        ////Insert it into state 
         this.setState({ teams: teams })
 
         //Get the resources for each team that the user belongs to

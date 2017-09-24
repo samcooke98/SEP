@@ -32,7 +32,6 @@ export async function post(endpoint, params) {
             return { success: false, msg: "Server returned unauthorised" }
         }
         return response.json()
-        // return response.json()
     })
 }
 

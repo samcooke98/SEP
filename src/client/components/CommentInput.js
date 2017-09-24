@@ -9,7 +9,7 @@ export default class CommentComponent extends React.Component {
     render() {
         return (
             <section>
-                <Input type='text' label='Comment' name='comment' value={this.props.comment} onChange={(val) => this.props.handleChange(val, "comment")} />
+                <Input type='text' label='Comment' name='comment' value={this.props.comments} onChange={(val) => this.props.handleChange(val, "comments")} />
             </section>
         )   
     }

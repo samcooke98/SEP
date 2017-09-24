@@ -54,8 +54,14 @@ export const resetPassConfirm = createAction(actionTypes.RESET_PASS_CONFIRM, asy
 })
 
 export const createComment = createAction(actionTypes.CREATE_COMMENT, async (userId, comment, teamId) => {
-    return post(`${url}/comments`, { userId, comment, teamId}).then(
+    return post(`${teamId}/comments`, { userId, comment, teamId}).then(
         (payload) => normalize( normalizr.normalizeResource, payload) 
+    )
+})
+
+export const getComments = createAction(actionTypes.GET_COMMENTS, async (teamId) => {
+    return get(`resource?team=${teamId}`).then( 
+        (payload) => normalize( normalizr.normalizeResources, payload) 
     )
 })
 
