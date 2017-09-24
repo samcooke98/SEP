@@ -31,6 +31,7 @@ export async function post(endpoint, params) {
         if (response.status == 401) {
             return { success: false, msg: "Server returned unauthorised" }
         }
+        console.log('success', endpoint);
         return response.json()
     })
 }

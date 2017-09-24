@@ -5,12 +5,10 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { comment } from "../redux/actions.js";
 import CommentInput from "../components/CommentInput.js";
-import lodash from "lodash";
-import { getUserDetails, createComment, getComments } from "../redux/actions.js";
+import { getUserDetails, createComment } from "../redux/actions.js";
 
-
+import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
 import Avatar from 'react-toolbox/lib/avatar'
 import Input from 'react-toolbox/lib/input';
 import Button from "react-toolbox/lib/button";
@@ -19,10 +17,9 @@ class CommentContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: '',
+            resourceId: this.props.match.params.resourceId,
+            userId: '',
             comments: '',
-            teams: []
-
         }
     }
 
@@ -31,13 +28,10 @@ class CommentContainer extends React.Component {
         let teams = this.props.user.teams.map((val) => this.props.teams[val]);
         //Create a property to hold if the team is checked or not
         teams = teams.map((val) => (val.checked = false, val))
-        
+
         teams.forEach((val) => 
-            this.props.createComment(this.props.user._id, this.state.comments, val._id),
-            teams.forEach((val) => this.props.getComments(val._id))
+            this.props.createComment(this.state.resourceId, this.props.user._id, this.state.comments),
         );
-        console.log(this.props.commentsIDs);
-               
 
     };
 
@@ -46,17 +40,66 @@ class CommentContainer extends React.Component {
    
     }
 
+    componentDidMount() {
+        //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
+        let teams = this.props.user.teams.map((val) => this.props.teams[val]);
+
+        //Create a property to hold if the team is checked or not
+        teams = teams.map((val) => (val.checked = false, val))
+        
+        ////Insert it into state 
+        this.setState({ teams: teams })
+
+        
+        console.log(this.props.resources);
+    }
+
+    // this.props.resourceIDs.map((id) => {
+    //     let resource = this.props.resources[id]
+    //     console.log(resource._id);
+    //     return <LinkCard
+    //         title={resource.title || ''}
+    //         subtitle={resource.url}
+    //         text={resource.description}
+    //         url={resource.url}
+    //         resourceId={resource._id}
+    //         commentFunc={this.navigateWithRouter.bind(this, "resource/" + resource._id + "/comments")}
+    //         removeFunc={this.remove.bind(this, resource._id)}
+    //     />
+    // })
+
+    
+
     render() {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                     <h1>Comments</h1>
+                    <List selectable ripple>
+                        <ListItem
+                        avatar='https://dl.dropboxusercontent.com/u/2247264/assets/m.jpg'
+                        caption='Dr. Manhattan'
+                        legend="Jonathan 'Jon' Osterman"
+                        rightIcon='star'
+                        />
+                        <ListItem
+                        avatar='https://dl.dropboxusercontent.com/u/2247264/assets/o.jpg'
+                        caption='Ozymandias'
+                        legend='Adrian Veidt'
+                        rightIcon='star'
+                        />
+                        <ListItem
+                        avatar='https://dl.dropboxusercontent.com/u/2247264/assets/r.jpg'
+                        caption='Rorschach'
+                        legend='Walter Joseph Kovacs'
+                        rightIcon='star'
+                        />
+                    </List>
                     <CommentInput
                         comment={this.state.comment}
                         handleChange={this.handleChange}
                     />
                     <Button label='Comment' raised primary onMouseUp={this.submitForm}/>
-                    <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
-                    </div>
+                    
             </div>
         )
     }
@@ -65,19 +108,21 @@ class CommentContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     var user = state.data.users[state.misc.userID]; //Gets the User Object
+    console.log(state.data.comments);
     return {
         user: user,
         teams: state.data.teams,
         comments: state.data.comments || {},
-        commentsIDs: state.ui.comments || []
+        resource: state.data.resources || {},
     }
 }
+
 //Typically would implement actions
 const mapDispatchToProps = (dispatch) => {
     return {
         getUser: () => dispatch(getUserDetails()),
-        createComment: (userId, comment, teamId) => dispatch(createComment(userId, comment, teamId)),
-        getComments: (teamId) => dispatch(getComments(teamId)),
+        createComment: (resourceId, userId, comment) => dispatch(createComment(resourceId, userId, comment)),
+        getComments: (resourceId) => dispatch(getComments(resourceId)),  
     }
 }
 

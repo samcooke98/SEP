@@ -49,12 +49,12 @@ var functionalReducers = {
             },
             ui: {
                 ...state.ui,
-                comments: [ ...(state.ui && state.ui.comments || []), action.payload.payload.result] 
+                comments: [ ...(state.ui && state.ui.comments || []), action.payload.payload.result] ,
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             }
         }),
         onFail: (state, action) => ({
-
+            
         })
     },
     [actionTypes.GET_COMMENTS]: {

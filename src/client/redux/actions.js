@@ -53,14 +53,14 @@ export const resetPassConfirm = createAction(actionTypes.RESET_PASS_CONFIRM, asy
     return post(`reset/confirmAction`, { RID, password })
 })
 
-export const createComment = createAction(actionTypes.CREATE_COMMENT, async (userId, comment, teamId) => {
-    return post(`${teamId}/comments`, { userId, comment, teamId}).then(
-        (payload) => normalize( normalizr.normalizeResource, payload) 
+export const createComment = createAction(actionTypes.CREATE_COMMENT, async (resourceId, userId, comment) => {
+    return post(`${resourceId}/comments`, {resourceId, userId, comment}).then(
+        (payload) => normalize( normalizr.normalizeComment, payload) 
     )
 })
 
-export const getComments = createAction(actionTypes.GET_COMMENTS, async (teamId) => {
-    return get(`resource?team=${teamId}`).then( 
+export const getComments = createAction(actionTypes.GET_COMMENTS, async (resourceId) => {
+    return get(`resource?comment=${resourceId}`).then( 
         (payload) => normalize( normalizr.normalizeResources, payload) 
     )
 })
@@ -69,23 +69,8 @@ export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (u
     return post(`resource`, { url, title, description, team: teamID }).then(
 
         (payload) => normalize( normalizr.normalizeResource, payload) 
-        //This helper function replaces all the code below!
-        // {
-        //     if (payload.success)
-        //         return {
-        //             : payload.success,
-        //             payload: normalizr.normalizeResource(payload.payload)
-        //         }
-        //     else
-        //         return {
-        //             success: payload.success,
-        //             payload: payload.payload
-        //         }
-        // }
     )
 })
-
-
 
 export const getResources = createAction(actionTypes.GET_RESOURCE, async (teamID) => {
     return get(`resource?team=${teamID}`).then( 

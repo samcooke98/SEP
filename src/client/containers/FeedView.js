@@ -5,13 +5,11 @@ import React from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getUserDetails, createResource, getResources, deleteResource } from "../redux/actions.js";
-
 import { Button, IconButton } from 'react-toolbox/lib/button';
 import ResourceForm from "../components/ResourceForm.js";
 import LinkCard from "../components/LinkCard.js";
 import LoggedInRedirector from "./LoggedInRedirector"
 import { withProtection } from "./Protector.js";
-
 
 class FeedView extends React.Component {
     constructor(props) {
@@ -21,7 +19,6 @@ class FeedView extends React.Component {
             title: '',
             description: '',
             teams: []
-
         }
     }
 
@@ -50,13 +47,32 @@ class FeedView extends React.Component {
     componentDidMount() {
         //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
         let teams = this.props.user.teams.map((val) => this.props.teams[val]);
+
         //Create a property to hold if the team is checked or not
         teams = teams.map((val) => (val.checked = false, val))
+        
         ////Insert it into state 
         this.setState({ teams: teams })
 
         //Get the resources for each team that the user belongs to
-        teams.forEach((val) => this.props.getResources(val._id))
+        teams.map((team) =>{
+            this.props.getResources(team._id)
+        })
+
+    }
+
+    navigateWithRouter = (to, event) => {
+        //We will use React-Router to route, instead of making a request
+        //This pretty much comes from the react-router code
+        console.log(arguments);
+        
+        if (
+            !event.defaultPrevented && // onClick prevented default
+            event.button === 0  // ignore everything but left clicks
+        ) {
+            event.preventDefault();
+            this.props.history.push(to);
+        }
     }
 
     render() {
@@ -73,16 +89,17 @@ class FeedView extends React.Component {
                 />
                 <Button icon='add' floating onMouseUp={this.submit} />
                 <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
-
                     { /*TODO: Show only teams that user belongs to, Sort the order */
                         this.props.resourceIDs.map((id) => {
                             let resource = this.props.resources[id]
+                            console.log(resource._id);
                             return <LinkCard
                                 title={resource.title || ''}
                                 subtitle={resource.url}
                                 text={resource.description}
                                 url={resource.url}
-                                key={resource._id}
+                                resourceId={resource._id}
+                                commentFunc={this.navigateWithRouter.bind(this, "resource/" + resource._id + "/comments")}
                                 removeFunc={this.remove.bind(this, resource._id)}
                             />
                         })
@@ -91,8 +108,9 @@ class FeedView extends React.Component {
             </div>
         )
     }
-
 }
+
+
 
 
 const mapStateToProps = (state) => {
@@ -101,8 +119,7 @@ const mapStateToProps = (state) => {
         user: user,
         teams: state.data.teams,
         resources: state.data.resources || {},
-        resourceIDs: state.ui.resources || []
-        // resources: (state.data || {}).resources
+        resourceIDs: state.ui.resource || []
     }
 }
 //Typically would implement actions

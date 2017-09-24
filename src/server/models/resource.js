@@ -6,7 +6,8 @@ let Resource = new mongoose.Schema({
     description: { type: String }, 
     title: {type: String},
     owner: {type: mongoose.Schema.ObjectId, required: true, ref: "Account" }, 
-    team: { type: mongoose.Schema.ObjectId, required: true, ref: "Team"}
+    team: { type: mongoose.Schema.ObjectId, required: true, ref: "Team"},
+    comments: [{type: ObjectId, required: true, ref:'Comment' }]
 })
 
 
