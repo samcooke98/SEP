@@ -38,7 +38,11 @@ const NavigationList = [
         caption: "Team Management",
         to: "/manage",
         loginOnly: true
-    }
+    },
+    {
+        divider: true,
+    },
+    link("Settings", "/settings")
 ]
 =======
 >>>>>>> Fixing UI for landing page
