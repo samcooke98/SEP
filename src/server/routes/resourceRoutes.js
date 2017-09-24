@@ -12,12 +12,15 @@ router.get("/testresource", (req, res) => {
     res.send("It's alive!");
 })
 
-router.post("/resource", isLoggedIn, canDo, async (req, res) => {
+router.post("/resource", isLoggedIn, canDo, async (req, res, next) => {
+    console.log("POST resource route");
     try {
         // If we get to here, we try to insert the Resource (failure reasons: url already exists)
         var result = await ResourceController.createResource(req.body.url, req.body.title, req.body.description, req.user._id, req.body.team)
+        TeamController.notifyTeam(req.body.team, req.user._id, `New Link on TeamShare`, `${req.user.firstName} added a new link to your team. Click here to see it!`, req.body.url)
         res.json(result);
     } catch (err) {
+        console.log(err)
         next(err); //Apparently error-handling will handle it? 
     }
 })
@@ -40,7 +43,7 @@ router.get("/resource", isLoggedIn, async (req, res) => {
     }
 })
 
-router.delete("/resource/:id", isLoggedIn, async (req, res) => { 
+router.delete("/resource/:id", isLoggedIn, async (req, res) => {
     let resourceID = req.params.id;
     var result = await ResourceController.remove(resourceID, req.user._id);
     res.json(result);

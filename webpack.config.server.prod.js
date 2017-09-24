@@ -8,7 +8,9 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
 	entry: [
-        './src/server/index.js',
+		'babel-polyfill',
+
+		'./src/server/index.js',
 	],
 	output: {
 		filename: 'server.js',
@@ -17,9 +19,9 @@ module.exports = {
 	},
 	target: 'node',
 	externals: [nodeExternals(), {
-        "./static/manifest.json": JSON.stringify(require(path.resolve(__dirname, "build/static/manifest.json")))
-    }],
-	node:{ 
+		"./static/manifest.json": JSON.stringify(require(path.resolve(__dirname, "build/static/manifest.json")))
+	}],
+	node: {
 		__dirname: false
 	},
 	module: {
@@ -34,14 +36,12 @@ module.exports = {
 		]
 	},
 	plugins: [
-        new webpack.DefinePlugin({
-            'process.env': {
-                'NODE_ENV': JSON.stringify('production')
-            }
-        }),
-        // new webpack.IgnorePlugin(/manifest.json/)	
-    ],
-    // externals: [
-    //     "./static/manifest.json"
-    // ]
+		new webpack.DefinePlugin({
+			'process.env.NODE_ENV': JSON.stringify('production')
+		}),
+		// new webpack.IgnorePlugin(/manifest.json/)	
+	],
+	// externals: [
+	//     "./static/manifest.json"
+	// ]
 };

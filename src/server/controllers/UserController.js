@@ -1,6 +1,7 @@
 import User from "../models/account.js";
 import Team from "../models/team.js"
 import { sendError, sendPayload } from "../utils/apiResponse.js";
+import { notifySimple } from "../utils/pushNotify.js";
 
 import passport from "passport";
 import moment from "moment";
@@ -26,7 +27,7 @@ export function registerUser(req, res) {
             //TODO: This should probably be in the team Controller
 
             var team = (new Team({ owner: account._id, teamName: req.body.teamName, description: req.body.description, category: req.body.category, status: 'Invalid', creationDate: new moment().utc() }))
-            team.save( async function (err, team) {
+            team.save(async function (err, team) {
                 if (err) {
                     console.log(err);
                     console.log("^^^ DB ERROR ^^^");
@@ -76,3 +77,53 @@ export async function getDetails(id) {
     var user = await User.findById(id);
     return user.populate('teams').execPopulate()
 }
+
+/**
+ * 
+ * @param {Object({endpoint, keys: { p256dh, auth }})} notifyPayload 
+ * @param {} userID - ID of the User to add
+ */
+export async function addNotification(notifyPayload, userID) {
+    console.log(notifyPayload);
+    console.log("^^^");
+    var user = await User.findById(userID);
+    //TODO: Currently storing arbitary data - WE must validate the data at some point
+
+    //Check if the endpoint already exists 
+    if (user.notifications.find((value) => {
+        return (value.endpoint == notifyPayload.endpoint)
+    })) {
+        console.log("Already exists");
+        return sendError("Notification already exists");
+    } else {
+
+        //Save 
+        user.notifications.push(notifyPayload);
+        return user.save().then(() => sendPayload("Added Notification"), (err) => {
+            console.log(err)
+            return sendError(err)
+        })
+    }
+}
+
+export async function removeNotification(endpointURL, userID) {
+    let user = await User.findById(userID);
+
+    for (let index in user.notifications) {
+        let notification = user.notifications[index]
+        if (notification.endpoint == endpointURL) {
+            user.notifications.splice(index, 1);
+            return user.save().exec().then( () => { 
+                return sendPayload("Successfully removed entry")
+                
+            })
+        }
+    }
+    return sendError("Couldn't find endpoint");
+}
+
+export async function getUsersInTeam(teamID) {
+    var result = await User.find({ teams: teamID }).exec();
+    return result;
+}
+

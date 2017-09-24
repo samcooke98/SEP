@@ -14,12 +14,13 @@ import ResetContainer from "./containers/ResetContainer.js";
 import PasswordResetContainer from "./containers/PasswordResetContainer.js";
 import BaseContainer from "./containers/BaseContainer.js";
 import CommentContainer from "./containers/CommentContainer.js";
+import SettingsContainer from "./containers/SettingsContainer.js";
 
 export const routes = [
 
     {
         path: "/",
-        exact: true,
+        // exact: true,
         component: BaseContainer,
         routes: [
             
@@ -57,6 +58,10 @@ export const routes = [
             {
                 path: "/:url/comments",
                 component: CommentContainer
+            },
+            {
+                path: "/settings",
+                component: SettingsContainer
             },
             { 
                 path: "/",

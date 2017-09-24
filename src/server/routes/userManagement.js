@@ -42,6 +42,21 @@ router.get("/user", isLoggedIn, async (req, res) => {
     res.json(sendPayload(data));
 })
 
+router.post("/user/notify", isLoggedIn, async (req, res) => {
+    console.log(req.body);
+    var data = await UserController.addNotification(req.body, req.user._id);
+    console.log(data);
+    res.json(sendPayload(data));
+})
+
+router.delete("/user/notify", isLoggedIn, async (req, res) => {
+    let endpoint = req.query.endpoint;
+    console.log("Removing Endpoint " + endpoint + "")
+    var data = await UserController.removeNotification(endpoint, req.user._id);
+    res.json(data);
+
+})
+
 
 
 module.exports = router;
