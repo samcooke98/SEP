@@ -18,7 +18,7 @@ class FeedView extends React.Component {
             url: '',
             title: '',
             description: '',
-            teams: []
+            teams: [],
         }
     }
 
@@ -92,7 +92,6 @@ class FeedView extends React.Component {
                     { /*TODO: Show only teams that user belongs to, Sort the order */
                         this.props.resourceIDs.map((id) => {
                             let resource = this.props.resources[id]
-                            console.log(resource._id);
                             return <LinkCard
                                 title={resource.title || ''}
                                 subtitle={resource.url}

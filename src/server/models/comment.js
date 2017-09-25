@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var passportLocalMongoose = require('passport-local-mongoose');
 
 var Comment = new Schema({
-    resourceId: { type: ObjectId, required: true },
+    resourceId: { type: ObjectId, required: true }, //Probably redundant ? 
     userId: { type: ObjectId, required: true },
     comment: String,
 });

@@ -11,6 +11,7 @@ const initialState = {
         users: {},
         teams: {},
         resources: {},
+        comments: {}
     },
     ui: {}, //UI Data is placed here -> Like error messages for example
     misc: { // Anything that doesn't fit above can go here, (or in a new node if you want ) 

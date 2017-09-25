@@ -39,35 +39,6 @@ class CommentContainer extends React.Component {
         this.setState({ [name]: value })
    
     }
-
-    componentDidMount() {
-        //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
-        let teams = this.props.user.teams.map((val) => this.props.teams[val]);
-
-        //Create a property to hold if the team is checked or not
-        teams = teams.map((val) => (val.checked = false, val))
-        
-        ////Insert it into state 
-        this.setState({ teams: teams })
-
-        
-        console.log(this.props.resources);
-    }
-
-    // this.props.resourceIDs.map((id) => {
-    //     let resource = this.props.resources[id]
-    //     console.log(resource._id);
-    //     return <LinkCard
-    //         title={resource.title || ''}
-    //         subtitle={resource.url}
-    //         text={resource.description}
-    //         url={resource.url}
-    //         resourceId={resource._id}
-    //         commentFunc={this.navigateWithRouter.bind(this, "resource/" + resource._id + "/comments")}
-    //         removeFunc={this.remove.bind(this, resource._id)}
-    //     />
-    // })
-
     
 
     render() {
@@ -108,7 +79,6 @@ class CommentContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     var user = state.data.users[state.misc.userID]; //Gets the User Object
-    console.log(state.data.comments);
     return {
         user: user,
         teams: state.data.teams,

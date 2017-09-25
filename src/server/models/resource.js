@@ -7,8 +7,7 @@ let Resource = new mongoose.Schema({
     title: {type: String},
     owner: {type: mongoose.Schema.ObjectId, required: true, ref: "Account" }, 
     team: { type: mongoose.Schema.ObjectId, required: true, ref: "Team"},
-    comments: [{type: ObjectId, required: true, ref:'Comment' }]
+    comments: [{type: mongoose.Schema.ObjectId, required: true, ref:'Comment' }]
 })
-
 
 export default mongoose.model("Resource", Resource);

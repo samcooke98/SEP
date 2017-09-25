@@ -61,7 +61,7 @@ export const createComment = createAction(actionTypes.CREATE_COMMENT, async (res
 
 export const getComments = createAction(actionTypes.GET_COMMENTS, async (resourceId) => {
     return get(`resource?comment=${resourceId}`).then( 
-        (payload) => normalize( normalizr.normalizeResources, payload) 
+        (payload) => normalize( normalizr.normalizeComment, payload) 
     )
 })
 
