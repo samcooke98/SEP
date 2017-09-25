@@ -5,10 +5,11 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const webpack = require('webpack');
 
 module.exports = {
-	entry: ['babel-polyfill', './src/client/index.js', 'webpack-hot-middleware/client'],
+	entry: ['babel-polyfill',  'webpack-hot-middleware/client', './src/client/index.js',],
 	output: {
 		filename: 'client.bundle.js',
-		path: path.resolve(__dirname, 'build/static/')
+		path: path.resolve(__dirname, 'build/static/'),
+		publicPath: "/"
 	},
 	devtool: 'source-map',
 	target: 'web',
@@ -24,7 +25,7 @@ module.exports = {
 			{
 				test: /\.css$/,
 				use: [
-					"style-loader",
+					"isomorphic-style-loader",
 					{
 						loader: "css-loader",
 						options: {
@@ -51,7 +52,7 @@ module.exports = {
 
 	},
 	plugins: [
-		new CleanWebpackPlugin(path.resolve(__dirname, "build/static/")),
+		// new CleanWebpackPlugin(path.resolve(__dirname, "build/static/")),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoEmitOnErrorsPlugin()
 	]
