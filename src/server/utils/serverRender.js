@@ -4,24 +4,56 @@ import { matchPath } from 'react-router-dom'
 
 export default function serverRender(req, res, next) {
     const matches = recursive(req.url, clientRoutes);
-    console.log(matches);
-    
-    next();
+    if (matches) {
+        res.send(renderApp(req.url));
+    } else {
+        next();
+    }
 }
 
-const recursive = ( url, routes) => { 
-    return routes.some((route) => { 
-        const match = matchPath(url, route); 
-        if(route.routes && match) { 
+const recursive = (url, routes) => {
+    return routes.some((route) => {
+        const match = matchPath(url, route);
+        if (route.routes && match) {
             return recursive(url, route.routes);
-        } else { 
-            return match; 
+        } else {
+            return match;
         }
     })
 }
+import React from "react";
+import { StaticRouter } from "react-router-dom";
+import ReactDOMServer from "react-dom/server";
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import reducer from '../../client/redux/reducer.js'
+import { Helmet } from "react-helmet";
+
+const renderApp = (location) => {
+    const store = createStore(reducer);
+
+    const preloadedState = store.getState();
+
+    const context = {};
+
+    var App = require('../../client/App.js').default;
+
+    //TODO: We also want to check if the router matches, cause if it doesn't we should return 404
+
+    let html = ReactDOMServer.renderToString(
+        <StaticRouter location={location} context={context}>
+            <Provider store={store}>
+                <App/>
+            </Provider>
+        </StaticRouter>
+    )
+    const helmet = Helmet.renderStatic();
+    return (generateHTML(html, preloadedState, helmet))
+
+}
 
 
-
+const manifest = require('./static/manifest.json');
 
 /**
  * 

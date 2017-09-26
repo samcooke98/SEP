@@ -93,6 +93,9 @@ var functionalReducers = {
             ui: {...state.ui, resources: state.ui.resources.filter( (val) => val  != action.meta.id )  } //Remove the id from the resources array
         }), //Remove all instances of the id 
         onFail:    (state,action) => ({})
+    },
+    ["Hello"]: {
+        onSuccess: (state, action) => ({hello: "hello"})
     }
 
 

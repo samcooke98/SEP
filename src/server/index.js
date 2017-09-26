@@ -17,76 +17,51 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 const config = require('../../webpack/client.dev.js')
 import webpack from 'webpack';
 
-//React SSR Stuff
-import { matchPath } from 'react-router-dom'
 
 //Initialisation 
 const app = express();
 const compiler = webpack(config);
 
-/**  Serve the webpack bundle to the client */
-app.use(webpackDevMiddleware(compiler, {
-    noInfo: true, publicPath: config.output.publicPath
-}));
-app.use(webpackHotMiddleware(compiler));
+const isProd = (process.env.NODE_ENV == "production")
+
+if (isProd) {
+
+    /**  Serve the webpack bundle to the client */
+    app.use(webpackDevMiddleware(compiler, {
+        noInfo: true, publicPath: config.output.publicPath
+    }));
+    app.use(webpackHotMiddleware(compiler));
+}
+
+if( !isProd) { 
+    app.static( "./static/" ) 
+}
+
 //https://github.com/webpack/webpack-dev-middleware#server-side-rendering to investigate 
-
-
+import App from "./app.js"
 /** API Routes, and the such */
-app.use((req, res, next) => {
-    require('./app.js')(req, res, next);
+app.use(function main(req, res, next) {
+    return App(req, res, next);
 })
+let currentApp = App;
 
-/** Watch for Changes in the Server files */
-const watcher = chokidar.watch('./src/server');
-
-//THIS doesn't work because of Webpack bundling... 
-watcher.on('ready', function () {
-    watcher.on('all', function () {
-        console.log("Clearing /server/ module cache from server");
-        console.log(require.cache);
-        Object.keys(require.cache).forEach(function (id) {
-            //We can't reload any Mongo Models (currently)
-            //https://stackoverflow.com/questions/19643126/how-do-you-remove-a-model-from-mongoose
-            if (/[\/\\]server[\/\\]/.test(id)) {
-                if (/[\/\\]models[\/\\]/.test(id)) {
-                    // console.log("Skipping reloading model")
-                    // console.log(id);
-                } else {
-                    console.log(require.cache[id]);
-                    delete require.cache[id];
+if (module.hot) {
+    console.log("HMR Enabled");
+    module.hot.accept('./app.js', function () {
+        for (let layer of app._router.stack) {
+            if (layer.name == "main") {
+                const newApp = require("./app.js").default;
+                //.default becuz we are using the es6 modules. 
+                //Overwrite the layer function
+                layer.handle = function main(req, res, next) {
+                    return newApp(req, res, next);
                 }
+                console.log("HMR: Updated");
             }
-        });
-    });
-});
-
-
-//Server Rendering 
-// import {routes as clientRoutes} from "../client/Routes.js"
-
-// app.use((req, res, next) => {
-//     //Imitate Switch with 'some'
-//     //Note: This currently doesn't support nested routes 
-//     clientRoutes.some((route) => {
-//         if(route.routes){ 
-//             //Recursive
-//         }
-//         const match = matchPath(req.url, route);
-//         console.log(route);
-//         console.log("Match ^^")
-//         console.log(req.url);
-//         if (match) {
-//             res.send("Found match");
-//             console.log(route);
-//             return;
-//         }
-//     })
-//     next();
-// })
-
-
-
+        }
+    })
+    module.hot.decline("./index.js");
+}
 
 const server = http.createServer(app)
 server.listen(process.env.PORT || 3000, 'localhost', (err) => {
@@ -94,7 +69,7 @@ server.listen(process.env.PORT || 3000, 'localhost', (err) => {
         throw err;
 
     const addr = server.address();
-
+    console.log("Server started");
     console.log("Listening on http://%s:%d", addr.address, addr.port);
 });
 

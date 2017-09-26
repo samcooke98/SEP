@@ -99,7 +99,7 @@
 //         let teamObj = {};
 //         let userObj = {};
 //         for (var team of userDetails.teams) {
-//             teamObj[team._id] = team
+//             teayarbnmObj[team._id] = team
 //         }
 //         // Get the user (This looks ugly af sorry, but basically it is the result of a login operation)
 //         store.dispatch({

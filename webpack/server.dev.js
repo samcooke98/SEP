@@ -8,7 +8,9 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 module.exports = {
 	entry: [
 		'babel-polyfill',
+		'webpack/hot/poll?1000',
 		'./src/server/index.js',
+
 	],
 	output: {
 		filename: 'server.js',
@@ -19,17 +21,16 @@ module.exports = {
 	externals: [nodeExternals({
 		whitelist: [
 			'webpack/hot/poll?1000',
-			/^react-toolbox/, //I find these work better
+			/^react-toolbox/, //Regex actually works, strings didn't seem to be 
 			/^react-css-themr/,
 			/\.(?!(?:jsx?|json|css|scss)$).{1,5}$/i,
 		]
-	})],
+	}), "./src/server/app.js"],
 	node: {
 		__dirname: false
 	},
-	// watch: true,
+	watch: true,
 	devtool: "inline-source-map",
-
 	module: {
 		rules: [
 			{
@@ -66,10 +67,10 @@ module.exports = {
 	},
 	plugins: [
 		new StartServerPlugin('server.js'),
-		// new webpack.HotModuleReplacementPlugin(),
-		// new webpack.NamedModulesPlugin(),
-		// new webpack.NoEmitOnErrorsPlugin(),
-		new CleanWebpackPlugin(path.resolve(__dirname, "build")),
+		new webpack.HotModuleReplacementPlugin(),
+		new webpack.NamedModulesPlugin(),
+		new webpack.NoEmitOnErrorsPlugin(),
+		// new CleanWebpackPlugin(path.resolve(__dirname, "build")),
 
 	]
 };

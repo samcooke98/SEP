@@ -10,8 +10,8 @@ module.exports = {
 	],
 	output: {
 		filename: 'client-[chunkHash].js',
-		path: path.resolve(__dirname, 'build/static'),
-		publicPath: path.resolve(__dirname, "build/static")
+		path: path.resolve(__dirname, '../build/static'),
+		publicPath: path.resolve(__dirname, "../build/static")
 	},
 	target: 'web',
 	module: {

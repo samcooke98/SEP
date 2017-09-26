@@ -83,10 +83,10 @@
     "test:bdd": "cucumber-js",
     "start:test": "npm run dev",
     "test": "npm run test:bdd",
-    "dev": "webpack --config ./webpack/webpack.config.server.js",
+    "dev": "webpack --config ./webpack/server.dev.js",
     "build": "npm run build:cli && npm run build:srv",
-    "build:srv": "webpack --config ./webpack/webpack.config.server.prod.js",
-    "build:cli": "webpack --config ./webpack/webpack.config.client.prod.js",
+    "build:srv": "webpack --config ./webpack/server.prod.js",
+    "build:cli": "webpack --config ./webpack/client.prod.js",
     "start": "node ./build/server.js"
   },
   "author": "Samuel Cooke <hello@samcooke.com.au>",

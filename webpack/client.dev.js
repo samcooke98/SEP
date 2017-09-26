@@ -8,7 +8,7 @@ module.exports = {
 	entry: ['babel-polyfill',  'webpack-hot-middleware/client', './src/client/index.js',],
 	output: {
 		filename: 'client.bundle.js',
-		path: path.resolve(__dirname, 'build/static/'),
+		path: path.resolve(__dirname, '../build/static/'),
 		publicPath: "/"
 	},
 	devtool: 'source-map',
@@ -25,7 +25,7 @@ module.exports = {
 			{
 				test: /\.css$/,
 				use: [
-					"isomorphic-style-loader",
+					"style-loader",
 					{
 						loader: "css-loader",
 						options: {

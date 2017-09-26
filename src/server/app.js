@@ -14,12 +14,12 @@ for (var route in Routes) {
 //app.use("/api", resourceRoutes);
 
 //Handle React Stuff 
-app.use((req, res, next) => {
+app.use( (req, res, next) => {
     return serverRenderer(req, res, next);
 })
 
 
+app.get("/hello", (req,res) => res.send("Testing reloading") ) 
 
-
-// export default app;
-module.exports = app;  
+export default app;
+// module.exports = app;  
