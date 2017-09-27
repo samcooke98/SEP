@@ -2,7 +2,9 @@
 require('es6-promise').polyfill();
 require('fetch-everywhere');
 
-const API_URL = "http://localhost:3000/api/"
+// const API_URL = "http://localhost:3000/api/"
+// 
+const API_URL ="/api/"
 
 const formEncode = (params) => Object.keys(params).map((key) => {
     return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
