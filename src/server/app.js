@@ -20,9 +20,10 @@ app.use( (req, res, next) => {
     return serverRenderer(req, res, next);
 })
 
+//Send Bundle
 app.use(express.static(path.join(__dirname, 'static')))
-
-app.get("/hello", (req,res) => res.send("Testing reloading") ) 
+//Send Static from the Build directory 
+app.use(express.static(path.join(__dirname, "../static")))
 
 export default app;
 // module.exports = app;  
