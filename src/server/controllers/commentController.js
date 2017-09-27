@@ -1,8 +1,8 @@
 import Comment from "../models/comment.js";
 import { sendError, sendPayload } from "../utils/apiResponse.js";
 
-export async function createComment(resourceId, userId, comment) {
-    var newComment = new Comment({ resourceId: resourceId, userId: userId, comment: string});
+export async function createComment(resource, user, comment) {
+    var newComment = new Comment({ resourceId: resource, userId: user, comment});
     console.log('newComment');
      //You should probably also store on the resource ID 
     try {

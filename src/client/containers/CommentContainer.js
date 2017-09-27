@@ -91,8 +91,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         getUser: () => dispatch(getUserDetails()),
-        createComment: (resourceId, userId, comment) => dispatch(createComment(resourceId, userId, comment)),
-        getComments: (resourceId) => dispatch(getComments(resourceId)),  
+        createComment: (resourceId, userId, comments) => dispatch(createComment(resourceId, userId, comments)),
+        // getComments: (resourceId) => dispatch(getComments(resourceId)),  
     }
 }
 

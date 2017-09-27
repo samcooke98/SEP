@@ -1,11 +1,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-const { ObjectId} = Schema; 
 var passportLocalMongoose = require('passport-local-mongoose');
 
 var Comment = new Schema({
-    resourceId: { type: ObjectId, required: true }, //Probably redundant ? 
-    userId: { type: ObjectId, required: true },
+    resourceId: [{type: Schema.ObjectId, ref: 'resourceId', required: true}],
+    userId: [{ type: Schema.ObjectId, ref: 'userId', required: true }],
     comment: String,
 });
 
