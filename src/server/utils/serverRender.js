@@ -60,10 +60,11 @@ const renderApp = (location) => {
     return (generateHTML(html, preloadedState, helmet))
 
 }
-
-// if (process.env.NODE_ENV == "production") {
-    const manifest = require('./static/manifest.json');
-// }
+let manifest; 
+//This gets the name of the client bundle. TODO: In the future, we should also get the vendor bundle. s
+if (process.env.NODE_ENV == "production") {
+    manifest = __non_webpack_require__ ('./static/build-manifest.json');
+}
 
 /**
  * 

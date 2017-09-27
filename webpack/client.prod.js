@@ -63,7 +63,7 @@ module.exports = {
 				'NODE_ENV': JSON.stringify('production')
 			}
 		}),
-		new ManifestPlugin(),
+		new ManifestPlugin({fileName: "build-manifest.json"}),
 		new UglifyJSPlugin(),
 		new webpack.optimize.UglifyJsPlugin(), //minify everything
 		new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks 
@@ -71,3 +71,6 @@ module.exports = {
 
 	]
 };
+
+//We can improve load times by doing something like this: https://webpack.js.org/plugins/dll-plugin/ 
+//https://github.com/gajus/react-css-modules/issues/48 -> Investigate ? 

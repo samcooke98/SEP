@@ -26,7 +26,7 @@ module.exports = {
 
 		]
 	}), {
-		"./static/manifest.json": JSON.stringify(require(path.resolve(__dirname, "../build/static/manifest.json")))
+		// "./static/manifest.json": JSON.stringify(require(path.resolve(__dirname, "../build/static/manifest.json")))
 	}],
 	node: {
 		__dirname: false,
@@ -63,7 +63,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			'process.env.NODE_ENV': JSON.stringify('production')
+			'process.env.NODE_ENV': JSON.stringify('production'),
 		}),
 		new ExtractTextPlugin("style-server.css"),
 		// new webpack.IgnorePlugin(/manifest.json/)	
