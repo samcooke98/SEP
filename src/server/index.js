@@ -8,8 +8,10 @@ import http from "http";
 import express from 'express';
 import React from "react"
 
-//Server-side Rendering 
-import chokidar from "chokidar";
+
+import passport from "passport";
+import Account from "./models/account.js";
+import bodyParser from 'body-parser';
 
 //React Hot Reloading Stuff
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -20,12 +22,30 @@ import webpack from 'webpack';
 
 //Initialisation 
 const app = express();
+
+//Setup Body Parser
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
+
+/* Setup Account Logging-in */
+var LocalStrategy = require('passport-local').Strategy;
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
+
+app.use(require('express-session')({
+    secret: 'sakfofjeoiafjeo',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 const compiler = webpack(config);
 
 const isProd = (process.env.NODE_ENV == "production")
 
 if (!isProd) {
-
     /**  Serve the webpack bundle to the client */
     app.use(webpackDevMiddleware(compiler, {
         noInfo: true, publicPath: config.output.publicPath
@@ -33,9 +53,6 @@ if (!isProd) {
     app.use(webpackHotMiddleware(compiler));
 }
 
-if( !isProd) { 
-    // app.static( "./static/" ) 
-}
 
 //https://github.com/webpack/webpack-dev-middleware#server-side-rendering to investigate 
 import App from "./app.js"

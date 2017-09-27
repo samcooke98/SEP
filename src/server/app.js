@@ -1,6 +1,12 @@
+require('dotenv').config();
 import express from 'express';
 import * as Routes from "./routes";
 import serverRenderer from "./utils/serverRender.js";
+import mongoose from "mongoose";
+import passport from "passport";
+import Account from "./models/account.js";
+import bodyParser from 'body-parser';
+
 const path = require('path')// __non_webpack_require__('path');
 
 const app = express();
@@ -24,6 +30,16 @@ app.use( (req, res, next) => {
 app.use(express.static(path.join(__dirname, 'static')))
 //Send Static from the Build directory 
 app.use(express.static(path.join(__dirname, "../static")))
+
+
+/* Setup Mongo Connection */
+mongoose.connect(process.env.MONGO_URL || "mongodb://localhost:27017/boilerplate", {
+    useMongoClient: true
+}, (err) => {
+    if (err) console.log(err); else console.log("Connected to Mongo");
+});
+mongoose.Promise = global.Promise
+
 
 export default app;
 // module.exports = app;  
