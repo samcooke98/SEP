@@ -5,6 +5,7 @@ const nodeExternals = require('webpack-node-externals')
 const StartServerPlugin = require('start-server-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
 	entry: [
@@ -28,7 +29,7 @@ module.exports = {
 		"./static/manifest.json": JSON.stringify(require(path.resolve(__dirname, "../build/static/manifest.json")))
 	}],
 	node: {
-		__dirname: false
+		__dirname: false,
 	},
 	module: {
 		rules: [
@@ -42,26 +43,29 @@ module.exports = {
 			{
 				test: /\.css$/,
 				include: /(node_modules|bower_components)/,
-				use: [
-					"isomorphic-style-loader",
-					{
-						loader: "css-loader",
-						options: {
-							modules: true,
-							sourceMap: true,
-							importLoaders: 1,
-							localIdentName: "[name]--[local]--[hash:base64:8]"
-						}
-					},
-					"postcss-loader" // has separate config, see postcss.config.js nearby
-				]
-			}
+				use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: [
+						{
+							loader: 'css-loader',
+							options: {
+								modules: true,
+								localIdentName: "[name]--[local]---[hash:base64:8]",
+								importLoaders: 1
+							}
+						},
+						'postcss-loader'
+					]
+				})
+			},
+
 		]
 	},
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify('production')
 		}),
+		new ExtractTextPlugin("style-server.css"),
 		// new webpack.IgnorePlugin(/manifest.json/)	
 	],
 	// externals: [

@@ -1,7 +1,6 @@
 import { routes as clientRoutes } from "../../client/Routes.js"
 import { matchPath } from 'react-router-dom'
 
-
 export default function serverRender(req, res, next) {
     const matches = recursive(req.url, clientRoutes);
     if (matches) {
@@ -33,8 +32,14 @@ const renderApp = (location) => {
     const store = createStore(reducer);
 
     const preloadedState = store.getState();
+    const css = new Set();
 
-    const context = {};
+    const context = {
+        insertCss: (...styles) => {
+            styles.forEach(style => css.add(style._getCss()));
+        },
+    };
+
 
     var App = require('../../client/App.js').default;
 
@@ -43,17 +48,22 @@ const renderApp = (location) => {
     let html = ReactDOMServer.renderToString(
         <StaticRouter location={location} context={context}>
             <Provider store={store}>
-                <App/>
+                <App />
             </Provider>
         </StaticRouter>
     )
+    console.log(css);
+
+    console.log("^^^");
+    console.log(context);
     const helmet = Helmet.renderStatic();
     return (generateHTML(html, preloadedState, helmet))
 
 }
 
-
-const manifest = require('./static/manifest.json');
+// if (process.env.NODE_ENV == "production") {
+    const manifest = require('./static/manifest.json');
+// }
 
 /**
  * 
@@ -69,7 +79,7 @@ const generateHTML = (reactDOM, preloadedState, helmet) => {
     ${helmet.meta.toString()}
     ${helmet.link.toString()}
     <link rel="manifest" href="/manifest.json">
-    
+    <link rel="stylesheet" type='text/css' href='styles.css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <style>html, body{margin:0;padding:0;}</style>
@@ -85,3 +95,15 @@ const generateHTML = (reactDOM, preloadedState, helmet) => {
 
 
 
+
+/* 
+We need to use something to prevent the Flash of Unstyled content when loading ( )
+https://github.com/css-modules/postcss-modules
+https://github.com/kriasoft/isomorphic-style-loader
+
+
+
+This also looks cool? 
+https://github.com/javivelasco/react-css-themr
+
+*/

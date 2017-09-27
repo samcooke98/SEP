@@ -24,7 +24,7 @@ const compiler = webpack(config);
 
 const isProd = (process.env.NODE_ENV == "production")
 
-if (isProd) {
+if (!isProd) {
 
     /**  Serve the webpack bundle to the client */
     app.use(webpackDevMiddleware(compiler, {
@@ -34,7 +34,7 @@ if (isProd) {
 }
 
 if( !isProd) { 
-    app.static( "./static/" ) 
+    // app.static( "./static/" ) 
 }
 
 //https://github.com/webpack/webpack-dev-middleware#server-side-rendering to investigate 

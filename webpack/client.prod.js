@@ -3,9 +3,13 @@ const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 var ManifestPlugin = require('webpack-manifest-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+console.log(__dirname);
 
 module.exports = {
 	entry: [
+		'babel-polyfill',
 		'./src/client/index.js',
 	],
 	output: {
@@ -25,19 +29,20 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				use: [
-					"style-loader",
-					{
-						loader: "css-loader",
-						options: {
-							modules: true,
-							sourceMap: true,
-							importLoaders: 1,
-							localIdentName: "[name]--[local]--[hash:base64:8]"
-						}
-					},
-					"postcss-loader" // has separate config, see postcss.config.js nearby
-				]
+				use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: [
+						{
+							loader: 'css-loader',
+							options: {
+								modules: true,
+								localIdentName: "[name]--[local]---[hash:base64:8]",
+								importLoaders: 1
+							}
+						},
+						'postcss-loader'
+					]
+				})
 			},
 			{
 				test: /\.(png|svg|jpg|gif)$/,
@@ -52,7 +57,7 @@ module.exports = {
 		],
 	},
 	plugins: [
-		new CleanWebpackPlugin(path.resolve(__dirname, "build/static/")),
+		new CleanWebpackPlugin(path.resolve(__dirname, "../build/static/"), { allowExternal: true }),
 		new webpack.DefinePlugin({
 			'process.env': {
 				'NODE_ENV': JSON.stringify('production')
@@ -61,7 +66,8 @@ module.exports = {
 		new ManifestPlugin(),
 		new UglifyJSPlugin(),
 		new webpack.optimize.UglifyJsPlugin(), //minify everything
-		new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
+		new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks 
+		new ExtractTextPlugin("styles.css"),
 
 	]
 };
