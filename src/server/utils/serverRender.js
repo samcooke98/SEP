@@ -1,10 +1,10 @@
 import { routes as clientRoutes } from "../../client/Routes.js"
 import { matchPath } from 'react-router-dom'
 
-export default function serverRender(req, res, next) {
+export default async function serverRender(req, res, next) {
     const matches = recursive(req.url, clientRoutes);
     if (matches) {
-        res.send(renderApp(req.url));
+        res.send( await renderApp(req.url, req));
     } else {
         next();
     }
@@ -27,24 +27,38 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from '../../client/redux/reducer.js'
 import { Helmet } from "react-helmet";
+var userController = require('../controllers/UserController.js')
 
-const renderApp = (location) => {
+const renderApp = async (location, req) => {
     const store = createStore(reducer);
 
-    const preloadedState = store.getState();
     const css = new Set();
 
-    const context = {
-        insertCss: (...styles) => {
-            styles.forEach(style => css.add(style._getCss()));
-        },
-    };
-
+    const context = {};
+    if (req.user) {
+        let userDetails = await userController.getDetails(req.user._id);
+        let teamObj = {};
+        let userObj = {};
+        for (var team of userDetails.teams) {
+            teamObj[team._id] = team
+        }
+        store.dispatch({
+            type: "LOGIN",
+            payload: {
+                success: true, payload: {
+                    result: req.user._id,
+                    entities: {
+                        users: { [req.user._id]: req.user },
+                        teams: teamObj
+                    }
+                }
+            }
+        })
+    }
 
     var App = require('../../client/App.js').default;
 
-    //TODO: We also want to check if the router matches, cause if it doesn't we should return 404
-
+    const preloadedState = store.getState();    
     let html = ReactDOMServer.renderToString(
         <StaticRouter location={location} context={context}>
             <Provider store={store}>
@@ -52,18 +66,14 @@ const renderApp = (location) => {
             </Provider>
         </StaticRouter>
     )
-    console.log(css);
-
-    console.log("^^^");
-    console.log(context);
     const helmet = Helmet.renderStatic();
     return (generateHTML(html, preloadedState, helmet))
 
 }
-let manifest; 
+let manifest;
 //This gets the name of the client bundle. TODO: In the future, we should also get the vendor bundle. s
 if (process.env.NODE_ENV == "production") {
-    manifest = __non_webpack_require__ ('./static/build-manifest.json');
+    manifest = __non_webpack_require__('./static/build-manifest.json');
 }
 
 /**

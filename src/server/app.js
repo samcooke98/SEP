@@ -22,9 +22,7 @@ for (var route in Routes) {
 //app.use("/api", resourceRoutes);
 
 //Handle React Stuff 
-app.use( (req, res, next) => {
-    return serverRenderer(req, res, next);
-})
+app.use(  serverRenderer )
 
 //Send Bundle
 app.use(express.static(path.join(__dirname, 'static')))
