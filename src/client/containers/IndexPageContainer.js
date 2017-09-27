@@ -4,7 +4,7 @@
 import React from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { StyleSheet, View, Text, Image } from "react-primitives" 
+import { StyleSheet, View, Text, Image } from "react-primitives"
 
 
 
@@ -16,48 +16,48 @@ class IndexPageContainer extends React.Component {
     render() {
         //Ideally, these would be all componenets, and this would have no control on the visuals
         return (
-         <div style={stylesheet.bg}>
-            <div style={stylesheet.container}> 
-             <h1 style={stylesheet.titles}>TeamShare.</h1>
-               <desc style={stylesheet.text}> Looking for a way to maximise collaboration and information sharing between members of your team? Look no further! TeamShare is an interactive and centralised platform aimed at facilitating resource sharing and collaboration in any team, giving you the ability to share articles and annotate for further discussion. </desc>          
-               <div style={stylesheet.spacing}>
-                <p style={stylesheet.spacing}> Already a member? Login to access your team! </p>
-                 <Link to="/login" style={stylesheet.button}> Login </Link>
-                 <br/>
-                 <p style={stylesheet.spacing}> New to Teamshare? Register as a team leader here! </p>
-                 <Link to="/register" style={stylesheet.button}> Register </Link> 
-                </div >
-            </div> 
-         </div>
+            <div style={stylesheet.bg}>
+                <div style={stylesheet.container}>
+                    <h1 style={stylesheet.titles}>TeamShare.</h1>
+                    <desc style={stylesheet.text}> Looking for a way to maximise collaboration and information sharing between members of your team? Look no further! TeamShare is an interactive and centralised platform aimed at facilitating resource sharing and collaboration in any team, giving you the ability to share articles and annotate for further discussion. </desc>
+                    <div style={stylesheet.spacing}>
+                        <p style={stylesheet.spacing}> Already a member?! Login to access your team! </p>
+                        <Link to="/login" style={stylesheet.button}> Login </Link>
+                        <br />
+                        <p style={stylesheet.spacing}> New to Teamshare? Register as a team leader here! </p>
+                        <Link to="/register" style={stylesheet.button}> Register </Link>
+                    </div >
+                </div>
+            </div>
         )
     }
 }
 
 const stylesheet = ({
     container: {
-     display: "block",
-     position: "relative",
-    //  margin: "auto",
-     height: "100%",
-    //  width: "25%",
-     overflow: "hidden",
-     textAlign: "center",
-    //  borderRadius: "25px",
-     padding: "20px",
-    //  border: "2px solid #BCC0CA",
-     verticalAlign: "middle",
-     backgroundColor: 'white'
-     
+        display: "block",
+        position: "relative",
+        //  margin: "auto",
+        height: "100%",
+        //  width: "25%",
+        overflow: "hidden",
+        textAlign: "center",
+        //  borderRadius: "25px",
+        padding: "20px",
+        //  border: "2px solid #BCC0CA",
+        verticalAlign: "middle",
+        backgroundColor: 'white'
+
     },
     spacing: {
-     padding: "50px",
-     fontSize: "20px"
+        padding: "50px",
+        fontSize: "20px"
     },
     titles: {
-       textAlign: "center",
-       fontSize: "80px"
-       
-    }, 
+        textAlign: "center",
+        fontSize: "80px"
+
+    },
 
     text: {
         padding: "50x",
@@ -68,7 +68,7 @@ const stylesheet = ({
     },
     description: {
         textAlign: "center"
-    }, 
+    },
     button: {
         backgroundColor: "#4285F4",
         color: "white",
@@ -76,7 +76,7 @@ const stylesheet = ({
         border: "none",
         textAlign: "center",
         fontSize: "28px",
-      padding: "20px 32px",
+        padding: "20px 32px",
         margin: "auto",
         textDecoration: "none",
 
@@ -90,9 +90,9 @@ const stylesheet = ({
         fontSize: "16px",
         margin: "10px 0px",
         borderRadius: "5%"
-  }, 
+    },
     buttonRight: {
-        backgroundColor: "#3333ff", 
+        backgroundColor: "#3333ff",
         border: "none",
         color: "white",
         padding: "20px 70px",
@@ -106,7 +106,7 @@ const stylesheet = ({
         float: "center"
 
     },
-    
+
 })
 const mapStateToProps = (state) => {
     return {
@@ -125,4 +125,4 @@ const mapDispatchToProps = (dispatch) => {
 
 //withRouter connects to react-router: (https://reacttraining.com/react-router/web/guides/redux-integration) 
 //Connect connects to the redux store: (redux.js.org/docs/basics/UsageWithReact.html) 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(IndexPageContainer ));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(IndexPageContainer));

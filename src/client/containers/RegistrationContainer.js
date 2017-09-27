@@ -91,13 +91,14 @@ class RegistrationContainer extends React.Component {
 
 	handleErrors = (error) => {
 		console.log(error);
-		switch (error.name) {
-			case "UserExistsError":
-				this.setState({ email: { ...this.state.email, error: error.message } })
-				break;
-			default:
-				console.log("Unknown Error");
-		}
+		if (error)
+			switch (error.name) {
+				case "UserExistsError":
+					this.setState({ email: { ...this.state.email, error: error.message } })
+					break;
+				default:
+					console.log("Unknown Error");
+			}
 	}
 
 	componentWillReceiveProps(nextProps) {

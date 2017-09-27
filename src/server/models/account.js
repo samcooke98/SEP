@@ -7,7 +7,7 @@ var Account = new Schema({
     firstName: String,
     lastName: String,
     teams: [{ type: Schema.ObjectId, ref: 'Team' }], //TODO: Ensure unique-ness ($addToSet).
-    notifications: [{}]
+    notifications: [{}],
 });
 
 Account.plugin(passportLocalMongoose);

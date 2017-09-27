@@ -3,11 +3,12 @@
         "env",
         "react"
     ],
-    "plugins":[
-        "react-hot-loader/babel", 
+    "plugins": [
+        "react-hot-loader/babel",
         "syntax-async-functions",
         "transform-regenerator",
-         "transform-class-properties",
-          "transform-object-rest-spread"
+        "transform-class-properties",
+        "transform-object-rest-spread",
+        "transform-export-extensions"
     ]
 }

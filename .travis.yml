@@ -4,7 +4,7 @@ node_js:
 
 before_script:
 - npm run dev &
-- sleep 30
+- sleep 45
 script:
 - npm run test
 
