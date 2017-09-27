@@ -81,7 +81,7 @@ if (module.hot) {
 }
 
 const server = http.createServer(app)
-server.listen(process.env.PORT || 3000, 'localhost', (err) => {
+server.listen(process.env.PORT || 3000, "0.0.0.0", (err) => {
     if (err)
         throw err;
 
