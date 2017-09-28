@@ -60,7 +60,8 @@ class CommentContainer extends React.Component {
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                     <h1>Comments</h1>
                     <List selectable ripple>
-                            return <p> {this.props.comments[id].comment}</p>
+                        {this.props.resource && this.props.resource.comments.map( (id) => {
+                            return <p key={id}> {this.props.comments && this.props.comments[id].comment}</p>
                         })}
                         
                     </List>

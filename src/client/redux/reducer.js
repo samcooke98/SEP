@@ -35,7 +35,7 @@ var functionalReducers = {
             },
             ui: {
                 ...state.ui,
-                resources: [ ...(state.ui && state.ui.resources || []), action.payload.payload.result] 
+                resource: [ ...(state.ui && state.ui.resource || []), action.payload.payload.result] 
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             },            
         }),
@@ -75,7 +75,7 @@ var functionalReducers = {
         onSuccess: (state, action) => ({
             ui: {
                 ...state.ui,
-                resource: [ ...(state.ui && state.ui.resources || []), ...action.payload.payload.result] 
+                resource: [ ...(state.ui && state.ui.resource || []), ...action.payload.payload.result] 
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             }
         }),
