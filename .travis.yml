@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+- '7'
+
+before_script:
+- npm run dev &
+- sleep 45
+script:
+- npm run test
+
+#Addons (Chrome for BDD tests)
+addons:
+  chrome: stable
+dist: trusty
+before_deploy:
+ - npm run build
+#Deployment
+deploy:
+  provider: heroku
+  api_key:
+    secure: nJU9G0waBnZZc2GSaOLxmDD0OMqpej/qwVGcO6OzWRv6nIMTE/be+o7YtvTGEM8WNajdF7zvfBHJbLTSzRQ/5zSmsdQfnCcGHC8C6B076gits6XrPdsgNfchCg+Y9EzGPUMeA5mazyhdu2PHcBVqIEjG+OjBUXJLjJmItpRHIx8rDJ00nio1ERmM2bAR7IeisSbJQq9eaj2W7MyBzRjuJ8GYIUKFtZts8F+k86BbIKccava0yz7iB1a/jIKbO2pEuLcTJS2PTR+AlK5WahFv8w1SJPIeT96Gzq1FEUk4bJkBkNt9Vr5ob0tpf4yN2Sy8/UARH5v3pMbj+XkbKiGeCZhzgksBGfM1pr8WnXZR+ChyF0WO+6u7dYdsTpGRAV/js9uQm591vMidZqTIZhb32a7sOxQeiy6eRv9Y4wXFnpj91PqY7yYjhyzRvt2814gC64HevNZ7G/yGFA3+FD9AwhxiKQy6C5xPWnI1OJGBn1y5S9l2eqZC6VrFcgx7iXmjxQdGm+sMJDDX7MJSe6Bx8eiuuIm+Z+j2+61N33nIkRQ85xqNxBWgsg7IVX/biZv1riPgHvhkRk2h67zVQf/DKeS1bO4ZNS55/njuGn10Lhx04ffk6O5soV0XPfmJMvN2/CcrUmg5tZFZDfHdjXQOauEqZ/XcuNg+0/KJmkuZQOM=
+  app: teamshare-sep
+  skip_cleanup: true

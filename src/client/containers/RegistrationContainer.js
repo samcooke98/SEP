@@ -10,7 +10,6 @@ import LoggedInRedirector from "./LoggedInRedirector.js";
 import Input from 'react-toolbox/lib/input';
 import Button from "react-toolbox/lib/button";
 import Autocomplete from 'react-toolbox/lib/autocomplete';
-var validate = require('validator.js');
 
 const categories = [
 	"Business", "School", "Fun", "Friends"
@@ -90,13 +89,14 @@ class RegistrationContainer extends React.Component {
 
 	handleErrors = (error) => {
 		console.log(error);
-		switch (error.name) {
-			case "UserExistsError":
-				this.setState({ email: { ...this.state.email, error: error.message } })
-				break;
-			default:
-				console.log("Unknown Error");
-		}
+		if (error)
+			switch (error.name) {
+				case "UserExistsError":
+					this.setState({ email: { ...this.state.email, error: error.message } })
+					break;
+				default:
+					console.log("Unknown Error");
+			}
 	}
 
 	componentWillReceiveProps(nextProps) {

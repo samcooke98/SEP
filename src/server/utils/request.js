@@ -5,16 +5,17 @@
  *   Is user admin? 
  *   Is no user logged in? 
  */
-import {sendError} from "./apiResponse.js"
+import { sendError } from "./apiResponse.js"
 
-export function isLoggedIn(req, res, next) { 
+export function isLoggedIn(req, res, next) {
     console.log("Is logged in!");
     console.log(req.session);
     console.log(req.user);
-    if(req.user == undefined) {
+    if (req.user == undefined) {
         //User isn't logged in
         res.json(sendError("This endpoint requires authentication"));
-    } else { 
+    } else {
+        console.log(next)
         next();
     }
 }
@@ -27,17 +28,19 @@ export function isLoggedIn(req, res, next) {
  * @param {*} res 
  * @param {*} next 
  */
-export function canDo(req,res,next) { 
-    let teamID = req.body.team; 
+export function canDo(req, res, next) {
+    let teamID = req.body.team;
     let user = req.user;
     //Because the team IDs are Buffers, we compare with =='
-    for(var team of user.teams) { 
-        if(team == teamID){
+    for (var team of user.teams) {
+        if (team == teamID) {
+            console.log("here");
+            console.log(next)
             next();
             return;
         }
     }
-    res.json(sendError("You aren't a member of this team"));    
+    res.json(sendError("You aren't a member of this team"));
 } //TODO: This should have unit testing \ acceptance testing 
 
 

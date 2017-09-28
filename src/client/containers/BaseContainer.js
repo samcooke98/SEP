@@ -2,7 +2,7 @@
 * Basic Container Component Template
 */
 import React from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { Layout } from "react-toolbox/lib/layout";
@@ -11,7 +11,7 @@ import { RouteWithSubRoutes } from "../Routes.js";
 import { AppBar, Panel, NavDrawer, Link as RTLink } from 'react-toolbox';
 import { List, ListItem, ListDivider } from "react-toolbox";
 import Navigation from 'react-toolbox/lib/navigation';
-
+import Link from 'react-toolbox/lib/link';
 import IndexPageContainer from "./IndexPageContainer.js"
 
 /**
@@ -32,12 +32,16 @@ const NavigationList = [
         caption: "Feed", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
         to: "/feed",
         loginOnly: true
-    }, 
-    { 
+    },
+    {
         caption: "Team Management",
         to: "/manage",
         loginOnly: true
-    }
+    },
+    {
+        divider: true,
+    },
+    link("Settings", "/settings")
 ]
 
 
@@ -94,8 +98,8 @@ class BaseContainer extends React.Component {
                                                 className={this.props.location.pathname == val.to ? 'active' : ''}
                                                 key={index}
                                             />)
-                                        } else { 
-                                            return ( <ListDivider key={index} />) 
+                                        } else {
+                                            return (<ListDivider key={index} />)
                                         }
                                     }
 
@@ -108,9 +112,11 @@ class BaseContainer extends React.Component {
                     </Navigation>
                 </NavDrawer>
                 <Panel>
-                    {this.props.routes.map((route, i) => (
-                        <RouteWithSubRoutes key={i} {...route} />
-                    ))}
+                    <Switch>
+                        {this.props.routes.map((route, i) => (
+                            <RouteWithSubRoutes key={i} {...route} />
+                        ))}
+                    </Switch>
                 </Panel>
             </Layout>
         )

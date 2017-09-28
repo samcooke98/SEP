@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "babel-plugin-transform-export-extensions": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.17.2",
+    "chokidar": "^1.7.0",
     "chromedriver": "^2.32.2",
     "connect-ensure-login": "^0.1.1",
     "cucumber": "^3.0.1",
@@ -14,7 +16,10 @@
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "express-session": "^1.15.5",
+    "extract-text-webpack-plugin": "^3.0.0",
     "fetch-everywhere": "^1.0.5",
+    "isomorphic-style-loader": "^4.0.0",
+    "jest": "^21.1.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "mongoose": "^4.11.8",
@@ -46,6 +51,7 @@
     "selenium-webdriver": "^3.5.0",
     "sendgrid": "^5.2.3",
     "validator.js": "^2.0.3",
+    "validator": "^8.2.0",
     "web-push": "^3.2.3"
   },
   "devDependencies": {
@@ -75,11 +81,14 @@
     "webpack-node-externals": "^1.6.0"
   },
   "scripts": {
-    "test": "jest",
-    "dev": "webpack --config webpack.config.server.js",
+    "test:unit": "jest",
+    "test:bdd": "cucumber-js",
+    "start:test": "npm run dev",
+    "test": "npm run test:bdd",
+    "dev": "webpack --config ./webpack/server.dev.js",
     "build": "npm run build:cli && npm run build:srv",
-    "build:srv": "webpack --config webpack.config.server.prod.js",
-    "build:cli": "webpack --config webpack.config.client.prod.js",
+    "build:srv": "webpack --config ./webpack/server.prod.js",
+    "build:cli": "webpack --config ./webpack/client.prod.js",
     "start": "node ./build/server.js"
   },
   "author": "Samuel Cooke <hello@samcooke.com.au>",
