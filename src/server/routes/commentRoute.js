@@ -14,11 +14,9 @@ router.get("/testcomment", (req, res) => {
 router.post("/:resourceId/comments", isLoggedIn, async (req, res) => {
     try {
         // If we get to here, we try to insert the Resource (failure reasons: url already exists)
-        console.log('hello my nigga');
-        var result = await CommentController.createComment(req.params.resourceId, req.body.userId, req.body.comment, )
+        var result = await CommentController.createComment(req.params.resourceId, req.body.userId, req.body.comment )
+        res.json(result);
         //TODO: Save on the Resource (!)
-        console.log(result, 'hello');
-        console.log('successful', res.json(result));
     } catch (err) {
         next(err); //Apparently error-handling will handle it? 
         console.log(err);

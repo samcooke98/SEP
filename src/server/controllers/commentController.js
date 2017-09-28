@@ -1,11 +1,12 @@
 import Comment from "../models/comment.js";
 import { sendError, sendPayload } from "../utils/apiResponse.js";
+import * as ResourceController from "./resourceController.js";
 
 export async function createComment(resource, user, comment) {
     var newComment = new Comment({ resourceId: resource, userId: user, comment});
-    console.log('newComment');
      //You should probably also store on the resource ID 
     try {
+        await ResourceController.addComment(newComment._id, resource); 
         await newComment.save();
         if (newComment) {
             return sendPayload(newComment); 

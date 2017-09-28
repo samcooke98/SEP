@@ -60,7 +60,7 @@ export const createComment = createAction(actionTypes.CREATE_COMMENT, async (res
 })
 
 export const getComments = createAction(actionTypes.GET_COMMENTS, async (resourceId) => {
-    return get(`resource?comment=${resourceId}`).then( 
+    return get(`resource/${resourceId}/comment`).then( 
         (payload) => normalize( normalizr.normalizeComment, payload) 
     )
 })
@@ -72,7 +72,11 @@ export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (u
     )
 })
 
-export const getResources = createAction(actionTypes.GET_RESOURCE, async (teamID) => {
+export const getResource = createAction(actionTypes.GET_RESOURCE, async (resId) => 
+    get(`resource/${resId}`).then( (payload) => normalize(normalizr.normalizeResource, payload)  )
+)
+
+export const getResources = createAction(actionTypes.GET_RESOURCES, async (teamID) => {
     return get(`resource?team=${teamID}`).then( 
         (payload) => normalize( normalizr.normalizeResources, payload) 
     )

@@ -6,7 +6,8 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import CommentInput from "../components/CommentInput.js";
-import { getUserDetails, createComment } from "../redux/actions.js";
+import { getUserDetails, createComment, getResource } from "../redux/actions.js";
+import { withProtection } from "./Protector.js";
 
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
 import Avatar from 'react-toolbox/lib/avatar'
@@ -25,15 +26,28 @@ class CommentContainer extends React.Component {
 
     submitForm = (evt) => {
         //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
-        let teams = this.props.user.teams.map((val) => this.props.teams[val]);
-        //Create a property to hold if the team is checked or not
-        teams = teams.map((val) => (val.checked = false, val))
-
-        teams.forEach((val) => 
-            this.props.createComment(this.state.resourceId, this.props.user._id, this.state.comments),
-        );
+        
+            this.props.createComment(this.state.resourceId, this.props.user._id, this.state.comments)
+            this.setState({submitted: true})
 
     };
+    
+    componentWillReceiveProps(nextProps) { 
+        if(nextProps.comments != this.props.comments && this.state.submitted) { 
+            //Comments have changed
+            this.props.getResource(this.props.match.params.resourceId);
+            this.setState({submitted: false});
+
+        }
+    }
+    
+
+    componentDidMount() {
+        if(this.props.resource != {}) { 
+            this.props.getResource(this.props.match.params.resourceId) 
+        
+        }
+    }
 
     handleChange = (value, name, isTeam) => {
         this.setState({ [name]: value })
@@ -46,24 +60,9 @@ class CommentContainer extends React.Component {
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                     <h1>Comments</h1>
                     <List selectable ripple>
-                        <ListItem
-                        avatar='https://dl.dropboxusercontent.com/u/2247264/assets/m.jpg'
-                        caption='Dr. Manhattan'
-                        legend="Jonathan 'Jon' Osterman"
-                        rightIcon='star'
-                        />
-                        <ListItem
-                        avatar='https://dl.dropboxusercontent.com/u/2247264/assets/o.jpg'
-                        caption='Ozymandias'
-                        legend='Adrian Veidt'
-                        rightIcon='star'
-                        />
-                        <ListItem
-                        avatar='https://dl.dropboxusercontent.com/u/2247264/assets/r.jpg'
-                        caption='Rorschach'
-                        legend='Walter Joseph Kovacs'
-                        rightIcon='star'
-                        />
+                            return <p> {this.props.comments[id].comment}</p>
+                        })}
+                        
                     </List>
                     <CommentInput
                         comment={this.state.comment}
@@ -77,13 +76,15 @@ class CommentContainer extends React.Component {
 }
 
 
-const mapStateToProps = (state) => {
+
+
+const mapStateToProps = (state, ownProps) => {
     var user = state.data.users[state.misc.userID]; //Gets the User Object
     return {
         user: user,
         teams: state.data.teams,
         comments: state.data.comments || {},
-        resource: state.data.resources || {},
+        resource: state.data.resources && state.data.resources[ownProps.match.params.resourceId] || null,
     }
 }
 
@@ -92,10 +93,13 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getUser: () => dispatch(getUserDetails()),
         createComment: (resourceId, userId, comments) => dispatch(createComment(resourceId, userId, comments)),
-        // getComments: (resourceId) => dispatch(getComments(resourceId)),  
+        getResource: (resourceId) => dispatch(getResource(resourceId)),
+        getComments: (resourceId) => dispatch(getComments(resourceId))  
     }
 }
 
 //withRouter connects to react-router: (https://reacttraining.com/react-router/web/guides/redux-integration) 
 //Connect connects to the redux store: (redux.js.org/docs/basics/UsageWithReact.html) 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CommentContainer));
+export default withProtection(
+    withRouter(connect(mapStateToProps, mapDispatchToProps)(CommentContainer))
+);

@@ -28,6 +28,7 @@ const initialState = {
 var functionalReducers = {
     [actionTypes.CREATE_RESOURCE]: {
         onSuccess: (state, action) => ({
+            ...state,
             misc: {
                 ...state.misc,
                 worked: true
@@ -36,7 +37,7 @@ var functionalReducers = {
                 ...state.ui,
                 resources: [ ...(state.ui && state.ui.resources || []), action.payload.payload.result] 
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
-            }
+            },            
         }),
         onFail: (state, action) => ({
 
@@ -70,7 +71,7 @@ var functionalReducers = {
 
         })
     }, 
-    [actionTypes.GET_RESOURCE]: {
+    [actionTypes.GET_RESOURCES]: {
         onSuccess: (state, action) => ({
             ui: {
                 ...state.ui,
@@ -128,6 +129,8 @@ var functionalReducers = {
 }
 
 export default function rootReducer(state = initialState, action) {
+    console.log(action);
+    console.log("^^^ ACTINO ^^^ ");
     switch (action.type) {
         case actionTypes.LOGIN:
             return loginReducer(state, action)
