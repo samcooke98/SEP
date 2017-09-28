@@ -10,6 +10,12 @@ defineSupportCode(function ({ Given, When, Then }) {
 		})
 	})
 
+	Given("I am on the landing page", function(){
+		return this.driver.get(url+"/").then(() => {
+			return this.driver.wait(seleniumWebdriver.until.urlIs(url+"/"))
+		})
+	})
+
 	Given("I have an account called {string} with a password of {string}", (username, pass) => {
 		return makeAdminAccount(username, pass).then((val) => logout())
 	})
@@ -43,6 +49,12 @@ defineSupportCode(function ({ Given, When, Then }) {
 			return element.click();
 		})
 	})
+
+	When('I click on {string}', function (text) {
+		return this.driver.findElement({linkText: text}).then(function(element) {
+		  return element.click();
+		});
+	  });
 
 	Then('I should see {string}', function (text) {
 		var xpath = "//*[contains(text(),'" + text + "')]";

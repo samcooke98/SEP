@@ -4,7 +4,6 @@ Feature: Invitation
     so that I can share my articles
     SEP-13
     
-
     Background: 
         Given I have an account called "sam" with a password of "sam"
             And I am logged in with "sam" and "sam"
