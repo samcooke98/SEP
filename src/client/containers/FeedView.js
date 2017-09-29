@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { getUserDetails, createResource, getResources, deleteResource } from "../redux/actions.js";
 
 import { Button, IconButton } from 'react-toolbox/lib/button';
+import Dialog from 'react-toolbox/lib/dialog';
 import ResourceForm from "../components/ResourceForm.js";
 import LinkCard from "../components/LinkCard.js";
 import LoggedInRedirector from "./LoggedInRedirector"
@@ -20,7 +21,8 @@ class FeedView extends React.Component {
             url: '',
             title: '',
             description: '',
-            teams: []
+            teams: [],
+            isDialogOpen: false
 
         }
     }
@@ -42,10 +44,15 @@ class FeedView extends React.Component {
             if (team.checked)
                 this.props.createResource(this.state.url, this.state.title, this.state.description, team._id)
         }
+        this.toggleDialog();
     }
 
     remove = (id) => {
         this.props.rmResource(id)
+    }
+
+    toggleDialog = () => {
+        this.setState({ isDialogOpen: !this.state.isDialogOpen });
     }
 
     componentDidMount() {
@@ -64,15 +71,24 @@ class FeedView extends React.Component {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                 <h1>Hello {this.props.user.firstName} </h1>
-                <p>Add a new entry below </p>
-                <ResourceForm
-                    url={this.state.url}
-                    title={this.state.title}
-                    description={this.state.description}
-                    teams={this.state.teams}
-                    handleChange={this.handleChange}
-                />
-                <Button icon='add' floating onMouseUp={this.submit} />
+                <Button icon='add' floating onMouseUp={this.toggleDialog} />
+                <p>Add a new entry </p>
+                <Dialog
+                    active={this.state.isDialogOpen}
+                    onEscKeyDown={this.toggleDialog}
+                    onOverlayClick={this.toggleDialog}
+                    title='My awesome dialog'
+                >
+                    <p>Here you can add arbitrary content. Components like Pickers are using dialogs now.</p>
+                    <ResourceForm
+                        url={this.state.url}
+                        title={this.state.title}
+                        description={this.state.description}
+                        teams={this.state.teams}
+                        handleChange={this.handleChange}
+                    />
+                    <Button icon='add' floating onMouseUp={this.submit} />
+                </Dialog>
                 <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
 
                     { /*TODO: Show only teams that user belongs to, Sort the order */
