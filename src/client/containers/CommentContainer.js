@@ -6,7 +6,7 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import CommentInput from "../components/CommentInput.js";
-import { getUserDetails, createComment, getResource } from "../redux/actions.js";
+import { getUserDetails, getUsersInTeam, createComment, getResource } from "../redux/actions.js";
 import { withProtection } from "./Protector.js";
 
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
@@ -21,6 +21,7 @@ class CommentContainer extends React.Component {
             resourceId: this.props.match.params.resourceId,
             userId: '',
             comments: '',
+            teams: [],
         }
     }
 
@@ -49,7 +50,24 @@ class CommentContainer extends React.Component {
         }
     }
 
-    handleChange = (value, name, isTeam) => {
+    handleChange = (value, name) => {
+        if(value == '@'){
+            //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
+            let teams = this.props.user.teams.map((val) => this.props.teams[val]);
+        
+                //Create a property to hold if the team is checked or not
+                teams = teams.map((val) => (val.checked = false, val))
+                
+                ////Insert it into state 
+                this.setState({ teams: teams })
+        
+                //Get the resources for each team that the user belongs to
+                teams.map((team) =>{
+                    console.log(team._id)
+                    this.props.getUsersInTeam(team._id);
+                })
+        }
+        console.log(value);
         this.setState({ [name]: value })
    
     }
@@ -58,15 +76,19 @@ class CommentContainer extends React.Component {
     render() {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
-                    <h1>Comments</h1>
+                    <h2>Comments</h2>
                     <List selectable ripple>
                         {this.props.resource && this.props.resource.comments.map( (id) => {
-                            return <p key={id}> {this.props.comments && this.props.comments[id].comment}</p>
+                            return <ListItem 
+                                avatar='https://dl.dropboxusercontent.com/u/2247264/assets/m.jpg'
+                                caption={this.props.comments && this.props.comments[id].comment}
+                                legend={this.props.user.username}
+                            />
                         })}
-                        
                     </List>
                     <CommentInput
-                        comment={this.state.comment}
+                        user={this.props.user}
+                        comments={this.state.comments}
                         handleChange={this.handleChange}
                     />
                     <Button label='Comment' raised primary onMouseUp={this.submitForm}/>
@@ -93,6 +115,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         getUser: () => dispatch(getUserDetails()),
+        getUsersInTeam: (teamId) => dispatch(getUsersInTeam(teamId)),
         createComment: (resourceId, userId, comments) => dispatch(createComment(resourceId, userId, comments)),
         getResource: (resourceId) => dispatch(getResource(resourceId)),
         getComments: (resourceId) => dispatch(getComments(resourceId))  

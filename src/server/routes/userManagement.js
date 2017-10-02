@@ -35,10 +35,18 @@ router.post("/login", passport.authenticate('local'), async (req, res) => {
     res.json(sendPayload(await UserController.getDetails(req.user._id)))
 })
 
-router.get("/logout", UserController.logout)
+router.get("/logout", UserController.logout);
 
 router.get("/user", isLoggedIn, async (req, res) => {
     var data = await UserController.getDetails(req.user._id);
+    res.json(sendPayload(data));
+})
+
+router.get("/users/:teamId", isLoggedIn, async (req, res) => {
+    console.log('hello');
+    let teamId = req.match.teamId;
+    console.log('kndkajsdskjnsadkdnkdasnkjsndkjasndk');
+    var data = await UserController.getUsersInTeam(teamId);
     res.json(sendPayload(data));
 })
 

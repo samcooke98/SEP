@@ -14,6 +14,7 @@ const app = express();
 //Add the Routes from the ./routes/index.js to the App's middleware.
 //TODO: Investigate Webpack unravelling this for us? 
 for (var route in Routes) {
+    console.log('---------------------------------------------------------------------------');
     app.use('/api', Routes[route]);
 }
 

@@ -82,7 +82,19 @@ var functionalReducers = {
         onFail: (state, action) => ({
 
         })
-    }, 
+    },
+    [actionTypes.GET_USERS]: {
+        onSuccess: (state, action) => ({
+            ui: {
+                ...state.ui,
+                userInTeam: [ ...(state.ui && state.ui.userInTeam || []), ...action.payload.payload.result] 
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            }
+        }),
+        onFail: (state, action) => ({
+
+        })
+    },
     [actionTypes.REGISTER]: {
         onSuccess: (state, action) => ({ //Success returns the same as login 
             ui: {   
@@ -132,13 +144,12 @@ var functionalReducers = {
 }
 
 export default function rootReducer(state = initialState, action) {
-    console.log(action);
-    console.log("^^^ ACTINO ^^^ ");
     switch (action.type) {
         case actionTypes.LOGIN:
             return loginReducer(state, action)
             break;
         default:
+            console.log(action.payload);
             if (action.payload && action.payload.payload && action.payload.payload.entities)
                 state = merge({}, state, { data: action.payload.payload.entities })
     }
@@ -148,6 +159,7 @@ export default function rootReducer(state = initialState, action) {
         console.log("unhandled redux action");
         console.log(action);
     }
+    console.log(state);
     return state;
 }
 

@@ -1,6 +1,7 @@
 import Comment from "../models/comment.js";
 import { sendError, sendPayload } from "../utils/apiResponse.js";
 import * as ResourceController from "./resourceController.js";
+import * as UserController from "./UserController.js";
 
 export async function createComment(resource, user, comment) {
     var newComment = new Comment({ resourceId: resource, userId: user, comment});
@@ -15,6 +16,13 @@ export async function createComment(resource, user, comment) {
         console.log(err);
         return sendError(err);
     }
+}
+
+export async function getUsersInTeam(teamID) {
+    console.log('------------------------------------');
+    var result = await User.find({ teams: teamID }).exec();
+    console.log(result);
+    return result;
 }
 
 export async function getID(commentId) {

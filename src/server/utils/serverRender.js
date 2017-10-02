@@ -42,6 +42,7 @@ const renderApp = async (location, req) => {
         for (var team of userDetails.teams) {
             teamObj[team._id] = team
         }
+        console.log('----------------', store);
         store.dispatch({
             type: "LOGIN",
             payload: {

@@ -2,6 +2,7 @@ export const LOGIN 				= "LOGIN";
 export const REGISTER 			= "REGISTER";
 
 export const GET_USER 			= "GET_USER";
+export const GET_USERS 			= "GET_USERS";
 export const SEND_INVITES 		= "SEND_INVITES";
 export const GET_INVITE 		= "GET_INVITE";
 

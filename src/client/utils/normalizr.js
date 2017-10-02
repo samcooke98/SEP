@@ -14,6 +14,7 @@ export const normalizeResources = (data) => normalize(data, [resourceEntity]);
 export const normalizeComment = (data) => normalize(data, commentEntity);
 
 export const normalizeUser = (data) => normalize( data, userEntity );
+export const normalizeUsers = (data) => normalize( data, [userEntity])
 
 
 export const normalizeTeam = (data) => normalize(data, teamEntity);

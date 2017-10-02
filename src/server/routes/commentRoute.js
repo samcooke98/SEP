@@ -24,4 +24,18 @@ router.post("/:resourceId/comments", isLoggedIn, async (req, res) => {
     }
 })
 
+// router.get("/users/:teamId", async (req, res) => {
+//     try {
+//         console.log(req);
+//         console.log('sjkhdsksbhjkahdhkabkhdhaskhdhjksh---------------------------------------------');
+//         var results = await UserController.getUsersInTeam(req.body.teamId);
+//         console.log(results);
+//         res.json(result);
+//     } catch(error) {
+//         next(err); //Apparently error-handling will handle it? 
+//         console.log(err);
+//         res.json(err);
+//     }
+// })
+
 export default router;
