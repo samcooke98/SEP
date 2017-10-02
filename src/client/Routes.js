@@ -15,6 +15,7 @@ import PasswordResetContainer from "./containers/PasswordResetContainer.js";
 import BaseContainer from "./containers/BaseContainer.js";
 import CommentContainer from "./containers/CommentContainer.js";
 import SettingsContainer from "./containers/SettingsContainer.js";
+import UpdateDetailsContainer from "./containers/UpdatedDetailsInput.js";
 
 export const routes = [
 
@@ -28,6 +29,11 @@ export const routes = [
                 path: "/feed",
                 exact: true,
                 component: FeedView
+            },
+            {
+                path: '/updateDetails',
+                exact:true,
+                component: UpdateDetailsContainer
             },
             {
                 path: '/login',

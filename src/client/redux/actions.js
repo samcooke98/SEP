@@ -77,6 +77,9 @@ export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (u
     )
 })
 
+export const updateDetails = createAction(actionTypes.UPDATE_DETAILS, async (email, password, firstName, lastName) => {
+    return post('updateDetails', {email, password, firstName, lastName}).then( (val) => normalize( normalizr.normalizeUser, val))
+})
 
 
 export const getResources = createAction(actionTypes.GET_RESOURCE, async (teamID) => {

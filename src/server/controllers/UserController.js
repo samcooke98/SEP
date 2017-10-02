@@ -43,6 +43,31 @@ export function registerUser(req, res) {
     });
 }
 
+export function updateUserDetails(email, firstName, lastName, newPassword) {
+    if (req.body.password === req.body.newPassword) {
+        Account.findOneAndUpdate({ _id: req.user._id }, {
+            $set: {
+                username: req.body.email,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                password: req.body.newPassword
+            }
+        }, { new: true }, (err, updatedUser) => {
+            if (err) {
+                console.log("===============ERROR WHEN UPDATING USER=============");
+                console.log(err);
+            }
+            else {
+                console.log(updatedUser);
+          //      res.json(sendPayload( await getDetails(req.user._id)));
+            }
+        });
+    }
+    else {
+        return sendError("Passwords don't match!");
+    }
+
+}
 /**
  * Get the Feed for the logged in user
  * @param {*} req 
@@ -113,9 +138,9 @@ export async function removeNotification(endpointURL, userID) {
         let notification = user.notifications[index]
         if (notification.endpoint == endpointURL) {
             user.notifications.splice(index, 1);
-            return user.save().exec().then( () => { 
+            return user.save().exec().then(() => {
                 return sendPayload("Successfully removed entry")
-                
+
             })
         }
     }

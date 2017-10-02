@@ -57,6 +57,19 @@ router.delete("/user/notify", isLoggedIn, async (req, res) => {
 
 })
 
+router.get("/updateDetails", isLoggedIn, async (req, res) => {
+    var data = await UserController.getDetails(req.user._id);
+    res.json(sendPayload(data));
+    console.log(req.body);
+
+})
+
+router.post("/updateDetails", isLoggedIn, async (req, res) => {
+    var data = await UserController.updateUserDetails(req.body.email, req.body.firstName, req.body.lastName, req.body.newPassword);
+    console.log(data);
+    res.json(sendPayload(data));
+})
+
 
 
 module.exports = router;
