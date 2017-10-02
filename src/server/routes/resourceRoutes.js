@@ -37,13 +37,29 @@ router.get("/resource", isLoggedIn, async (req, res) => {
         //todo: handle appropriate 
         //Team should be a selection of the users
         team = req.user.teams[0] && req.user.teams[0]._id
-    } else {
+    } 
         var result = await ResourceController.getFromTeam(team);
         res.json(result);
-    }
+    
 })
 
-router.delete("/resource/:id", isLoggedIn, async (req, res) => {
+router.get("/resource/:id/comments", isLoggedIn, async(req,res) => {
+    let id = req.match.id;
+    try { 
+        var result = await ResourceController.getID(id);
+        result.populate("comments").execPopulate().then( (val) => { 
+            res.json(sendPayload(val.comments))
+        })
+    } catch (err) { 
+        res.json(sendError(JSON.stringify(err)))
+    }
+
+})
+
+
+
+
+router.delete("/resource/:id", isLoggedIn, async (req, res) => { 
     let resourceID = req.params.id;
     var result = await ResourceController.remove(resourceID, req.user._id);
     res.json(result);

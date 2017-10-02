@@ -56,7 +56,7 @@ export const routes = [
                 component: PasswordResetContainer
             },
             {
-                path: "/:url/comments",
+                path: "/resource/:resourceId/comments",
                 component: CommentContainer
             },
             {
