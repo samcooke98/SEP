@@ -43,10 +43,8 @@ router.get("/user", isLoggedIn, async (req, res) => {
 })
 
 router.get("/users/:teamId", isLoggedIn, async (req, res) => {
-    console.log('hello');
-    let teamId = req.match.teamId;
-    console.log('kndkajsdskjnsadkdnkdasnkjsndkjasndk');
-    var data = await UserController.getUsersInTeam(teamId);
+    var data = await UserController.getUsersInTeam(req.params.teamId);
+    console.log(data);
     res.json(sendPayload(data));
 })
 
