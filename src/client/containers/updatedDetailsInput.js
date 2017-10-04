@@ -89,5 +89,7 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UpdatedDetailsInput));
+export default withProtection(
+    withRouter(connect(mapStateToProps, mapDispatchToProps)(UpdatedDetailsInput))
+);
 

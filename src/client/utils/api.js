@@ -17,7 +17,7 @@ const formEncode = (params) => Object.keys(params).map((key) => {
  * @returns {Object}
  */
 export async function post(endpoint, params) {
-    console.log(params);
+    console.log(params, JSON.stringify(params));
     var opts = {
         method: "POST",
         headers: {
@@ -33,8 +33,8 @@ export async function post(endpoint, params) {
         if (response.status == 401) {
             return { success: false, msg: "Server returned unauthorised" }
         }
+
         return response.json()
-        // return response.json()
     })
 }
 
@@ -48,6 +48,7 @@ export async function get(endpoint) {
             return { success: false, msg: "Server returned unauthorised" }
         }
         try {
+            console.log('here', response.json);
             return response.json()
         } catch (err) {
             console.warn('error when parsing json');
