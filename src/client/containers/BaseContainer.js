@@ -3,16 +3,19 @@
 */
 import React from "react";
 import { withRouter, Switch } from "react-router-dom";
-import { connect } from "react-redux";
-
+import { connect } from "react-redux"
 import { Layout } from "react-toolbox/lib/layout";
-
-import { RouteWithSubRoutes } from "../Routes.js";
 import { AppBar, Panel, NavDrawer, Link as RTLink } from 'react-toolbox';
 import { List, ListItem, ListDivider } from "react-toolbox";
 import Navigation from 'react-toolbox/lib/navigation';
 import Link from 'react-toolbox/lib/link';
+import { MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
+
+
+import { RouteWithSubRoutes } from "../Routes.js";
 import IndexPageContainer from "./IndexPageContainer.js"
+import User from "../components/UserButton/UserButton.js";
+import { logout } from "../redux/actions.js";
 
 /**
  * Data to populate the navigation list with 
@@ -53,8 +56,6 @@ class BaseContainer extends React.Component {
     navigateWithRouter = (to, event) => {
         //We will use React-Router to route, instead of making a request
         //This pretty much comes from the react-router code
-        console.log(arguments);
-        console.log(to);
         if (
             !event.defaultPrevented && // onClick prevented default
             event.button === 0  // ignore everything but left clicks
@@ -66,7 +67,29 @@ class BaseContainer extends React.Component {
     render() {
         return (
             <Layout>
-                <AppBar title='TeamShare' fixed flat />
+                <AppBar title='TeamShare' fixed flat>
+                    <Navigation type='horizontal'>
+
+                        {this.props.loggedIn &&
+                            <User
+                                avatar={this.props.avatar}
+                                name={this.props.name}
+                            >
+                                {/* We can put MenuItems here */}
+                                <MenuItem value="edit" caption="Edit Profile" onClick={
+                                    () => this.props.history.push('/edit')
+                                } />
+                                <MenuDivider />
+                                <MenuItem value="blah" caption="Logout" onClick={
+                                    () => {
+                                        this.props.logout();
+                                        this.props.history.push("/");
+                                    }
+                                } />
+                            </User>
+                        }
+                    </Navigation>
+                </AppBar>
                 <NavDrawer pinned active clipped permanentAt='sm'>
                     <Navigation type='vertical'>
                         <List selectable ripple>
@@ -125,14 +148,22 @@ class BaseContainer extends React.Component {
 
 
 const mapStateToProps = (state) => {
-    return {
-        loggedIn: state.misc.loggedIn
+    if (!state.misc.loggedIn)
+        return { loggedIn: false }
+    else {
+        const user = state.data.users[state.misc.userID]
+
+        return {
+            loggedIn: state.misc.loggedIn,
+            name: user.firstName + " " + user.lastName,
+            avatar: user.avatarURI
+        }
     }
 }
 //Typically would implement actions
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        logout: () => dispatch(logout())
     }
 }
 

@@ -43,7 +43,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				include: /(node_modules|bower_components)/,
+				// include: /(node_modules|bower_components)/,
 				use: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
 					use: [

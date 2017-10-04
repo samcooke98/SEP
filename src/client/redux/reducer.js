@@ -35,9 +35,9 @@ var functionalReducers = {
             },
             ui: {
                 ...state.ui,
-                resource: [ ...(state.ui && state.ui.resource || []), action.payload.payload.result] 
+                resource: [...(state.ui && state.ui.resource || []), action.payload.payload.result]
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
-            },            
+            },
         }),
         onFail: (state, action) => ({
 
@@ -51,41 +51,51 @@ var functionalReducers = {
             },
             ui: {
                 ...state.ui,
-                comments: [ ...(state.ui && state.ui.comments || []), action.payload.payload.result] ,
+                comments: [...(state.ui && state.ui.comments || []), action.payload.payload.result],
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             }
         }),
         onFail: (state, action) => ({
-            
+
         })
     },
     [actionTypes.GET_COMMENTS]: {
         onSuccess: (state, action) => ({
             ui: {
                 ...state.ui,
-                comments: [ ...(state.ui && state.ui.comments || []), ...action.payload.payload.result] 
+                comments: [...(state.ui && state.ui.comments || []), ...action.payload.payload.result]
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             }
         }),
         onFail: (state, action) => ({
 
         })
-    }, 
-    [actionTypes.GET_RESOURCES]: {
+    },
+    [actionTypes.LOGOUT]: {
+        onSuccess: (state, action) => ({
+            ...state,
+            misc: {
+                ...state.misc,
+                loggedIn: false,
+                userID: undefined
+            }
+        })
+    },
+    [actionTypes.GET_RESOURCE]: {
         onSuccess: (state, action) => ({
             ui: {
                 ...state.ui,
-                resource: [ ...(state.ui && state.ui.resource || []), ...action.payload.payload.result] 
+                resource: [...(state.ui && state.ui.resource || []), ...action.payload.payload.result]
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             }
         }),
         onFail: (state, action) => ({
 
         })
-    }, 
+    },
     [actionTypes.REGISTER]: {
         onSuccess: (state, action) => ({ //Success returns the same as login 
-            ui: {   
+            ui: {
                 ...state.ui,
                 registrationSuccess: true,
                 registrationFail: ""
@@ -103,29 +113,29 @@ var functionalReducers = {
     //     onSuccess: (state,action) => ({ ui: { ...state.ui, resetPassSent: true, resetPassError: ''}}),
     //     onFail: (state, action) => ({ui: {...state.ui, resetPassError: action.payload.payload, resetPassSent: false}})
     // },
-    [actionTypes.GET_INVITE]: { 
-        onSuccess: (state, action) => ({ 
-            ui: { 
+    [actionTypes.GET_INVITE]: {
+        onSuccess: (state, action) => ({
+            ui: {
                 ...state.ui, getInviteSuccess: true, getInviteMessage: '', invitedID: action.payload.payload.result
-            }, 
-        }), 
-        onFail: (state, action) => ({ 
-            ui: { ...state.ui, getInviteMessage: "Something went wrong", getInviteSuccess:false, invitedID: ''}
+            },
+        }),
+        onFail: (state, action) => ({
+            ui: { ...state.ui, getInviteMessage: "Something went wrong", getInviteSuccess: false, invitedID: '' }
         })
     },
-    [actionTypes.JOIN_TEAM]: { 
-        onSuccess: (state,action) => ({ui: { ...state.ui, joinTeam: true,joinTeamMsg: ''}, misc: { ...state.ui, loggedIn: true, userID: action.payload.payload.result }}),
-        onFail:    (state,action) => ({ui: { ...state.ui, joinTeam: false, joinTeamMsg: action.payload}}),
+    [actionTypes.JOIN_TEAM]: {
+        onSuccess: (state, action) => ({ ui: { ...state.ui, joinTeam: true, joinTeamMsg: '' }, misc: { ...state.ui, loggedIn: true, userID: action.payload.payload.result } }),
+        onFail: (state, action) => ({ ui: { ...state.ui, joinTeam: false, joinTeamMsg: action.payload } }),
     },
-    [actionTypes.DELETE_RESOURCE]: { 
+    [actionTypes.DELETE_RESOURCE]: {
         onSuccess: (state, action) => ({
-            data: { ...state.data, resources: { ...state.data.resources, [action.meta.id]: {} }}, //Remove the data object (or set it to blank)
-            ui: {...state.ui, resources: state.ui.resources.filter( (val) => val  != action.meta.id )  } //Remove the id from the resources array
+            data: { ...state.data, resources: { ...state.data.resources, [action.meta.id]: {} } }, //Remove the data object (or set it to blank)
+            ui: { ...state.ui, resources: state.ui.resources.filter((val) => val != action.meta.id) } //Remove the id from the resources array
         }), //Remove all instances of the id 
-        onFail:    (state,action) => ({})
+        onFail: (state, action) => ({})
     },
     ["Hello"]: {
-        onSuccess: (state, action) => ({hello: "hello"})
+        onSuccess: (state, action) => ({ hello: "hello" })
     }
 
 

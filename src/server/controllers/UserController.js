@@ -44,13 +44,25 @@ export function registerUser(req, res) {
     });
 }
 
-//I really just threw together, it's shithoues. 
-export async function updateUserDetails(userID, email, firstName, lastName, newPassword) {
-    const deferred = q.defer();
-    const update = {
-        username: email,
-        firstName: firstName,
-        lastName: lastName,
+export function updateUserDetails(email, firstName, lastName, newPassword) {
+    if (req.body.password === req.body.newPassword) {
+        Account.findOneAndUpdate({ _id: req.user._id }, {
+            $set: {
+                username: req.body.email,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                password: req.body.newPassword
+            }
+        }, { new: true }, (err, updatedUser) => {
+            if (err) {
+                console.log("===============ERROR WHEN UPDATING USER=============");
+                console.log(err);
+            }
+            else {
+                console.log(updatedUser);
+                //      res.json(sendPayload( await getDetails(req.user._id)));
+            }
+        });
     }
 
     console.log("******************** UPDATE BELOW *************");
@@ -170,3 +182,13 @@ export async function getUsersInTeam(teamID) {
     return result;
 }
 
+
+export async function setAvatar(userID, uri) {
+    try {
+        const result = await User.find({ _id: userID });
+        result.avatarURI = uri;
+        return sendPayload(await result.save());
+    } catch (err) { 
+        return sendError(err);
+    }
+}
