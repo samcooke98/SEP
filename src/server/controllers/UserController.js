@@ -52,10 +52,16 @@ export async function updateUserDetails(userID, email, firstName, lastName, newP
         firstName: firstName,
         lastName: lastName,
     }
+
+    console.log("******************** UPDATE BELOW *************");
+    console.log(update);
     
     if (newPassword) {
-        const user = await findById(userID);
+        console.log("************ I AM AT NEW PASSWORD. THE NEW PASSWORD IS:" + newPassword)
+        const user = await User.findById(userID);
+        console.log("******************** THIS IS THE USER: " + user);
         user.setPassword(newPassword, () => {
+            user.save();
             console.log("Updated password!");
         })
     }
@@ -63,6 +69,7 @@ export async function updateUserDetails(userID, email, firstName, lastName, newP
     User.findOneAndUpdate({ _id: userID }, {
         $set: update
     }, { new: true }, (err, updatedUser) => {
+        console.log("*************** A *****************")
         if (err) {
             console.log("===============ERROR WHEN UPDATING USER=============");
             console.log(err);

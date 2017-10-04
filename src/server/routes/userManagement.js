@@ -64,6 +64,8 @@ router.get("/updateDetails", isLoggedIn, async (req, res) => {
 })
 
 router.post("/updateDetails", isLoggedIn, async (req, res, next) => {
+    console.log("********************* UPDATE REQ BODY BELOW *******************");
+    console.log(req.body);
     try {
         //TODO: At some point, we should be checking the passpord properly, instead of using the session to identify
         var result = await UserController.updateUserDetails(
