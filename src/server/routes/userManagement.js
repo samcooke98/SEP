@@ -11,7 +11,7 @@ import { isLoggedIn } from "../utils/request.js"
 
 import { sendError, sendPayload } from "../utils/apiResponse.js";
 import { ensureLoggedIn } from "connect-ensure-login"
-
+import fileUploader from "../utils/fileUpload.js";
 
 router.post('/register', UserController.registerUser);
 
@@ -69,6 +69,8 @@ router.post("/updateDetails", isLoggedIn, async (req, res) => {
     console.log(data);
     res.json(sendPayload(data));
 })
+
+router.get("/sign-s3", fileUploader)
 
 
 

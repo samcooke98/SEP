@@ -30,7 +30,7 @@ handleChange = (name, value) => {
 submitForm = (evt) => {
         evt.preventDefault();
         if (this.state.password.value == this.state.newPassword.value) {
-            this.clearErrors();
+            // this.clearErrors();
             this.props.updateDetails(this.state.email.value, this.state.password.value, this.state.firstName.value, this.state.lastName.value)
         }
         else {

@@ -18,21 +18,21 @@ const avatars = [
     "http://placeimg.com/80/80/people?h",
     "http://placeimg.com/80/80/people?b",
     "http://placeimg.com/80/80/people?d",
-    
-    
 ]
 
 
+
+
 class AvatarSelection extends React.Component {
-    constructor(props) { 
+    constructor(props) {
         super(props);
-        
-        this.state = { 
+
+        this.state = {
             active: undefined
         }
     }
 
-    onButtonClick = (evt,val) => { 
+    onButtonClick = (evt, val) => {
         // const target = evt.target.value;
         console.log(val);
         console.log(evt);
@@ -41,20 +41,56 @@ class AvatarSelection extends React.Component {
 
     }
 
+    calcSignature = () => {
+        const file = document.getElementById("file-input").files[0]
+        fetch(`/api/sign-s3?file-name=${encodeURIComponent(file.name)}&file-type=${encodeURIComponent(file.type)}`).then((resp) => resp.json()).then(
+            (json) => {
+                this.uploadFile(file, json.signedRequest, json.url)
+            }
+        )
+    }
+
+    uploadFile = (file, signedRequest, url) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', signedRequest);
+        xhr.onreadystatechange = () => {
+          if(xhr.readyState === 4){
+            if(xhr.status === 200){
+                console.log("Hello!");
+            //   document.getElementById('preview').src = url;
+            //   document.getElementById('avatar-url').value = url;
+            }
+            else{
+              alert('Could not upload file.');
+            }
+          }
+        };
+        xhr.send(file);
+    }
+
+    onSubmit = (evt) => {
+        evt.preventDefault();
+        this.calcSignature();
+    }
+
     render() {
         return (
             <div>
                 {
                     avatars.map((val, i) => {
                         return (
-                            <IconButton key={i} onClick={(evt) => this.onButtonClick.bind(this,evt, val)()} style={{ margin: '8px' }}>
-                                <Avatar image={val } style={
-                                    this.props.selected == val ? {border: "2px solid blue" } : {}
-                                }  /> 
+                            <IconButton key={i} onClick={(evt) => this.onButtonClick.bind(this, evt, val)()} style={{ margin: '8px' }}>
+                                <Avatar image={val} style={
+                                    this.props.selected == val ? { border: "2px solid blue" } : {}
+                                } />
                             </IconButton>
                         )
                     })
                 }
+                {/* <form onSubmit={this.onSubmit}> */}
+                    <input id='file-input' type='file' />
+                    <button onClick={this.onSubmit}> Upload </button>
+                {/* </form> */}
             </div>
         )
     }
