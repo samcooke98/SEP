@@ -16,11 +16,14 @@ export default class LinkCard extends React.PureComponent {
                     title={this.props.title}
                     subtitle={this.props.subtitle}
                 />
-                <CardText>{this.props.text}</CardText>
+                <CardText>
+                    {this.props.text}
+                    {this.props.tags.map(val => <p>{val}</p>)}
+                </CardText>
                 <CardActions>
                     <Button flat icon='open_in_browser' label="Open" onClick={this.onClick} />
                     <Button flat label="Comment" onClick={this.comment} />
-                    <Button icon="delete" accent label='delete' onClick={this.props.removeFunc} /> 
+                    <Button icon="delete" accent label='delete' onClick={this.props.removeFunc} />
                 </CardActions>
 
             </Card>
@@ -35,7 +38,7 @@ export default class LinkCard extends React.PureComponent {
         open(this.props.url)
     }
 
-    delete = () => { 
+    delete = () => {
         console.log("TODO");
     }
 }

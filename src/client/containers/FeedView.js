@@ -14,6 +14,7 @@ import LoggedInRedirector from "./LoggedInRedirector"
 import { withProtection } from "./Protector.js";
 
 
+
 class FeedView extends React.Component {
     constructor(props) {
         super(props);
@@ -22,7 +23,8 @@ class FeedView extends React.Component {
             title: '',
             description: '',
             teams: [],
-            isDialogOpen: false
+            isDialogOpen: false,
+            tags: []
 
         }
     }
@@ -40,11 +42,12 @@ class FeedView extends React.Component {
     }
 
     submit = (evt) => {
+        debugger;
         for (var team of this.state.teams) {
             if (team.checked)
-                this.props.createResource(this.state.url, this.state.title, this.state.description, team._id)
+                this.props.createResource(this.state.url, this.state.title, this.state.description, team._id, this.state.tags)
         }
-        console.log('this evt'   + evt);
+        console.log('this evt' + evt);
         //this.toggleDialog();
     }
 
@@ -84,6 +87,7 @@ class FeedView extends React.Component {
                     <ResourceForm
                         url={this.state.url}
                         title={this.state.title}
+                        tags={this.state.tags}
                         description={this.state.description}
                         teams={this.state.teams}
                         handleChange={this.handleChange}
@@ -99,6 +103,7 @@ class FeedView extends React.Component {
                                 title={resource.title || ''}
                                 subtitle={resource.url}
                                 text={resource.description}
+                                tags={resource.tags}
                                 url={resource.url}
                                 key={resource._id}
                                 removeFunc={this.remove.bind(this, resource._id)}
@@ -127,7 +132,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         getUser: () => dispatch(getUserDetails()),
-        createResource: (url, title, description, team) => dispatch(createResource(url, title, description, team)),
+        createResource: (url, title, description, team, tags) => dispatch(createResource(url, title, description, team, tags)),
         getResources: (teamID) => dispatch(getResources(teamID)),
         rmResource: (id) => dispatch(deleteResource(id)),
     }

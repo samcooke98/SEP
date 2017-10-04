@@ -57,8 +57,8 @@ export const comment = createAction(actionTypes.COMMENT, async (username, text, 
     return post(`${url}/comments`, { username, text, url})
 })
 
-export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID) => {
-    return post(`resource`, { url, title, description, team: teamID }).then(
+export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID, tags) => {
+    return post(`resource`, { url, title, description, team: teamID, tags }).then(
 
         (payload) => normalize( normalizr.normalizeResource, payload) 
         //This helper function replaces all the code below!

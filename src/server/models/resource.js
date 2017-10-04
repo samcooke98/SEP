@@ -8,7 +8,7 @@ let Resource = new mongoose.Schema({
 	owner: { type: mongoose.Schema.ObjectId, required: true, ref: "Account" },
 	team: { type: mongoose.Schema.ObjectId, required: true, ref: "Team" },
 	tags: [{
-		type: String
+		type: String, required: false
 	}]
 })
 
