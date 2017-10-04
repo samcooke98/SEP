@@ -44,7 +44,8 @@ class FeedView extends React.Component {
             if (team.checked)
                 this.props.createResource(this.state.url, this.state.title, this.state.description, team._id)
         }
-        this.toggleDialog();
+        console.log('this evt'   + evt);
+        //this.toggleDialog();
     }
 
     remove = (id) => {
@@ -71,15 +72,15 @@ class FeedView extends React.Component {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                 <h1>Hello {this.props.user.firstName} </h1>
-                <Button icon='add' floating onMouseUp={this.toggleDialog} />
-                <p>Add a new entry </p>
+                <div style={{}}>
+                    <Button label='Add a new entry' flat primary onMouseUp={this.toggleDialog} />
+                </div>
                 <Dialog
                     active={this.state.isDialogOpen}
                     onEscKeyDown={this.toggleDialog}
                     onOverlayClick={this.toggleDialog}
-                    title='My awesome dialog'
+                    title='Add new entry'
                 >
-                    <p>Here you can add arbitrary content. Components like Pickers are using dialogs now.</p>
                     <ResourceForm
                         url={this.state.url}
                         title={this.state.title}
