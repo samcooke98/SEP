@@ -5,6 +5,7 @@ import { notifySimple } from "../utils/pushNotify.js";
 
 import passport from "passport";
 import moment from "moment";
+import q from 'q';
 
 /**
  * Creates a user and team 
@@ -43,6 +44,48 @@ export function registerUser(req, res) {
     });
 }
 
+//I really just threw together, it's shithoues. 
+export async function updateUserDetails(userID, email, firstName, lastName, newPassword) {
+    const deferred = q.defer();
+    const update = {
+        username: email,
+        firstName: firstName,
+        lastName: lastName,
+    }
+
+    console.log("******************** UPDATE BELOW *************");
+    console.log(update);
+    
+    if (newPassword) {
+        console.log("************ I AM AT NEW PASSWORD. THE NEW PASSWORD IS:" + newPassword)
+        const user = await User.findById(userID);
+        console.log("******************** THIS IS THE USER: " + user);
+        user.setPassword(newPassword, () => {
+            user.save();
+            console.log("Updated password!");
+        })
+    }
+
+    User.findOneAndUpdate({ _id: userID }, {
+        $set: update
+    }, { new: true }, (err, updatedUser) => {
+        console.log("*************** A *****************")
+        if (err) {
+            console.log("===============ERROR WHEN UPDATING USER=============");
+            console.log(err);
+            deferred.resolve(sendPayload(err));
+
+        }
+        else {
+
+            deferred.resolve(sendPayload(updatedUser));
+
+            //      res.json(sendPayload( await getDetails(req.user._id)));
+        }
+    });
+
+    return deferred.promise;
+}
 /**
  * Get the Feed for the logged in user
  * @param {*} req 
@@ -113,9 +156,9 @@ export async function removeNotification(endpointURL, userID) {
         let notification = user.notifications[index]
         if (notification.endpoint == endpointURL) {
             user.notifications.splice(index, 1);
-            return user.save().exec().then( () => { 
+            return user.save().exec().then(() => {
                 return sendPayload("Successfully removed entry")
-                
+
             })
         }
     }

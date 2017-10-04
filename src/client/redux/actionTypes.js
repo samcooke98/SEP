@@ -14,6 +14,6 @@ export const DELETE_RESOURCE    = "DELETE_RESOURCE";
 
 export const COMMENT 		    = "COMMENT";
 
-
+export const UPDATE_DETAILS     = "UPDATE_DETAILS";
 
 export const JOIN_TEAM          = "JOIN_TEAM";
