@@ -59,11 +59,27 @@ export const createComment = createAction(actionTypes.CREATE_COMMENT, async (res
     )
 })
 
+export const createReply = createAction(actionTypes.CREATE_REPLY, async (commentId, userId, reply) => {
+    return post(`${resourceId}/comments/${commentId}/replies`, {commentId, userId, reply}).then(
+        (payload) => normalize( normalizr.normalizeComment, payload) 
+    )
+})
+
 export const getComments = createAction(actionTypes.GET_COMMENTS, async (resourceId) => {
     return get(`resource/${resourceId}/comment`).then( 
         (payload) => normalize( normalizr.normalizeComment, payload) 
     )
 })
+
+export const getReplies = createAction(actionTypes.GET_REPLIES, async (resourceId ,commentId) => {
+    return get(`resource/${resourceId}/comment/${commentId}/replies`).then( 
+        (payload) => normalize( normalizr.normalizeComment, payload) 
+    )
+})
+
+export const getComment = createAction(actionTypes.GET_COMMENT, async (commentId) => 
+    get(`resource/${resourceId}/comment/${commentId}`).then( (payload) => normalize(normalizr.normalizeResource, payload)  )
+)
 
 export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID) => {
     return post(`resource`, { url, title, description, team: teamID }).then(
