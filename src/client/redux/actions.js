@@ -65,6 +65,11 @@ export const getComments = createAction(actionTypes.GET_COMMENTS, async (resourc
     )
 })
 
+export const deleteComment = createAction(actionTypes.DELETE_COMMENT, async (resourceId, commentId) => {
+    return del( `resource/${resourceId}/comments/${commentId}`);
+}, (resourceId,commentId) => ({ resourceId: resourceId, commentId:commentId}) ) //Create a meta part, containing the comment that was deleted
+
+
 export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID) => {
     return post(`resource`, { url, title, description, team: teamID }).then(
 
