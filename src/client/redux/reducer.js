@@ -41,6 +41,16 @@ var functionalReducers = {
 
         })
     },
+    [actionTypes.LOGOUT]: {
+        onSuccess: (state, action) => ({ 
+            ...state,
+            misc: { 
+                ...state.misc,
+                loggedIn: false,
+                userID: undefined
+            }
+        })
+    },
     [actionTypes.GET_RESOURCE]: {
         onSuccess: (state, action) => ({
             ui: {

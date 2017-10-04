@@ -59,7 +59,7 @@ export function updateUserDetails(email, firstName, lastName, newPassword) {
             }
             else {
                 console.log(updatedUser);
-          //      res.json(sendPayload( await getDetails(req.user._id)));
+                //      res.json(sendPayload( await getDetails(req.user._id)));
             }
         });
     }
@@ -152,3 +152,13 @@ export async function getUsersInTeam(teamID) {
     return result;
 }
 
+
+export async function setAvatar(userID, uri) {
+    try {
+        const result = await User.find({ _id: userID });
+        result.avatarURI = uri;
+        return sendPayload(await result.save());
+    } catch (err) { 
+        return sendError(err);
+    }
+}

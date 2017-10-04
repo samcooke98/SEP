@@ -23,6 +23,10 @@ export const login = createAction(actionTypes.LOGIN, async (username, password) 
     return post("login", { username, password }).then( (val) => normalize( normalizr.normalizeUser, val))
 })
 
+export const logout = createAction( actionTypes.LOGOUT, async () => { 
+    return get("logout")
+})
+
 
 export const register = createAction(actionTypes.REGISTER, async (username, password, firstName, lastName, teamName, description, category) => {
     return post("register", { username, password, firstName, lastName, teamName, description, category })

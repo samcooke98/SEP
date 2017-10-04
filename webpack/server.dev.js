@@ -48,7 +48,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				include: /(node_modules|bower_components)/,
+				// include: /(node_modules|bower_components)/,
 				use: [
 					"isomorphic-style-loader",
 					{
