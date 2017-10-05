@@ -25,7 +25,6 @@ render(
     mountApp);
 
 if (module.hot) {
-    console.log("here");
     module.hot.accept('./App', () => {
         const NextApp = require('./App').default;
         render(

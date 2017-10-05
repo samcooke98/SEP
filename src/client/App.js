@@ -9,7 +9,6 @@ import {Helmet} from "react-helmet";
     
 import { routes, RouteWithSubRoutes } from './Routes';
 
-
 export default function App(props) {
     console.log(routes);
     return (

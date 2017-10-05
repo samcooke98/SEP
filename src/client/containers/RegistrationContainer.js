@@ -20,7 +20,6 @@ const categories = [
 class RegistrationContainer extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			email: { value: '', error: '' },
 			password: { value: '', error: '' },
@@ -50,7 +49,6 @@ class RegistrationContainer extends React.Component {
 				shouldSubmit = false;
 				this.setState({ [container]: { ...this.state[container], error: "Cannot be empty" } })
 			}
-
 		}
 
 		//TODO: Validate email

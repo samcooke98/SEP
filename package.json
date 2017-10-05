@@ -41,6 +41,7 @@
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-tagsinput": "^3.18.0",
     "react-toolbox": "^2.0.0-beta.12",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
@@ -50,6 +51,7 @@
     "sass": "^1.0.0-beta.2",
     "selenium-webdriver": "^3.5.0",
     "sendgrid": "^5.2.3",
+    "validator.js": "^2.0.3",
     "validator": "^8.2.0",
     "web-push": "^3.2.3"
   },

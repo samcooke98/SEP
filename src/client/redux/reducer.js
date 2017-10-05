@@ -11,6 +11,7 @@ const initialState = {
         users: {},
         teams: {},
         resources: {},
+        comments: {}
     },
     ui: {}, //UI Data is placed here -> Like error messages for example
     misc: { // Anything that doesn't fit above can go here, (or in a new node if you want ) 
@@ -27,25 +28,54 @@ const initialState = {
 var functionalReducers = {
     [actionTypes.CREATE_RESOURCE]: {
         onSuccess: (state, action) => ({
+            ...state,
             misc: {
                 ...state.misc,
                 worked: true
             },
             ui: {
                 ...state.ui,
-                resources: [ ...(state.ui && state.ui.resources || []), action.payload.payload.result] 
+                resource: [ ...(state.ui && state.ui.resource || []), action.payload.payload.result] 
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            },            
+        }),
+        onFail: (state, action) => ({
+
+        })
+    },
+    [actionTypes.CREATE_COMMENT]: {
+        onSuccess: (state, action) => ({
+            misc: {
+                ...state.misc,
+                worked: true
+            },
+            ui: {
+                ...state.ui,
+                comments: [ ...(state.ui && state.ui.comments || []), action.payload.payload.result] ,
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            }
+        }),
+        onFail: (state, action) => ({
+            
+        })
+    },
+    [actionTypes.GET_COMMENTS]: {
+        onSuccess: (state, action) => ({
+            ui: {
+                ...state.ui,
+                comments: [ ...(state.ui && state.ui.comments || []), ...action.payload.payload.result] 
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             }
         }),
         onFail: (state, action) => ({
 
         })
-    },
-    [actionTypes.GET_RESOURCE]: {
+    }, 
+    [actionTypes.GET_RESOURCES]: {
         onSuccess: (state, action) => ({
             ui: {
                 ...state.ui,
-                resources: [ ...(state.ui && state.ui.resources || []), ...action.payload.payload.result] 
+                resource: [ ...(state.ui && state.ui.resource || []), ...action.payload.payload.result] 
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             }
         }),
@@ -103,6 +133,7 @@ var functionalReducers = {
 
 export default function rootReducer(state = initialState, action) {
     console.log(action);
+    console.log("^^^ ACTINO ^^^ ");
     switch (action.type) {
         case actionTypes.LOGIN:
             return loginReducer(state, action)
@@ -133,9 +164,7 @@ const createReducer = (state, action, onSuccess, onFail) =>
 //Login is special, it actually raises the correct error 
 const loginReducer = (state, action) => {
     let payload = action.payload.payload;
-    console.log(action.payload);
     if (action.payload.success) {
-        console.log('here');
         return { //ORDER is important. The spread operator does a shallow merge BUT it will overwrite. So call it first
             ...state,
             data: merge({}, state.data, payload.entities),
