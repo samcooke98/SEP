@@ -9,8 +9,8 @@ let Resource = new mongoose.Schema({
 	team: { type: mongoose.Schema.ObjectId, required: true, ref: "Team" },
 	tags: [{
 		type: String, required: false
-	}]
+	}],
+    comments: [{type: mongoose.Schema.ObjectId, required: true, ref:'Comment' }]
 })
-
 
 export default mongoose.model("Resource", Resource);

@@ -8,9 +8,6 @@ var teamSchema = new Schema({
     status: {type: 'String', required:false},
     creationDate: {type: 'Date', default: Date.now},
     owner: {type: Schema.ObjectId, required: true },
-
-    // resources: [{type: Schema.ObjectId, ref: "Resource"}]
-
 });
 
 

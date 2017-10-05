@@ -25,9 +25,9 @@ export async function createResource(url, title, description, userID, teamID, ta
  */
 export async function getID(resourceID) {
     try {
-        let res = await Resource.findById(resourceID);
-        console.log(res);
-        return sendPayload(res);
+        let res = await Resource.findOne({_id: resourceID});
+        const result = await res.populate("comments").execPopulate();
+        return sendPayload(result);
 
     } catch (err) {
         return sendPayload(err);
@@ -36,8 +36,13 @@ export async function getID(resourceID) {
 
 export async function getFromTeam(teamID) {
     try {
+        let result = [];
         let res = await Resource.find({ team: teamID });
-        return sendPayload(res);
+        for(var resource of res) { 
+            result.push( await resource.populate("comments").execPopulate() );
+        }
+            
+        return sendPayload(result);
     } catch (err) {
         return sendPayload(err);
     }
@@ -62,5 +67,20 @@ export async function remove(resourceID, userID) {
         }
     } catch (err) {
         return sendError("Invalid Resource ID");
+    }
+}
+
+/**
+ * 
+ * @param {CoommentObj} Comment 
+ */
+export async function addComment(commentId, resourceID) { 
+    try { 
+        let res = await Resource.findById(resourceID);
+        res.comments.push(commentId);
+        const success = await res.save();
+        return success;
+    } catch(err) { 
+        console.log(err);
     }
 }
