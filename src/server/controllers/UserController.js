@@ -44,7 +44,7 @@ export function registerUser(req, res) {
     });
 }
 
-export function updateUserDetails(email, firstName, lastName, newPassword) {
+export async function updateUserDetails(email, firstName, lastName, newPassword) {
     if (req.body.password === req.body.newPassword) {
         Account.findOneAndUpdate({ _id: req.user._id }, {
             $set: {
