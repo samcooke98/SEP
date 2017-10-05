@@ -65,15 +65,11 @@ export const getComments = createAction(actionTypes.GET_COMMENTS, async (resourc
     )
 })
 
-export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID, tags) => {
-    return post(`resource`, { url, title, description, team: teamID, tags }).then(
+export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID) => {
+    return post(`resource`, { url, title, description, team: teamID }).then(
 
         (payload) => normalize( normalizr.normalizeResource, payload) 
     )
-})
-
-export const updateDetails = createAction(actionTypes.UPDATE_DETAILS, async (email, newPassword, firstName, lastName) => {
-    return post('updateDetails', {email, newPassword, firstName, lastName}).then( (val) => normalize( normalizr.normalizeUser, val))
 })
 
 export const getResource = createAction(actionTypes.GET_RESOURCE, async (resId) => 
