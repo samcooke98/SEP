@@ -38,7 +38,6 @@ class FeedView extends React.Component {
     }
 
     submit = (evt) => {
-        debugger;
         for (var team of this.state.teams) {
             if (team.checked)
                 this.props.createResource(this.state.url, this.state.title, this.state.description, team._id, this.state.tags)
