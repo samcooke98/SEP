@@ -4,6 +4,16 @@ import Navigation from 'react-toolbox/lib/navigation';
 import { List, ListItem, ListDivider, ListSubHeader } from "react-toolbox/lib/List";
 import {Link} from "react-router-dom"
 
+
+const propTypes = { 
+    teams: Array, //Of Team Objects
+}
+
+/**
+ * This renders the navigation list on the left of the screen. 
+ * Currently there are a few key aspects. There the first section, containing a Link to "/feed"
+ * The next section is then generated based off props.teams, and renders a link in the left menu to just that team view.
+ */
 export default (props) => {
     return (
         <Navigation type='vertical'>

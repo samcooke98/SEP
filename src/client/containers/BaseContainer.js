@@ -88,12 +88,22 @@ class BaseContainer extends React.Component {
                                 } />
                             </User>
                         }
+                        {
+                            !this.props.loggedIn &&
+                            <Navigation type="horizontal">
+                                <RTLink href="/login" label="Login" active />
+                                <RTLink href="/register" label="Register"  />
+                                <RTLink href="/" label="Home"  />
+                            </Navigation>
+                        }
                     </Navigation>
                 </AppBar>
                 <NavDrawer pinned={this.props.loggedIn} active={false} clipped >
-                    <NavigationList
-                        teams={this.props.teams}
-                    />
+                    {this.props.loggedIn &&
+                        <NavigationList
+                            teams={this.props.teams}
+                        />
+                    }
                 </NavDrawer>
                 <Panel>
                     <Switch>
@@ -110,7 +120,10 @@ class BaseContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     if (!state.misc.loggedIn)
-        return { loggedIn: false }
+        return {
+            loggedIn: false,
+            teams: []
+        }
     else {
         const user = state.data.users[state.misc.userID]
 
@@ -118,7 +131,7 @@ const mapStateToProps = (state) => {
             loggedIn: state.misc.loggedIn,
             name: user.firstName + " " + user.lastName,
             avatar: user.avatarURI,
-            teams: user.teams.map( (val) => state.data.teams[val] )
+            teams: user.teams.map((val) => state.data.teams[val])
         }
     }
 }
