@@ -100,7 +100,7 @@ export async function deleteComment(resourceID, commentID, userID)
             }
         }
         const success = await res.save();
-        return success;
+        return sendPayload(success);
     } catch (err) {
         console.log(err);
     }

@@ -119,6 +119,7 @@ var functionalReducers = {
     },
     [actionTypes.DELETE_RESOURCE]: {
         onSuccess: (state, action) => ({
+                ...state,
                 data: {...state.data, resources: {...state.data.resources, [action.meta.id]: {}}}, //Remove the data object (or set it to blank)
                 ui: {...state.ui, resources: state.ui.resources.filter((val) => val != action.meta.id)} //Remove the id from the resources array
             }), //Remove all instances of the id 
@@ -126,8 +127,26 @@ var functionalReducers = {
     },
     [actionTypes.DELETE_COMMENT]: {
         onSuccess: (state, action) => ({
+                ...state, 
+                data: { 
+                    ...state.data,
+                    comments: { 
+                        ...state.data.comments, 
+                        [action.meta.commentId]: {}
+                    },
+                    resources: {
+                        ...state.data.resources,
+                        [action.meta.resourceId]: { 
+                            ...state.data.resources[action.meta.resourceId],
+                            comments: state.data.resources[action.meta.resourceId].comments.filter(
+                                (id) => id != action.meta.commentId
+                            ) //Remove commentID
+                        }
+                    }
+                }
             }),
         onFail: (state, action) => ({
+            
             })
     },
     ["Hello"]: {
