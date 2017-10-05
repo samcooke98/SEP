@@ -16,36 +16,37 @@ import { RouteWithSubRoutes } from "../Routes.js";
 import IndexPageContainer from "./IndexPageContainer.js"
 import User from "../components/UserButton/UserButton.js";
 import { logout } from "../redux/actions.js";
+import NavigationList from "../components/NavigationList.js";
 
 /**
  * Data to populate the navigation list with 
  */
 const link = (caption, to) => ({ caption, to, ...arguments })
 
-const NavigationList = [
-    {
-        caption: "Login", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-        to: "/login"
-    },
-    link("Register", "/register"),
-    {
-        divider: true //Any object that doesn't have 'to', and 'caption' defined will render as a divider
-    },
-    {
-        caption: "Feed", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-        to: "/feed",
-        loginOnly: true
-    },
-    {
-        caption: "Team Management",
-        to: "/manage",
-        loginOnly: true
-    },
-    {
-        divider: true,
-    },
-    link("Settings", "/settings")
-]
+// const NavigationList = [
+//     {
+//         caption: "Login", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
+//         to: "/login"
+//     },
+//     link("Register", "/register"),
+//     {
+//         divider: true //Any object that doesn't have 'to', and 'caption' defined will render as a divider
+//     },
+//     {
+//         caption: "Feed", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
+//         to: "/feed",
+//         loginOnly: true
+//     },
+//     {
+//         caption: "Team Management",
+//         to: "/manage",
+//         loginOnly: true
+//     },
+//     {
+//         divider: true,
+//     },
+//     link("Settings", "/settings")
+// ]
 
 
 class BaseContainer extends React.Component {
@@ -69,7 +70,6 @@ class BaseContainer extends React.Component {
             <Layout>
                 <AppBar title='TeamShare' fixed flat>
                     <Navigation type='horizontal'>
-
                         {this.props.loggedIn &&
                             <User
                                 avatar={this.props.avatar}
@@ -90,49 +90,10 @@ class BaseContainer extends React.Component {
                         }
                     </Navigation>
                 </AppBar>
-                <NavDrawer pinned active clipped permanentAt='sm'>
-                    <Navigation type='vertical'>
-                        <List selectable ripple>
-                            {/*So we wrap the router on */}
-                            {
-                                NavigationList.map((val, index) => {
-                                    /* return (val.caption !== undefined && val.to !== undefined
-                                        ? <ListItem
-                                            {...val}
-                                            onClick={this.navigateWithRouter.bind(this, val.to)}
-                                            className={this.props.location.pathname == val.to ? 'active' : ''}
-                                            key={index}
-                                        />
-                                        : <ListDivider key={index} />) */
-                                    if (val.loginOnly) {
-                                        if (this.props.loggedIn) {
-                                            return (<ListItem
-                                                {...val}
-                                                onClick={this.navigateWithRouter.bind(this, val.to)}
-                                                className={this.props.location.pathname == val.to ? 'active' : ''}
-                                                key={index}
-                                            />);
-                                        }
-                                    } else {
-                                        if (val.caption !== undefined && val.to !== undefined) {
-                                            return (<ListItem
-                                                {...val}
-                                                onClick={this.navigateWithRouter.bind(this, val.to)}
-                                                className={this.props.location.pathname == val.to ? 'active' : ''}
-                                                key={index}
-                                            />)
-                                        } else {
-                                            return (<ListDivider key={index} />)
-                                        }
-                                    }
-
-
-                                }
-                                )
-                            }
-                        </List>
-
-                    </Navigation>
+                <NavDrawer pinned={this.props.loggedIn} active={false} clipped >
+                    <NavigationList
+                        teams={this.props.teams}
+                    />
                 </NavDrawer>
                 <Panel>
                     <Switch>
@@ -156,7 +117,8 @@ const mapStateToProps = (state) => {
         return {
             loggedIn: state.misc.loggedIn,
             name: user.firstName + " " + user.lastName,
-            avatar: user.avatarURI
+            avatar: user.avatarURI,
+            teams: user.teams.map( (val) => state.data.teams[val] )
         }
     }
 }
