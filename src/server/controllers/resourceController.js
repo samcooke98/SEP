@@ -3,9 +3,8 @@ import { get } from "../controllers/TeamController.js";
 import { sendError, sendPayload } from "../utils/apiResponse.js";
 
 
-//TODO: Team Relationship
-export async function createResource(url, title, description, userID, teamID) {
-    var newRes = new Resource({ url: url, owner: userID, title, description, team: teamID });
+export async function createResource(url, title, description, userID, teamID, tags) {
+    var newRes = new Resource({ url: url, owner: userID, title, description, team: teamID, tags});
 
     try {
         await newRes.save();

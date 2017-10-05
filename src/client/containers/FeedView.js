@@ -6,6 +6,7 @@ import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getUserDetails, createResource, getResources, deleteResource } from "../redux/actions.js";
 import { Button, IconButton } from 'react-toolbox/lib/button';
+import Dialog from 'react-toolbox/lib/dialog';
 import ResourceForm from "../components/ResourceForm.js";
 import LinkCard from "../components/LinkCard.js";
 import LoggedInRedirector from "./LoggedInRedirector"
@@ -19,6 +20,9 @@ class FeedView extends React.Component {
             title: '',
             description: '',
             teams: [],
+            isDialogOpen: false,
+            tags: []
+
         }
     }
 
@@ -34,14 +38,21 @@ class FeedView extends React.Component {
     }
 
     submit = (evt) => {
+        debugger;
         for (var team of this.state.teams) {
             if (team.checked)
-                this.props.createResource(this.state.url, this.state.title, this.state.description, team._id)
+                this.props.createResource(this.state.url, this.state.title, this.state.description, team._id, this.state.tags)
         }
+        console.log('this evt' + evt);
+        //this.toggleDialog();
     }
 
     remove = (id) => {
         this.props.rmResource(id)
+    }
+
+    toggleDialog = () => {
+        this.setState({ isDialogOpen: !this.state.isDialogOpen });
     }
 
     componentDidMount() {
@@ -79,15 +90,25 @@ class FeedView extends React.Component {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                 <h1>Hello {this.props.user.firstName} </h1>
-                <p>Add a new entry below </p>
-                <ResourceForm
-                    url={this.state.url}
-                    title={this.state.title}
-                    description={this.state.description}
-                    teams={this.state.teams}
-                    handleChange={this.handleChange}
-                />
-                <Button icon='add' floating onMouseUp={this.submit} />
+                <div style={{}}>
+                    <Button label='Add a new entry' flat primary onMouseUp={this.toggleDialog} />
+                </div>
+                <Dialog
+                    active={this.state.isDialogOpen}
+                    onEscKeyDown={this.toggleDialog}
+                    onOverlayClick={this.toggleDialog}
+                    title='Add new entry'
+                >
+                    <ResourceForm
+                        url={this.state.url}
+                        title={this.state.title}
+                        tags={this.state.tags}
+                        description={this.state.description}
+                        teams={this.state.teams}
+                        handleChange={this.handleChange}
+                    />
+                    <Button icon='add' floating onMouseUp={this.submit} />
+                </Dialog>
                 <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
                     { /*TODO: Show only teams that user belongs to, Sort the order */
                         this.props.resourceIDs.map((id) => {
@@ -96,6 +117,7 @@ class FeedView extends React.Component {
                                 title={resource.title || ''}
                                 subtitle={resource.url}
                                 text={resource.description}
+                                tags={resource.tags}
                                 url={resource.url}
                                 resourceId={resource._id}
                                 commentFunc={this.navigateWithRouter.bind(this, "resource/" + resource._id + "/comments")}
@@ -125,7 +147,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         getUser: () => dispatch(getUserDetails()),
-        createResource: (url, title, description, team) => dispatch(createResource(url, title, description, team)),
+        createResource: (url, title, description, team, tags) => dispatch(createResource(url, title, description, team, tags)),
         getResources: (teamID) => dispatch(getResources(teamID)),
         rmResource: (id) => dispatch(deleteResource(id)),
     }
