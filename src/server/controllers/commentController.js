@@ -27,3 +27,14 @@ export async function getID(commentId) {
         return sendPayload(err);
     }
 }
+
+export async function addReply(replyID, commentId) { 
+    try { 
+        let res = await Comment.findById(commentId);
+        res.replies.push(replyID);
+        const success = await res.save();
+        return success;
+    } catch(err) { 
+        console.log(err);
+    }
+}
