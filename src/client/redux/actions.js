@@ -28,8 +28,8 @@ export const logout = createAction( actionTypes.LOGOUT, async () => {
 })
 
 
-export const register = createAction(actionTypes.REGISTER, async (username, password, firstName, lastName, teamName, description, category) => {
-    return post("register", { username, password, firstName, lastName, teamName, description, category })
+export const register = createAction(actionTypes.REGISTER, async (username, password, firstName, lastName, teamName, description, category, avatar) => {
+    return post("register", { username, password, firstName, lastName, teamName, description, category, avatar })
 })
 
 export const getUserDetails = createAction(actionTypes.GET_USER, async () => {

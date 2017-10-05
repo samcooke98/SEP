@@ -10,14 +10,14 @@ Component that renders a bunch of avatars, and provides a parent with the active
 */
 
 const avatars = [
-    "http://placeimg.com/80/80/animals?a",
-    "http://placeimg.com/80/80/animals?c",
-    "http://placeimg.com/80/80/animals?g",
-    "http://placeimg.com/80/80/animals?e",
-    "http://placeimg.com/80/80/people?f",
-    "http://placeimg.com/80/80/people?h",
-    "http://placeimg.com/80/80/people?b",
-    "http://placeimg.com/80/80/people?d",
+    // "http://placeimg.com/80/80/animals?a",
+    // "http://placeimg.com/80/80/animals?c",
+    // "http://placeimg.com/80/80/animals?g",
+    // "http://placeimg.com/80/80/animals?e",
+    // "http://placeimg.com/80/80/people?f",
+    // "http://placeimg.com/80/80/people?h",
+    // "http://placeimg.com/80/80/people?b",
+    // "http://placeimg.com/80/80/people?d",
 ]
 
 
@@ -28,7 +28,7 @@ class AvatarSelection extends React.Component {
         super(props);
 
         this.state = {
-            active: undefined
+            activeURI: undefined
         }
     }
 
@@ -45,25 +45,25 @@ class AvatarSelection extends React.Component {
         const file = document.getElementById("file-input").files[0]
         fetch(`/api/sign-s3?file-name=${encodeURIComponent(file.name)}&file-type=${encodeURIComponent(file.type)}`).then((resp) => resp.json()).then(
             (json) => {
-                this.uploadFile(file, json.signedRequest, json.url)
+                if(!json.error) 
+                    this.uploadFile(file, json.signedRequest, json.url)
             }
         )
     }
 
     uploadFile = (file, signedRequest, url) => {
+
         const xhr = new XMLHttpRequest();
         xhr.open('PUT', signedRequest);
         xhr.onreadystatechange = () => {
-          if(xhr.readyState === 4){
-            if(xhr.status === 200){
-                console.log("Hello!");
-            //   document.getElementById('preview').src = url;
-            //   document.getElementById('avatar-url').value = url;
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    this.props.setURI(url)
+                }
+                else {
+                    alert('Could not upload file.');
+                }
             }
-            else{
-              alert('Could not upload file.');
-            }
-          }
         };
         xhr.send(file);
     }
@@ -74,6 +74,7 @@ class AvatarSelection extends React.Component {
     }
 
     render() {
+
         return (
             <div>
                 {
@@ -87,10 +88,9 @@ class AvatarSelection extends React.Component {
                         )
                     })
                 }
-                {/* <form onSubmit={this.onSubmit}> */}
-                    <input id='file-input' type='file' />
-                    <button onClick={this.onSubmit}> Upload </button>
-                {/* </form> */}
+                <Avatar image={this.props.URI} title={this.props.name || ""} />
+                <input id='file-input' type='file' />
+                <button onClick={this.onSubmit}> Upload </button>
             </div>
         )
     }
