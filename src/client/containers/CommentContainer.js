@@ -22,14 +22,16 @@ class CommentContainer extends React.Component {
             userId: '',
             comments: '',
             teams: [],
+            usersInTeam: null,
         }
     }
 
     submitForm = (evt) => {
         //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
         
-            this.props.createComment(this.state.resourceId, this.props.user._id, this.state.comments)
-            this.setState({submitted: true})
+            this.props.createComment(this.state.resourceId, this.props.user._id, this.state.comments);
+            this.setState({submitted: true});
+            this.setState({commments: ''});
 
     };
     
@@ -46,34 +48,37 @@ class CommentContainer extends React.Component {
     componentDidMount() {
         if(this.props.resource != {}) { 
             this.props.getResource(this.props.match.params.resourceId) 
-        
         }
+       
     }
 
     handleChange = (value, name) => {
         if(value == '@'){
-            //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
-            let teams = this.props.user.teams.map((val) => this.props.teams[val]);
-        
-                //Create a property to hold if the team is checked or not
-                teams = teams.map((val) => (val.checked = false, val))
-                
-                ////Insert it into state 
-                this.setState({ teams: teams })
-        
-                //Get the resources for each team that the user belongs to
-                teams.map((team) =>{
-                    console.log(team._id)
-                    this.props.getUsersInTeam(team._id);
-                })
+            
         }
-        console.log(value);
         this.setState({ [name]: value })
    
+    }
+
+    componentWillReceiveProps( nextProps ) { 
+        if(nextProps.usersInTeam != this.props.usersInTeam) 
+            this.setState({usersInTeam: nextProps.usersInTeam})
+
+
+
+        if(!this.props.usersInTeam)
+            if(!nextProps.usersInTeam)
+                if(this.props.team || nextProps.team) {
+                    console.log("GETTING TEAM")
+                    this.props.getUsersInTeam( (this.props || nextProps) .team._id ) 
+                }
+        
+        // if(nextProps.usersInTeam)nextProps.team )&& !(this.props || nextProps).usersInTeam) 
     }
     
 
     render() {
+        console.log(this.props.usersInTeam);
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                     <h2>Comments</h2>
@@ -82,13 +87,18 @@ class CommentContainer extends React.Component {
                             return <ListItem 
                                 avatar='https://dl.dropboxusercontent.com/u/2247264/assets/m.jpg'
                                 caption={this.props.comments && this.props.comments[id].comment}
-                                legend={this.props.user.username}
+                                legend={this.props.user.firstName + ' ' + this.props.user.lastName}
+                                rightIcon='delete'
+                                
                             />
                         })}
                     </List>
                     <CommentInput
                         user={this.props.user}
                         comments={this.state.comments}
+                        users={this.props.usersInTeam && this.props.usersInTeam.map((val) =>  (this.props.allUsers[val])
+                        
+                        )}
                         handleChange={this.handleChange}
                     />
                     <Button label='Comment' raised primary onMouseUp={this.submitForm}/>
@@ -103,11 +113,16 @@ class CommentContainer extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     var user = state.data.users[state.misc.userID]; //Gets the User Object
+    const resourceID = ownProps.match.params.resourceId; 
+
     return {
         user: user,
         teams: state.data.teams,
+        allUsers: state.data.users,
+        usersInTeam: state.ui.userInTeam,
         comments: state.data.comments || {},
         resource: state.data.resources && state.data.resources[ownProps.match.params.resourceId] || null,
+        team: state.data.teams && state.data.resources && state.data.teams[state.data.resources[resourceID].team]
     }
 }
 

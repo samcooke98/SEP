@@ -6,29 +6,33 @@ import Autocomplete from 'react-toolbox/lib/autocomplete';
 /**
  * Component that renders a form for inputting resource links
  */
-const source = {
-    hello:  { username: 'erow' },
-    user:  { username: 'jsomma121' }
-  };
 
-export default class CommentComponent extends React.Component {
-    state = {
-        countries: ['ES-es', 'TH-th'],
-        user: this.props.user,
-      }
-    
+
+export default class CommentInput extends React.Component {
+state = {
+    simple: 'Spain',
+    multiple: ['ES-es', 'TH-th']
+};
       handleChange = (value) => {
-          console.log('value', value);
-        this.setState({countries: value});
+            console.log(value);  
       };
 
-    
       render () {
-        return (
-            <div>
-                <Input type='text' label='Comment' name='comment' value={this.props.comments == '@' ? '@' + source.user.username : this.props.comments} onChange={(val) => this.props.handleChange(val, "comments")} />
-                    
-            </div>
-        );
+          console.log(this.props)
+            return (
+                <div>
+                   
+                    <Input 
+                        type='text' 
+                        label='Comment' 
+                        name='comment' 
+                        onChange={(val) => this.handleChange(val, "comments")} 
+                        source={  this.props.users && this.props.users.map( (val) =>  val.firstName +  " " + val.lastName ) 
+                            
+                        }
+                        />
+                        
+                </div>
+            );
     }
 }

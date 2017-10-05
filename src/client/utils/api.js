@@ -44,7 +44,6 @@ export async function get(endpoint) {
         credentials: "same-origin",
     }
     return fetch(API_URL + endpoint, opts).then((response) => {
-        console.log(API_URL + endpoint)
         if (response.status == 401) {
             return { success: false, msg: "Server returned unauthorised" }
         }

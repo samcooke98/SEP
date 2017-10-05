@@ -19,9 +19,7 @@ export async function createComment(resource, user, comment) {
 }
 
 export async function getUsersInTeam(teamID) {
-    console.log('------------------------------------');
     var result = await User.find({ teams: teamID }).exec();
-    console.log(result);
     return result;
 }
 

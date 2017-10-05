@@ -149,7 +149,6 @@ export default function rootReducer(state = initialState, action) {
             return loginReducer(state, action)
             break;
         default:
-            console.log(action.payload);
             if (action.payload && action.payload.payload && action.payload.payload.entities)
                 state = merge({}, state, { data: action.payload.payload.entities })
     }
@@ -159,7 +158,6 @@ export default function rootReducer(state = initialState, action) {
         console.log("unhandled redux action");
         console.log(action);
     }
-    console.log(state);
     return state;
 }
 
