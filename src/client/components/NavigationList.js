@@ -33,7 +33,7 @@ export default (props) => {
                             key={teamObj._id + "naviList"}
                             caption={teamObj.teamName}
                             itemContent={
-                                <NavigationLink to="/hello" display={teamObj.teamName} />
+                                <NavigationLink to={`/team/${teamObj._id}`} display={teamObj.teamName} />
                             }
                         />
                     )

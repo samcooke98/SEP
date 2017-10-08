@@ -81,12 +81,25 @@ var functionalReducers = {
             }
         })
     },
-    [actionTypes.GET_RESOURCE]: {
+    [actionTypes.GET_RESOURCES]: {
         onSuccess: (state, action) => ({
             ui: {
                 ...state.ui,
-                resource: [...(state.ui && state.ui.resource || []), ...action.payload.payload.result]
+                resource: [...(state.ui && state.ui.resource || []), ...action.payload.payload.result],
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            },
+            data: { 
+                ...state.data,
+                teams: {
+                    ...state.data.teams,
+                    [action.meta.teamID]: { 
+                        ...state.data.teams[action.meta.teamID],
+                        resources: [
+                            ...(state.data.teams[action.meta.teamID] || []),
+                            ...action.payload.payload.result
+                        ] //Store the resourceIDs into the team that the reqeuest was for
+                    }
+                }
             }
         }),
         onFail: (state, action) => ({

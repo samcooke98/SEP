@@ -88,7 +88,7 @@ export const getResources = createAction(actionTypes.GET_RESOURCES, async (teamI
     return get(`resource?team=${teamID}`).then( 
         (payload) => normalize( normalizr.normalizeResources, payload) 
     )
-})
+}, (teamID) => ({teamID}))
 
 export const deleteResource = createAction(actionTypes.DELETE_RESOURCE, async (resourceID) => {
     return del( `resource/${resourceID}`);

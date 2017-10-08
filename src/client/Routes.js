@@ -16,6 +16,8 @@ import BaseContainer from "./containers/BaseContainer.js";
 import CommentContainer from "./containers/CommentContainer.js";
 import SettingsContainer from "./containers/SettingsContainer.js";
 import UpdateDetailsContainer from "./containers/UpdatedDetailsInput.js";
+import TeamContainer from "./containers/TeamContainer.js";
+import EditTeamContainer from "./containers/EditTeamContainer.js";
 
 export const routes = [
 
@@ -24,7 +26,7 @@ export const routes = [
         // exact: true,
         component: BaseContainer,
         routes: [
-            
+
             {
                 path: "/feed",
                 exact: true,
@@ -32,7 +34,7 @@ export const routes = [
             },
             {
                 path: '/updateDetails',
-                exact:true,
+                exact: true,
                 component: UpdateDetailsContainer
             },
             {
@@ -69,7 +71,16 @@ export const routes = [
                 path: "/settings",
                 component: SettingsContainer
             },
-            { 
+            {
+                path: "/team/:teamID/edit",
+                component: EditTeamContainer
+            },
+            {
+                path: "/team/:teamID",
+                component: TeamContainer,
+                exact:true
+            },
+            {
                 path: "/",
                 exact: true,
                 component: IndexPageContainer
