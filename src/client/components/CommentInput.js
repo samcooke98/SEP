@@ -1,36 +1,64 @@
 import React from "react";
-import Input from 'react-toolbox/lib/input';
-import Checkbox from "react-toolbox/lib/checkbox";
-import Autocomplete from 'react-toolbox/lib/autocomplete';
+import {Checkbox, Input, Link, Chip, Autocomplete, Avatar}  from "react-toolbox/lib";
 
 /**
  * Component that renders a form for inputting resource links
  */
-
+// const countriesObject = {'ES-es': 'Spain', 'TH-th': 'Thailand', 'EN-gb': 'England', 'EN-en': 'USA'};
 
 export default class CommentInput extends React.Component {
-state = {
-    simple: 'Spain',
-    multiple: ['ES-es', 'TH-th']
-};
+        // state = {
+        //     userTagged: null,
+        // };
       handleChange = (value) => {
-            console.log(value);  
+        
       };
 
+      handleMultipleChange = (value) => {
+        this.setState({multiple: value});
+      };
+
+      handleUserTag(user) {
+        event.preventDefault();
+
+          
+      }
+
       render () {
-          console.log(this.props)
+          console.log(this.props.taggedUsers)
             return (
                 <div>
-                   
-                    <Input 
-                        type='text' 
-                        label='Comment' 
-                        name='comment' 
-                        onChange={(val) => this.handleChange(val, "comments")} 
-                        source={  this.props.users && this.props.users.map( (val) =>  val.firstName +  " " + val.lastName ) 
-                            
-                        }
-                        />
+                    {
+                        this.props.users != null && this.props.taggedUsers == []
+                        ? this.props.users && this.props.users.map( (val, i) =>
+                            this.props.taggedUsers.map((user, i) => {
+                                conosle.log(user);
+                                <div>
+                                    <Link active onClick={this.handleUserTag}>
+                                        <Chip>
+                                            <Avatar title="A" /><span>{user[i]}</span>
+                                        </Chip>
+                                    </Link>
+                                    <Input
+                                        type='text' 
+                                        label='Comment' 
+                                        name='comment' 
+                                        onChange={(val) => this.props.handleChange(val)}
+                                        value={user[i]}    
+                                    />
+                                </div>
+                            })
+                        )
+                        : 
+                            <Input
+                                type='text' 
+                                label='Comment' 
+                                name='comment' 
+                                onChange={(val) => this.props.handleChange(val)}    
+                                
+                            />
+                    }
+                    
                         
                 </div>
             );

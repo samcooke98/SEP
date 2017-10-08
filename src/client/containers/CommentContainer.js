@@ -23,6 +23,7 @@ class CommentContainer extends React.Component {
             comments: '',
             teams: [],
             usersInTeam: null,
+            taggedUsers: [ ],
         }
     }
 
@@ -53,8 +54,14 @@ class CommentContainer extends React.Component {
     }
 
     handleChange = (value, name) => {
+        
         if(value == '@'){
-            
+            let data = ['Joshua Somma'];
+            this.props.usersInTeam && this.props.usersInTeam.map((val) =>  (
+                data.push(this.props.allUsers[val].firstName + " " + this.props.allUsers[val].lastName)
+            ))
+            console.log(data);
+            this.setState({taggedUsers: data});
         }
         this.setState({ [name]: value })
    
@@ -78,7 +85,6 @@ class CommentContainer extends React.Component {
     
 
     render() {
-        console.log(this.props.usersInTeam);
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                     <h2>Comments</h2>
@@ -93,14 +99,21 @@ class CommentContainer extends React.Component {
                             />
                         })}
                     </List>
-                    <CommentInput
-                        user={this.props.user}
-                        comments={this.state.comments}
-                        users={this.props.usersInTeam && this.props.usersInTeam.map((val) =>  (this.props.allUsers[val])
-                        
-                        )}
-                        handleChange={this.handleChange}
-                    />
+                    { 
+                        this.state.taggedUsers != null
+                        ? <CommentInput
+                            taggedUsers={this.state.taggedUsers}
+                            user={this.props.user}
+                            comments={this.state.comments}
+                            users={this.props.usersInTeam && this.props.usersInTeam.map((val) =>  (this.props.allUsers[val]))}
+                            handleChange={this.handleChange}
+                            />
+                        : <CommentInput
+                            user={this.props.user}
+                            comments={this.state.comments}
+                            handleChange={this.handleChange}
+                            />
+                    }
                     <Button label='Comment' raised primary onMouseUp={this.submitForm}/>
                     
             </div>
