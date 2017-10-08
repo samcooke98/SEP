@@ -36,7 +36,9 @@ export function registerUser(req, res) {
                 } else {
                     //Add the team to the user
                     account.teams.push(team._id);
+                    team.members.push(account._id);
                     account.save();
+                    team.save();
                     res.json(sendPayload(await getDetails(req.user._id)));
                 }
             })

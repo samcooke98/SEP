@@ -147,9 +147,10 @@ var functionalReducers = {
         }), //Remove all instances of the id 
         onFail: (state, action) => ({})
     },
-    ["Hello"]: {
-        onSuccess: (state, action) => ({ hello: "hello" })
-    }
+    [actionTypes.SEND_INVITES]: {
+        onSuccess: (state, action) => ({...state, ui: { ...state.ui, inviteSuccess: true, inviteMsg: '' }}),
+        onFail:    (state,action) => ({...state, ui: { ...state.ui, inviteSuccess: false, inviteMsg: action.payload.error}})
+    },
 
 
 }
@@ -161,6 +162,8 @@ export default function rootReducer(state = initialState, action) {
         case actionTypes.LOGIN:
             return loginReducer(state, action)
             break;
+        case actionTypes.CLEAR_INVITE_SUCCESS: 
+            return {...state, ui:{ ...state.ui, inviteSuccess: null, inviteMsg: ''}}
         default:
             if (action.payload && action.payload.payload && action.payload.payload.entities)
                 state = merge({}, state, { data: action.payload.payload.entities })

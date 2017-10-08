@@ -1,6 +1,6 @@
 import { normalize, schema } from 'normalizr';
 
-const teamEntity = new schema.Entity("teams", {}, {idAttribute: '_id'});
+const teamEntity = new schema.Entity("teams", { users: [userEntity] }, {idAttribute: '_id'});
 
 const commentEntity = new schema.Entity("comments", {}, {idAttribute: '_id'});
 
@@ -14,6 +14,7 @@ export const normalizeResources = (data) => normalize(data, [resourceEntity]);
 export const normalizeComment = (data) => normalize(data, commentEntity);
 
 export const normalizeUser = (data) => normalize( data, userEntity );
+export const normalizeUsers= (data) => normalize( data, [userEntity] )
 
 
 export const normalizeTeam = (data) => normalize(data, teamEntity);

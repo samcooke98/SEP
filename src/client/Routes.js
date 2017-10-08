@@ -8,7 +8,6 @@ import LoginContainer from "./containers/LoginContainer";
 import IndexPageContainer from "./containers/IndexPageContainer";
 import RegistrationContainer from "./containers/RegistrationContainer"
 import FeedView from "./containers/FeedView.js";
-import TeamManagement from "./containers/TeamManagement.js"
 import InvitePage from "./containers/InvitePage.js";
 import ResetContainer from "./containers/ResetContainer.js";
 import PasswordResetContainer from "./containers/PasswordResetContainer.js";
@@ -46,11 +45,6 @@ export const routes = [
                 path: '/register',
                 exact: true,
                 component: RegistrationContainer
-            },
-            {
-                path: '/manage',
-                exact: true,
-                component: TeamManagement
             },
             {
                 path: "/invite/:id",

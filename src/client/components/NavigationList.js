@@ -1,7 +1,7 @@
 import React from "react";
 
 import Navigation from 'react-toolbox/lib/navigation';
-import { List, ListItem, ListDivider, ListSubHeader } from "react-toolbox/lib/List";
+import { List, ListItem, ListDivider, ListSubHeader } from "react-toolbox/lib/list";
 import {Link} from "react-router-dom"
 
 

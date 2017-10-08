@@ -5,20 +5,36 @@ import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
 
 import { withProtection } from "./Protector.js";
 import Container from "../components/Container.js";
-import ResourceList from "../components/ResourceList.js";
-
-import { getResources } from "../redux/actions.js";
-
+import UserCard from "../components/UserCard.js";
+import { Snackbar, Button } from "react-toolbox"
+import { getResources, getUsers } from "../redux/actions.js";
 
 class EditTeamContainer extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            active: false
+        }
+    }
 
     componentDidMount() {
         this.props.getResources();
+        this.props.getUsers();
+    }
+
+    removeUser = (userID) => {
+        console.log("Removing User");
+
+
+
+        console.log("TODO")
     }
 
     render() {
         const { team, user } = this.props;
         const isOwner = team.owner == user._id;
+        console.log(this.props.users);
         return (
             <Container>
                 <div style={{ display: 'flex', alignItems: "center" }}>
@@ -27,6 +43,31 @@ class EditTeamContainer extends React.Component {
                         <p> {team.description} </p>
                     </span>
                 </div>
+                {/* Really need to take this into a Grid Component  */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row' }} >
+
+                    {this.props.users.map(
+                        (user) => (
+                            <UserCard
+                                key={user._id}
+                                _id={user._id}
+                                avatar={user.avatarURI}
+                                name={user.firstName + " " + user.lastName}
+                                onRemove={() => { this.removeUser(user._id) }}
+                            />
+                        )
+                    )}
+                </div>
+                <Button label="Test" onClick={() => this.setState({ active: true })} />
+                {/* <Snackbar
+                    action="Undo"
+                    label="Removed ${name} from the team"
+                    active={this.state.active}
+                    onClick={this.handle}
+                    timeout={2000}
+                    onTimeout={() => this.setState({active:false})}
+                    type='warning'
+                /> */}
 
             </Container >
         )
@@ -37,16 +78,22 @@ class EditTeamContainer extends React.Component {
 const mapStateToProps = (state, ownProps) => {
     const teamID = ownProps.match.params.teamID;
     const team = state.data.teams[teamID]
+    const users = state.data.users;
+
     return {
         team: team,
         user: state.data.users[state.misc.userID],
+        users: (Object.values(users || {})).filter((user) => user.teams.includes(teamID)),
         resources: (team.resources || []).map((resourceID) => state.data.resources[resourceID])
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+    const teamID = ownProps.match.params.teamID
     return {
-        getResources: () => dispatch(getResources(ownProps.match.params.teamID))
+        getResources: () => dispatch(getResources(teamID)),
+        getUsers: () => dispatch(getUsers(teamID)),
+        removeUser: (userID) => dispatch(removeUserFromTeam(userID, teamID))
 
     }
 }

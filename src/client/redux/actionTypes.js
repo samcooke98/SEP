@@ -19,3 +19,6 @@ export const UPDATE_DETAILS     = "UPDATE_DETAILS";
 export const JOIN_TEAM          = "JOIN_TEAM";
 export const CREATE_COMMENT     = "CREATE_COMMENT";
 export const GET_COMMENTS       = "GET_COMMENTS";
+
+export const GET_USERS          = "GET_USERS";
+export const REMOVE_USER_FROM_TEAM = "REMOVE_USER_FROM_TEAM"
