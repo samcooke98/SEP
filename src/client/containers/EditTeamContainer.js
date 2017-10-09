@@ -7,7 +7,7 @@ import { withProtection } from "./Protector.js";
 import Container from "../components/Container.js";
 import UserCard from "../components/UserCard.js";
 import { Snackbar, Button } from "react-toolbox"
-import { getResources, getUsers } from "../redux/actions.js";
+import { getResources, getUsers, removeUserFromTeam } from "../redux/actions.js";
 
 class EditTeamContainer extends React.Component {
     constructor(props) {
@@ -19,16 +19,17 @@ class EditTeamContainer extends React.Component {
     }
 
     componentDidMount() {
+
+        const a = this.props.getUsers();
+        a.then( (val) => console.log("promise resolved with " + val))
         this.props.getResources();
-        this.props.getUsers();
     }
 
     removeUser = (userID) => {
         console.log("Removing User");
 
+        const promise = this.props.removeUser(userID)
 
-
-        console.log("TODO")
     }
 
     render() {
@@ -47,7 +48,7 @@ class EditTeamContainer extends React.Component {
                 <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row' }} >
 
                     {this.props.users.map(
-                        (user) => (
+                        (user) => user && (
                             <UserCard
                                 key={user._id}
                                 _id={user._id}
@@ -83,7 +84,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         team: team,
         user: state.data.users[state.misc.userID],
-        users: (Object.values(users || {})).filter((user) => user.teams.includes(teamID)),
+        users: team.members.map((id) => state.data.users[id]),
         resources: (team.resources || []).map((resourceID) => state.data.resources[resourceID])
     }
 }

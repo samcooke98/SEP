@@ -194,3 +194,9 @@ export async function setAvatar(userID, uri) {
         return sendError(err);
     }
 }
+
+export async function removeFromTeam(userID, teamID) { 
+    const user = await User.findById(userID);
+    user.teams.splice( user.teams.indexOf(teamID) , 1 );
+    await user.save();
+}

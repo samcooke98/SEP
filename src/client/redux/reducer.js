@@ -88,11 +88,11 @@ var functionalReducers = {
                 resource: [...(state.ui && state.ui.resource || []), ...action.payload.payload.result],
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             },
-            data: { 
+            data: {
                 ...state.data,
                 teams: {
                     ...state.data.teams,
-                    [action.meta.teamID]: { 
+                    [action.meta.teamID]: {
                         ...state.data.teams[action.meta.teamID],
                         resources: [
                             ...(state.data.teams[action.meta.teamID] || []),
@@ -148,9 +148,27 @@ var functionalReducers = {
         onFail: (state, action) => ({})
     },
     [actionTypes.SEND_INVITES]: {
-        onSuccess: (state, action) => ({...state, ui: { ...state.ui, inviteSuccess: true, inviteMsg: '' }}),
-        onFail:    (state,action) => ({...state, ui: { ...state.ui, inviteSuccess: false, inviteMsg: action.payload.error}})
+        onSuccess: (state, action) => ({ ...state, ui: { ...state.ui, inviteSuccess: true, inviteMsg: '' } }),
+        onFail: (state, action) => ({ ...state, ui: { ...state.ui, inviteSuccess: false, inviteMsg: action.payload.error } })
     },
+    [actionTypes.REMOVE_USER_FROM_TEAM]: {
+        onSuccess: (state, action) => ({
+            ...state, data: {
+                ...state.data,
+                users: {
+                    ...state.data.users,
+                    [action.meta.userID]: {
+                        ...state.data.users[action.meta.userID],
+                        teams: state.data.users[action.meta.userID].teams.filter( (id) => id != action.meta.teamID) 
+                    }
+                },
+                teams: {
+                    ...state.data.teams,
+                    ...action.payload.payload.entities.teams
+                }
+            }
+        })
+    }
 
 
 }
@@ -162,8 +180,8 @@ export default function rootReducer(state = initialState, action) {
         case actionTypes.LOGIN:
             return loginReducer(state, action)
             break;
-        case actionTypes.CLEAR_INVITE_SUCCESS: 
-            return {...state, ui:{ ...state.ui, inviteSuccess: null, inviteMsg: ''}}
+        case actionTypes.CLEAR_INVITE_SUCCESS:
+            return { ...state, ui: { ...state.ui, inviteSuccess: null, inviteMsg: '' } }
         default:
             if (action.payload && action.payload.payload && action.payload.payload.entities)
                 state = merge({}, state, { data: action.payload.payload.entities })

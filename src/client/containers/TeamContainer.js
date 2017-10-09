@@ -67,7 +67,7 @@ class TeamContainer extends React.Component {
                     value={this.state.value}
                     onClick={() => this.props.send( this.state.value) }
                 />
-                <p> DIVIDER </p>
+                <p/>
                 <ResourceList
                     resources={this.props.resources}
                 />

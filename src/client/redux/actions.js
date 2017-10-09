@@ -101,8 +101,8 @@ export const getUsers = createAction(actionTypes.GET_USERS, async (teamID) => {
 }, (teamID) => ({ teamID }))
 
 export const removeUserFromTeam = createAction(actionTypes.REMOVE_USER_FROM_TEAM, async (userID, teamID) => {
-    return del(`teams/${teamID}/users/${userID}`).then((payload) => normalize(normalizr.normalizeTeam, payload) )
-})
+    return del(`team/${teamID}/users/${userID}`).then((payload) => normalize(normalizr.normalizeTeam, payload) )
+}, (userID, teamID) => ({userID,teamID}))
 
 //At some point, it could be cool to generate these at runtime? 
 // const apiActions = [ 
