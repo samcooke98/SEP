@@ -7,6 +7,8 @@ var Team = require('../models/team');
 var moment = require('moment');
 import * as ResetLinkController from "../controllers/ResetLinkController.js";
 import * as UserController from "../controllers/UserController.js";
+import * as TeamController from "../controllers/TeamController.js";
+
 import { isLoggedIn } from "../utils/request.js"
 
 import { sendError, sendPayload } from "../utils/apiResponse.js";
@@ -51,15 +53,15 @@ router.delete("/user/teams/:teamID", isLoggedIn, async (req, res) => {
 
     try {
         if (TeamController.isOwner(req.user._id.str, req.params.teamID) != true) {
-            TeamController.removeFromTeam(req.user._id, req.params.teamID);
-            res.json(sendPayload(UserController.getDetails(req.user._id)))
+            await TeamController.removeFromTeam(req.user._id, req.params.teamID);
+            res.json(sendPayload(await UserController.getDetails(req.user._id)))
         } else {
             res.json(sendPayload("You can't leave while you're the owner of the team!"))
         }
 
     } catch (err) {
         console.log(err);
-        res.json(sendError(error))
+        res.json(sendError(err))
     }
 })
 

@@ -159,7 +159,7 @@ var functionalReducers = {
                     ...state.data.users,
                     [action.meta.userID]: {
                         ...state.data.users[action.meta.userID],
-                        teams: state.data.users[action.meta.userID].teams.filter( (id) => id != action.meta.teamID) 
+                        teams: state.data.users[action.meta.userID].teams.filter((id) => id != action.meta.teamID)
                     }
                 },
                 teams: {
@@ -168,6 +168,15 @@ var functionalReducers = {
                 }
             }
         })
+    },
+    [actionTypes.LEAVE_TEAM]: {
+        onSuccess: (state, action) => ({
+            ...state, 
+            data: { 
+                ...state.data, users: { ...state.data.users, ...action.payload.payload.entities.users}
+            }
+        }),
+        onFail: (state, action) => ({...state})
     }
 
 
