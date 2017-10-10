@@ -79,6 +79,9 @@ class BaseContainer extends React.Component {
                                 <MenuItem value="edit" caption="Edit Profile" onClick={
                                     () => this.props.history.push('/edit')
                                 } />
+                                <MenuItem value="notifications" caption="Notifications" onClick={
+                                    () => this.props.history.push('/notifications')
+                                } />
                                 <MenuDivider />
                                 <MenuItem value="blah" caption="Logout" onClick={
                                     () => {

@@ -16,6 +16,7 @@ export async function get(id) {
     return Team.findById(id);
 }
 
+
 export async function isOwner(userID, teamID) {
     const team = await get(teamID)
 
@@ -50,8 +51,6 @@ export async function removeFromTeam(userID, teamID) {
  * @param {*} url 
  */
 export async function notifyTeam(teamID, userID, title, message, url) {
-    console.log("NOTIFY TEAM");
-
     //Send a notification to all users in the team ( who have notifications ) 
     var users = await UserController.getUsersInTeam(teamID);
     for (var user of users) {

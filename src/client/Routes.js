@@ -17,6 +17,7 @@ import SettingsContainer from "./containers/SettingsContainer.js";
 import UpdateDetailsContainer from "./containers/UpdatedDetailsInput.js";
 import TeamContainer from "./containers/TeamContainer.js";
 import EditTeamContainer from "./containers/EditTeamContainer.js";
+import NotificationContainer from "./containers/NotificationContainer.js";
 
 export const routes = [
 
@@ -73,6 +74,10 @@ export const routes = [
                 path: "/team/:teamID",
                 component: TeamContainer,
                 exact:true
+            },
+            {
+                path: "/notifications",
+                component: NotificationContainer
             },
             {
                 path: "/",
