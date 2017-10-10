@@ -42,6 +42,11 @@ router.get("/user", isLoggedIn, async (req, res) => {
     res.json(sendPayload(data));
 })
 
+router.get("/user/:id", isLoggedIn, async (req, res) => {
+    var data = await UserController.getPublic(req.params.id);
+    res.json(sendPayload(data));
+})
+
 router.post("/user/notify", isLoggedIn, async (req, res) => {
     console.log(req.body);
     var data = await UserController.addNotification(req.body, req.user._id);

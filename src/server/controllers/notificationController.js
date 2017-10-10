@@ -1,6 +1,6 @@
 import Notification from "../models/notification.js";
 import { get as getTeamObj } from "./TeamController.js";
-import { getDetails as getUser} from "./UserController.js"
+import { getDetails as getUser } from "./UserController.js"
 export function createNotification() {
 
 }
@@ -18,6 +18,7 @@ export async function notifyTeam(teamID, triggerUser, description, url, shouldPu
     const teamObj = await getTeamObj(teamID);
 
     teamObj.members.map(async (id) => {
+        if (id.equals(triggerUser)) return;
         const user = await getUser(id);
         user.addNotification(notification);
         if (shouldPush) user.notify(notification.description, '', url);

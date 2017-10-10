@@ -135,6 +135,12 @@ export async function getDetails(id) {
     return user.populate('notifications').populate("teams").execPopulate()
 }
 
+export async function getPublic( id) { 
+    const user = await User.findById(id);
+    //TODO: Remove password d? 
+    return user;
+}
+
 /**
  * 
  * @param {Object({endpoint, keys: { p256dh, auth }})} notifyPayload 
