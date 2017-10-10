@@ -8,67 +8,116 @@ import { updateDetails } from "../redux/actions.js";
 
 import Button from "react-toolbox/lib/button";
 import Input from "react-toolbox/lib/input";
-import UpdateForm from "../components/UpdatedDetailsInput.js";
 
 class UpdatedDetailsInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             email: { value: '', error: '' },
-            oldPassword: { value: '', error: ''},
-			password: { value: '', error: '' },
-			newPassword: { value: '', error: '' },
-			firstName: { value: '', error: '' },
-			lastName: { value: '', error: '' },
+            // oldPassword: { value: '', error: '' },
+            newPassword: { value: '', error: '' },
+            confirmNewPassword: { value: '', error: '' },
+            firstName: { value: '', error: '' },
+            lastName: { value: '', error: '' },
 
         }
     }
-handleChange = (name, value) => {
-		this.setState({ [name]: { value, error: this.state[name].error } })
+
+    handleChange = (value, name) => {
+        this.setState({ [name]: { value, error: this.state[name].error } }, () => this.calcErrors())
     }
 
-submitForm = (evt) => {
+    submitForm = (evt) => {
         evt.preventDefault();
-        if (this.state.password.value == this.state.newPassword.value) {
+
+        const shouldSubmit = !this.hasErrors();
+
+        if (shouldSubmit) {
+            this.props.updateDetails(
+                this.state.email.value,
+                this.state.newPassword.value,
+                this.state.firstName.value,
+                this.state.lastName.value
+            )
             this.clearErrors();
-            this.props.updateDetails(this.state.email.value, this.state.password.value, this.state.firstName.value, this.state.lastName.value)
         }
-        else {
+    }
+
+    // TODO: GET THE PASSWORD CHECK WORKING!!!! THIS DOES NOT WORK @SAM @VISH @JOEY
+    calcErrors = () => {
+        if (this.state.newPassword.value != this.state.confirmNewPassword.value) {
             this.setState({
-                password: { ...this.state.password, error: "The passwords do not match" },
-                passwordConfirm: { ...this.state.newPassword, error: "The passwords do not match" }
+                newPassword: { ...this.state.newPassword, error: "The passwords do not match" },
+                confirmNewPassword: { ...this.state.confirmNewPassword, error: "The passwords do not match" }
+            })
+
+        } else {
+            this.setState({
+                newPassword: { ...this.state.newPassword, error: "" },
+                confirmNewPassword: { ...this.state.confirmNewPassword, error: "" }
             })
         }
-    }
-    
 
-    // submitForm = (evt) => {
-    //     evt.preventDefault();
-    //     this.props.signIn(this.state.email, this.state.password)
-    // }
+        for (var container in this.state) {
+            if (this.state[container].value === '' || this.state[container].value === "") {
+                this.setState({ [container]: { ...this.state[container], error: "Cannot be empty" } })
+            } else {
+                this.setState({ [container]: { ...this.state[container], error: "" } })
+            }
+        }
+
+    }
+
+    hasErrors = () => {
+        for (var container in this.state) {
+            if (this.state[container].error !== '') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     componentWillReceiveProps(nextProps) {
-    this.setState({ email: { value: nextProps.user.email }})
-    this.setState({ firstName: { value: nextProps.user.firstName }})
-    this.setState({ lastName: { value: nextProps.user.lastName }})
+        this.reset(nextProps);
     }
 
-    
+    componentWillMount() {
+        this.reset(this.props);
+    }
 
-   render() {
-       return (
-         <div style={{flex: 1, overflowY: 'auto', padding: '1.8rem'}}>
-            <UpdateForm
-             email={this.props.user.username}
-             firstName={this.props.user.firstName}
-             lastName={this.props.user.lastName}
-             oldPassword={this.state.oldPassword.value}
-             password={this.state.password.value}
-             newPassword={this.state.newPassword.value}/>
-            <Button label='Submit' raised primary onClick={this.submitForm} />
-    
-         </div>
-       )
-   }
+    clearErrors = () => {
+        for (var container in this.state) {
+            this.setState({ [container]: { ...this.state[container], error: "" } })
+        }
+    }
+
+    reset = (props) => {
+        this.setState({ email: { value: props.user.username } })
+        this.setState({ firstName: { value: props.user.firstName } })
+        this.setState({ lastName: { value: props.user.lastName } })
+    }
+
+
+
+    render() {
+        return (
+            <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
+
+                <form onSubmit={this.submitForm}>
+                    <Input type='text' label='Email' name='email' value={this.state.email.value} error={this.state.email.error} onChange={(val) => this.handleChange(val, "email")} />
+                    <Input type='text' label='First Name' name='firstName' value={this.state.firstName.value} error={this.state.firstName.error} onChange={(val) => this.handleChange(val, "firstName")} />
+                    <Input type='text' label='Last Name' name='lastName' value={this.state.lastName.value} error={this.state.lastName.error} onChange={(val) => this.handleChange(val, "lastName")} />
+                    {/* <Input type='password' label='Old password' name='oldPassword' onChange={(val) => this.handleChange(val, "oldPassword")} /> */}
+                    <Input type='password' label='New Password' name='newPassword' value={this.state.newPassword.value} error={this.state.newPassword.error} onChange={(val) => this.handleChange(val, "newPassword")} />
+                    <Input type='password' label='Confirm New Password' name='confirmNewPassword' value={this.state.confirmNewPassword.value} error={this.state.confirmNewPassword.error} onChange={(val) => this.handleChange(val, "confirmNewPassword")} />
+                    <Button label='Submit' raised primary onClick={this.submitForm} />
+                </form>
+
+            </div>
+        )
+    }
 }
 
 
@@ -76,14 +125,14 @@ submitForm = (evt) => {
 const mapStateToProps = (state) => {
     return {
         loggedIn: state.misc.loggedIn,
-        user: state.data.users[state.misc.userID] 
+        user: state.data.users[state.misc.userID]
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
 
     return {
-        updateDetails: (email, password, firstName, lastName) => dispatch(updateDetails(email, password, firstName, lastName))
+        updateDetails: (email, newPassword, firstName, lastName) => dispatch(updateDetails(email, newPassword, firstName, lastName))
         //   this.props.updateDetails(email, password, firstName, lastName)
 
     }
