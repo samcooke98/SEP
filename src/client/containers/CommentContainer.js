@@ -6,7 +6,7 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import CommentInput from "../components/CommentInput.js";
-import { getUserDetails, createComment, getResource } from "../redux/actions.js";
+import { getUserDetails, createComment, getResource, deleteComment } from "../redux/actions.js";
 import { withProtection } from "./Protector.js";
 
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
@@ -54,16 +54,24 @@ class CommentContainer extends React.Component {
    
     }
     
+    remove = (resourceID,commentId) => {
+        this.props.deleteComment(resourceID,commentId);        
+    }
+    
 
     render() {
+    
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                     <h1>Comments</h1>
                     <List selectable ripple>
-                        {this.props.resource && this.props.resource.comments.map( (id) => {
-                            return <p key={id}> {this.props.comments && this.props.comments[id].comment}</p>
+                        {this.props.resource && this.props.resource.comments.map( (id ) => {
+                            return <p key={id}> {this.props.comments && this.props.comments[id].comment}      
+                            {this.props.user._id == this.props.comments[id].userId &&
+                            <Button icon="delete" accent label='Remove' onClick={this.remove.bind(this,this.props.resource._id,id)}/>
+                            }
+                            </p>
                         })}
-                        
                     </List>
                     <CommentInput
                         comment={this.state.comment}
@@ -95,7 +103,8 @@ const mapDispatchToProps = (dispatch) => {
         getUser: () => dispatch(getUserDetails()),
         createComment: (resourceId, userId, comments) => dispatch(createComment(resourceId, userId, comments)),
         getResource: (resourceId) => dispatch(getResource(resourceId)),
-        getComments: (resourceId) => dispatch(getComments(resourceId))  
+        getComments: (resourceId) => dispatch(getComments(resourceId)),
+        deleteComment: (resourceId,commentId) => dispatch(deleteComment(resourceId,commentId))
     }
 }
 

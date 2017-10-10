@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { isLoggedIn, canDo } from "../utils/request.js"
-import * as ResourceController from "../controllers/resourceController.js";
+        import * as ResourceController from "../controllers/resourceController.js";
 import * as TeamController from "../controllers/TeamController.js";
 import { sendError, sendPayload } from "../utils/apiResponse.js";
 
@@ -39,29 +39,38 @@ router.get("/resource", isLoggedIn, async (req, res) => {
         //todo: handle appropriate 
         //Team should be a selection of the users
         team = req.user.teams[0] && req.user.teams[0]._id
-    } 
-        var result = await ResourceController.getFromTeam(team);
-        res.json(result);
-    
+    }
+    var result = await ResourceController.getFromTeam(team);
+    res.json(result);
+
 })
 
-router.get("/resource/:id/comments", isLoggedIn, async(req,res) => {
+router.get("/resource/:id/comments", isLoggedIn, async(req, res) => {
     let id = req.match.id;
-    try { 
+    try {
         var result = await ResourceController.getID(id);
-        result.populate("comments").execPopulate().then( (val) => { 
+        result.populate("comments").execPopulate().then((val) => {
             res.json(sendPayload(val.comments))
         })
-    } catch (err) { 
+    } catch (err) {
         res.json(sendError(JSON.stringify(err)))
     }
 
 })
 
+router.delete("/resource/:resourceId/comments/:commentId", isLoggedIn, async(req, res) => {
+    let rID = req.params.resourceId;
+    let cID = req.params.commentId;
+    try {
+        var result = await ResourceController.deleteComment(rID, cID, req.user._id);
+        res.json(result);
+    } catch (err) {
+        res.json(sendError(JSON.stringify(err)))
+    }
+});
 
 
-
-router.delete("/resource/:id", isLoggedIn, async (req, res) => { 
+router.delete("/resource/:id", isLoggedIn, async (req, res) => {
     let resourceID = req.params.id;
     var result = await ResourceController.remove(resourceID, req.user._id);
     res.json(result);
