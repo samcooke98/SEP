@@ -61,13 +61,29 @@ router.get("/updateDetails", isLoggedIn, async (req, res) => {
     var data = await UserController.getDetails(req.user._id);
     res.json(sendPayload(data));
     console.log(req.body);
-
 })
 
-router.post("/updateDetails", isLoggedIn, async (req, res) => {
-    var data = await UserController.updateUserDetails(req.body.email, req.body.firstName, req.body.lastName, req.body.newPassword);
-    console.log(data);
-    res.json(sendPayload(data));
+router.post("/updateDetails", isLoggedIn, async (req, res, next) => {
+    console.log("********************* UPDATE REQ BODY BELOW *******************");
+    console.log(req.body);
+    try {
+        //TODO: At some point, we should be checking the passpord properly, instead of using the session to identify
+        var result = await UserController.updateUserDetails(
+            req.user._id, 
+            req.body.email || req.user.username, 
+            req.body.firstName || req.user.firstName, 
+            req.body.lastName || req.user.lastName, 
+            req.body.newPassword || undefined);
+        console.log("RESULT:");
+        console.log(result);
+        res.json((result));
+
+
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
 })
 
 router.get("/sign-s3", fileUploader)

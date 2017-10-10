@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { isLoggedIn, canDo } from "../utils/request.js"
-import * as ResourceController from "../controllers/resourceController.js";
+        import * as ResourceController from "../controllers/resourceController.js";
 import * as TeamController from "../controllers/TeamController.js";
 import { sendError, sendPayload } from "../utils/apiResponse.js";
 
@@ -14,9 +14,11 @@ router.get("/testresource", (req, res) => {
 
 router.post("/resource", isLoggedIn, canDo, async (req, res, next) => {
     console.log("POST resource route");
+    console.log("****************** THIS IS THE REQ");
+    console.log(req.body);
     try {
         // If we get to here, we try to insert the Resource (failure reasons: url already exists)
-        var result = await ResourceController.createResource(req.body.url, req.body.title, req.body.description, req.user._id, req.body.team)
+        var result = await ResourceController.createResource(req.body.url, req.body.title, req.body.description, req.user._id, req.body.team, req.body.tags)
         TeamController.notifyTeam(req.body.team, req.user._id, `New Link on TeamShare`, `${req.user.firstName} added a new link to your team. Click here to see it!`, req.body.url)
         res.json(result);
     } catch (err) {
@@ -37,11 +39,36 @@ router.get("/resource", isLoggedIn, async (req, res) => {
         //todo: handle appropriate 
         //Team should be a selection of the users
         team = req.user.teams[0] && req.user.teams[0]._id
-    } else {
-        var result = await ResourceController.getFromTeam(team);
-        res.json(result);
     }
+    var result = await ResourceController.getFromTeam(team);
+    res.json(result);
+
 })
+
+router.get("/resource/:id/comments", isLoggedIn, async(req, res) => {
+    let id = req.match.id;
+    try {
+        var result = await ResourceController.getID(id);
+        result.populate("comments").execPopulate().then((val) => {
+            res.json(sendPayload(val.comments))
+        })
+    } catch (err) {
+        res.json(sendError(JSON.stringify(err)))
+    }
+
+})
+
+router.delete("/resource/:resourceId/comments/:commentId", isLoggedIn, async(req, res) => {
+    let rID = req.params.resourceId;
+    let cID = req.params.commentId;
+    try {
+        var result = await ResourceController.deleteComment(rID, cID, req.user._id);
+        res.json(result);
+    } catch (err) {
+        res.json(sendError(JSON.stringify(err)))
+    }
+});
+
 
 router.delete("/resource/:id", isLoggedIn, async (req, res) => {
     let resourceID = req.params.id;

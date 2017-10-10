@@ -24,6 +24,7 @@ module.exports = {
 			/^react-toolbox/, //Regex actually works, strings didn't seem to be 
 			/^react-css-themr/,
 			/\.(?!(?:jsx?|json|css|scss)$).{1,5}$/i,
+			/^react-tagsinput/
 		]
 	}), "./src/server/app.js"],
 	node: {
