@@ -9,6 +9,7 @@ import { AppBar, Panel, NavDrawer, Link as RTLink } from 'react-toolbox';
 import { List, ListItem, ListDivider } from "react-toolbox";
 import Navigation from 'react-toolbox/lib/navigation';
 import Link from 'react-toolbox/lib/link';
+import { Button } from "react-toolbox";
 import { MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
 
 
@@ -17,36 +18,12 @@ import IndexPageContainer from "./IndexPageContainer.js"
 import User from "../components/UserButton/UserButton.js";
 import { logout } from "../redux/actions.js";
 import NavigationList from "../components/NavigationList.js";
+import styles from './BaseContainer.css';
 
 /**
  * Data to populate the navigation list with 
  */
 const link = (caption, to) => ({ caption, to, ...arguments })
-
-// const NavigationList = [
-//     {
-//         caption: "Login", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-//         to: "/login"
-//     },
-//     link("Register", "/register"),
-//     {
-//         divider: true //Any object that doesn't have 'to', and 'caption' defined will render as a divider
-//     },
-//     {
-//         caption: "Feed", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-//         to: "/feed",
-//         loginOnly: true
-//     },
-//     {
-//         caption: "Team Management",
-//         to: "/manage",
-//         loginOnly: true
-//     },
-//     {
-//         divider: true,
-//     },
-//     link("Settings", "/settings")
-// ]
 
 
 class BaseContainer extends React.Component {
@@ -95,18 +72,19 @@ class BaseContainer extends React.Component {
                             !this.props.loggedIn &&
                             <Navigation type="horizontal">
                                 <RTLink href="/login" label="Login" active />
-                                <RTLink href="/register" label="Register"  />
-                                <RTLink href="/" label="Home"  />
+                                <RTLink href="/register" label="Register" />
+                                <RTLink href="/" label="Home" />
                             </Navigation>
                         }
                     </Navigation>
                 </AppBar>
-                <NavDrawer pinned={this.props.loggedIn} active={false} clipped >
+                <NavDrawer pinned={this.props.loggedIn} active={false} clipped className={styles.navList} >
                     {this.props.loggedIn &&
-                        <NavigationList
+                        <NavigationList className={styles.navBody}
                             teams={this.props.teams}
                         />
                     }
+                    <footer className={styles.footer}> <Button label="Create a Team" floating={false} primary flat /> </footer>
                 </NavDrawer>
                 <Panel>
                     <Switch>
