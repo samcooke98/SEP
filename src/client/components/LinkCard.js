@@ -17,11 +17,11 @@ export default class LinkCard extends React.PureComponent {
                 />
                 <CardText>
                     {this.props.text}
-                    {this.props.tags.map(val => <p>{val}</p>)}
+                    {this.props.tags.map((val, i) => <p key={i}>{val}</p>)}
                 </CardText>
                 <CardActions>
-                    <Button flat icon='open_in_browser' label="Open" onClick={this.onClick} />
-                    <Button flat label="Comment" onClick={this.comment} />
+                    <Button flat icon='open_in_browser' label="Open" onClick={this.openFunc} />
+                    <Button flat label="Comment" onClick={this.props.commentFunc} />
                     <Button icon="delete" accent label='delete' onClick={this.props.removeFunc} />
                 </CardActions>
 

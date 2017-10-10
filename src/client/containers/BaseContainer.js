@@ -22,30 +22,30 @@ import { logout } from "../redux/actions.js";
  */
 const link = (caption, to) => ({ caption, to, ...arguments })
 
-const NavigationList = [
-    {
-        caption: "Login", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-        to: "/login"
-    },
-    link("Register", "/register"),
-    {
-        divider: true //Any object that doesn't have 'to', and 'caption' defined will render as a divider
-    },
-    {
-        caption: "Feed", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-        to: "/feed",
-        loginOnly: true
-    },
-    {
-        caption: "Team Management",
-        to: "/manage",
-        loginOnly: true
-    },
-    {
-        divider: true,
-    },
-    link("Settings", "/settings")
-]
+// const NavigationList = [
+//     {
+//         caption: "Login", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
+//         to: "/login"
+//     },
+//     link("Register", "/register"),
+//     {
+//         divider: true //Any object that doesn't have 'to', and 'caption' defined will render as a divider
+//     },
+//     {
+//         caption: "Feed", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
+//         to: "/feed",
+//         loginOnly: true
+//     },
+//     {
+//         caption: "Team Management",
+//         to: "/manage",
+//         loginOnly: true
+//     },
+//     {
+//         divider: true,
+//     },
+//     link("Settings", "/settings")
+// ]
 
 
 class BaseContainer extends React.Component {
@@ -69,7 +69,6 @@ class BaseContainer extends React.Component {
             <Layout>
                 <AppBar title='TeamShare' fixed flat>
                     <Navigation type='horizontal'>
-
                         {this.props.loggedIn &&
                             <User
                                 avatar={this.props.avatar}
@@ -125,14 +124,25 @@ class BaseContainer extends React.Component {
                                             return (<ListDivider key={index} />)
                                         }
                                     }
-
-
-                                }
-                                )
-                            }
-                        </List>
-
+                                } />
+                            </User>
+                        }
+                        {
+                            !this.props.loggedIn &&
+                            <Navigation type="horizontal">
+                                <RTLink href="/login" label="Login" active />
+                                <RTLink href="/register" label="Register"  />
+                                <RTLink href="/" label="Home"  />
+                            </Navigation>
+                        }
                     </Navigation>
+                </AppBar>
+                <NavDrawer pinned={this.props.loggedIn} active={false} clipped >
+                    {this.props.loggedIn &&
+                        <NavigationList
+                            teams={this.props.teams}
+                        />
+                    }
                 </NavDrawer>
                 <Panel>
                     <Switch>
@@ -149,14 +159,26 @@ class BaseContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     if (!state.misc.loggedIn)
+<<<<<<< HEAD
+        return {
+            loggedIn: false,
+            teams: []
+        }
+=======
         return { loggedIn: false }
+>>>>>>> 3a536bdb3d38810d0078641fa89d9efd2f509e38
     else {
         const user = state.data.users[state.misc.userID]
 
         return {
             loggedIn: state.misc.loggedIn,
             name: user.firstName + " " + user.lastName,
+<<<<<<< HEAD
+            avatar: user.avatarURI,
+            teams: user.teams.map((val) => state.data.teams[val])
+=======
             avatar: user.avatarURI
+>>>>>>> 3a536bdb3d38810d0078641fa89d9efd2f509e38
         }
     }
 }

@@ -64,7 +64,6 @@ class InviteContainer extends React.Component {
         }
     }
 
-    //TODO: What if the user is already loggedIn? 
     render() {
         if (this.props.invitedID == undefined) return <div> Loading </div>
         return (

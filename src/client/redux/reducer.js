@@ -28,17 +28,17 @@ const initialState = {
 var functionalReducers = {
     [actionTypes.CREATE_RESOURCE]: {
         onSuccess: (state, action) => ({
-                ...state,
-                misc: {
-                    ...state.misc,
-                    worked: true
-                },
-                ui: {
-                    ...state.ui,
-                    resource: [...(state.ui && state.ui.resource || []), action.payload.payload.result]
-                            // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
-                },
-            }),
+            ...state,
+            misc: {
+                ...state.misc,
+                worked: true
+            },
+            ui: {
+                ...state.ui,
+                resource: [...(state.ui && state.ui.resource || []), action.payload.payload.result]
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            },
+        }),
         onFail: (state, action) => ({
 
             })
@@ -55,52 +55,75 @@ var functionalReducers = {
     },
     [actionTypes.CREATE_COMMENT]: {
         onSuccess: (state, action) => ({
-                misc: {
-                    ...state.misc,
-                    worked: true
-                },
-                ui: {
-                    ...state.ui,
-                    comments: [...(state.ui && state.ui.comments || []), action.payload.payload.result],
-                    // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
-                }
-            }),
+            misc: {
+                ...state.misc,
+                worked: true
+            },
+            ui: {
+                ...state.ui,
+                comments: [...(state.ui && state.ui.comments || []), action.payload.payload.result],
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            }
+        }),
         onFail: (state, action) => ({
 
-            })
+        })
     },
     [actionTypes.GET_COMMENTS]: {
         onSuccess: (state, action) => ({
-                ui: {
-                    ...state.ui,
-                    comments: [...(state.ui && state.ui.comments || []), ...action.payload.payload.result]
-                            // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
-                }
-            }),
+            ui: {
+                ...state.ui,
+                comments: [...(state.ui && state.ui.comments || []), ...action.payload.payload.result]
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            }
+        }),
         onFail: (state, action) => ({
 
-            })
+        })
+    },
+    [actionTypes.LOGOUT]: {
+        onSuccess: (state, action) => ({
+            ...state,
+            misc: {
+                ...state.misc,
+                loggedIn: false,
+                userID: undefined
+            }
+        })
     },
     [actionTypes.GET_RESOURCES]: {
         onSuccess: (state, action) => ({
-                ui: {
-                    ...state.ui,
-                    resource: [...(state.ui && state.ui.resource || []), ...action.payload.payload.result]
-                            // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            ui: {
+                ...state.ui,
+                resource: [...(state.ui && state.ui.resource || []), ...action.payload.payload.result],
+                // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
+            },
+            data: {
+                ...state.data,
+                teams: {
+                    ...state.data.teams,
+                    [action.meta.teamID]: {
+                        ...state.data.teams[action.meta.teamID],
+                        resources: [
+                            ...(state.data.teams[action.meta.teamID] || []),
+                            ...action.payload.payload.result
+                        ] //Store the resourceIDs into the team that the reqeuest was for
+                    }
                 }
-            }),
+            }
+        }),
         onFail: (state, action) => ({
 
-            })
+        })
     },
     [actionTypes.REGISTER]: {
-        onSuccess: (state, action) => ({//Success returns the same as login 
-                ui: {
-                    ...state.ui,
-                    registrationSuccess: true,
-                    registrationFail: ""
-                }
-            }),
+        onSuccess: (state, action) => ({ //Success returns the same as login 
+            ui: {
+                ...state.ui,
+                registrationSuccess: true,
+                registrationFail: ""
+            }
+        }),
         onFail: (state, action) => ({
                 ui: {
                     ...state.ui,
@@ -159,8 +182,23 @@ var functionalReducers = {
             
             })
     },
-    ["Hello"]: {
-        onSuccess: (state, action) => ({hello: "hello"})
+    [actionTypes.REMOVE_USER_FROM_TEAM]: {
+        onSuccess: (state, action) => ({
+            ...state, data: {
+                ...state.data,
+                users: {
+                    ...state.data.users,
+                    [action.meta.userID]: {
+                        ...state.data.users[action.meta.userID],
+                        teams: state.data.users[action.meta.userID].teams.filter( (id) => id != action.meta.teamID) 
+                    }
+                },
+                teams: {
+                    ...state.data.teams,
+                    ...action.payload.payload.entities.teams
+                }
+            }
+        })
     }
 
 
@@ -173,6 +211,8 @@ export default function rootReducer(state = initialState, action) {
         case actionTypes.LOGIN:
             return loginReducer(state, action)
             break;
+        case actionTypes.CLEAR_INVITE_SUCCESS:
+            return { ...state, ui: { ...state.ui, inviteSuccess: null, inviteMsg: '' } }
         default:
             if (action.payload && action.payload.payload && action.payload.payload.entities)
                 state = merge({}, state, {data: action.payload.payload.entities})

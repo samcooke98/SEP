@@ -36,7 +36,9 @@ export function registerUser(req, res) {
                 } else {
                     //Add the team to the user
                     account.teams.push(team._id);
+                    team.members.push(account._id);
                     account.save();
+                    team.save();
                     res.json(sendPayload(await getDetails(req.user._id)));
                 }
             })
@@ -44,13 +46,25 @@ export function registerUser(req, res) {
     });
 }
 
-//I really just threw together, it's shithoues. 
-export async function updateUserDetails(userID, email, firstName, lastName, newPassword) {
-    const deferred = q.defer();
-    const update = {
-        username: email,
-        firstName: firstName,
-        lastName: lastName,
+export async function updateUserDetails(email, firstName, lastName, newPassword) {
+    if (req.body.password === req.body.newPassword) {
+        Account.findOneAndUpdate({ _id: req.user._id }, {
+            $set: {
+                username: req.body.email,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                password: req.body.newPassword
+            }
+        }, { new: true }, (err, updatedUser) => {
+            if (err) {
+                console.log("===============ERROR WHEN UPDATING USER=============");
+                console.log(err);
+            }
+            else {
+                console.log(updatedUser);
+                //      res.json(sendPayload( await getDetails(req.user._id)));
+            }
+        });
     }
 
     console.log("******************** UPDATE BELOW *************");
@@ -176,7 +190,13 @@ export async function setAvatar(userID, uri) {
         const result = await User.find({ _id: userID });
         result.avatarURI = uri;
         return sendPayload(await result.save());
-    } catch (err) {
+    } catch (err) { 
         return sendError(err);
     }
+}
+
+export async function removeFromTeam(userID, teamID) { 
+    const user = await User.findById(userID);
+    user.teams.splice( user.teams.indexOf(teamID) , 1 );
+    await user.save();
 }

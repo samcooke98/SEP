@@ -10,14 +10,14 @@ Component that renders a bunch of avatars, and provides a parent with the active
 */
 
 const avatars = [
-    // "http://placeimg.com/80/80/animals?a",
-    // "http://placeimg.com/80/80/animals?c",
-    // "http://placeimg.com/80/80/animals?g",
-    // "http://placeimg.com/80/80/animals?e",
-    // "http://placeimg.com/80/80/people?f",
-    // "http://placeimg.com/80/80/people?h",
-    // "http://placeimg.com/80/80/people?b",
-    // "http://placeimg.com/80/80/people?d",
+    "http://placeimg.com/80/80/animals?a",
+    "http://placeimg.com/80/80/animals?c",
+    "http://placeimg.com/80/80/animals?g",
+    "http://placeimg.com/80/80/animals?e",
+    "http://placeimg.com/80/80/people?f",
+    "http://placeimg.com/80/80/people?h",
+    "http://placeimg.com/80/80/people?b",
+    "http://placeimg.com/80/80/people?d",
 ]
 
 
@@ -28,7 +28,7 @@ class AvatarSelection extends React.Component {
         super(props);
 
         this.state = {
-            activeURI: undefined
+            active: undefined
         }
     }
 
@@ -45,7 +45,7 @@ class AvatarSelection extends React.Component {
         const file = document.getElementById("file-input").files[0]
         fetch(`/api/sign-s3?file-name=${encodeURIComponent(file.name)}&file-type=${encodeURIComponent(file.type)}`).then((resp) => resp.json()).then(
             (json) => {
-                if(!json.error) 
+                if (!json.error)
                     this.uploadFile(file, json.signedRequest, json.url)
             }
         )
@@ -74,7 +74,6 @@ class AvatarSelection extends React.Component {
     }
 
     render() {
-
         return (
             <div>
                 {

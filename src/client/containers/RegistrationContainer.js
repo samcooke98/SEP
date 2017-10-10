@@ -128,7 +128,7 @@ class RegistrationContainer extends React.Component {
 				<LoggedInRedirector />
 				<form>
 					<h2> Your Details </h2>
-					
+
 					<Input type='text' name='email' label='Email' value={this.state.email.value} error={this.state.email.error} onChange={this.handleChange.bind(this, "email")} />
 					<Input type='password' name='password' label='Password' value={this.state.password.value} error={this.state.password.error} onChange={this.handleChange.bind(this, "password")} />
 					<Input type='password' name='passwordConfirm' label="Confirm Password" value={this.state.passwordConfirm.value}
@@ -136,11 +136,7 @@ class RegistrationContainer extends React.Component {
 					/>
 					<Input type='text' name='firstname' label="First Name" value={this.state.firstname.value} error={this.state.firstname.error} onChange={this.handleChange.bind(this, "firstname")} />
 					<Input type='text' name='lastname' label="Last Name" value={this.state.lastname.value} error={this.state.lastname.error} onChange={this.handleChange.bind(this, "lastname")} />
-					<AvatarSelection 
-						URI={this.state.avatarURI} 
-						setURI={(uri) => this.setState({avatarURI: uri})} 
-						name={this.state.firstname.value + " " + this.state.lastname.value}
-					/>
+					<AvatarSelection selected={this.state.avatarURI} onChange={(uri) => this.setState({ avatarURI: uri })} />
 					<h2> Team Details </h2>
 					<Input type='text' name='teamname' label='Team Name' value={this.state.teamname.value} error={this.state.teamname.error} onChange={this.handleChange.bind(this, "teamname")} />
 					<Input type='text' name='teamdesc' label='Team Description' value={this.state.teamdesc.value} error={this.state.teamdesc.error} onChange={this.handleChange.bind(this, "teamdesc")} />
