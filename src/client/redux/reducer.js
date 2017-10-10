@@ -2,19 +2,19 @@
  * Reducers
  */
 import { handleAction, handleActions } from "redux-actions"
-import combineReducers from "redux"
-import * as actionTypes from "./actionTypes.js";
+        import combineReducers from "redux"
+        import * as actionTypes from "./actionTypes.js";
 import merge from "lodash/merge";
 
 const initialState = {
-    data: { //Entities are placed in here 
+    data: {//Entities are placed in here 
         users: {},
         teams: {},
         resources: {},
         comments: {}
     },
     ui: {}, //UI Data is placed here -> Like error messages for example
-    misc: { // Anything that doesn't fit above can go here, (or in a new node if you want ) 
+    misc: {// Anything that doesn't fit above can go here, (or in a new node if you want ) 
         loggedIn: false,
 
     },
@@ -41,6 +41,16 @@ var functionalReducers = {
         }),
         onFail: (state, action) => ({
 
+            })
+    },
+    [actionTypes.LOGOUT]: {
+        onSuccess: (state, action) => ({ 
+            ...state,
+            misc: { 
+                ...state.misc,
+                loggedIn: false,
+                userID: undefined
+            }
         })
     },
     [actionTypes.CREATE_COMMENT]: {
@@ -115,12 +125,12 @@ var functionalReducers = {
             }
         }),
         onFail: (state, action) => ({
-            ui: {
-                ...state.ui,
-                registrationFail: action.payload.payload,
-                registrationSuccess: false,
-            }
-        }),
+                ui: {
+                    ...state.ui,
+                    registrationFail: action.payload.payload,
+                    registrationSuccess: false,
+                }
+            }),
     },
     // [actionTypes.RESET_PASS]: {  (this doesn't need to be stored in Redux, as far as I can see )
     //     onSuccess: (state,action) => ({ ui: { ...state.ui, resetPassSent: true, resetPassError: ''}}),
@@ -128,28 +138,49 @@ var functionalReducers = {
     // },
     [actionTypes.GET_INVITE]: {
         onSuccess: (state, action) => ({
-            ui: {
-                ...state.ui, getInviteSuccess: true, getInviteMessage: '', invitedID: action.payload.payload.result
-            },
-        }),
+                ui: {
+                    ...state.ui, getInviteSuccess: true, getInviteMessage: '', invitedID: action.payload.payload.result
+                },
+            }),
         onFail: (state, action) => ({
-            ui: { ...state.ui, getInviteMessage: "Something went wrong", getInviteSuccess: false, invitedID: '' }
-        })
+                ui: {...state.ui, getInviteMessage: "Something went wrong", getInviteSuccess: false, invitedID: ''}
+            })
     },
     [actionTypes.JOIN_TEAM]: {
-        onSuccess: (state, action) => ({ ui: { ...state.ui, joinTeam: true, joinTeamMsg: '' }, misc: { ...state.ui, loggedIn: true, userID: action.payload.payload.result } }),
-        onFail: (state, action) => ({ ui: { ...state.ui, joinTeam: false, joinTeamMsg: action.payload } }),
+        onSuccess: (state, action) => ({ui: {...state.ui, joinTeam: true, joinTeamMsg: ''}, misc: {...state.ui, loggedIn: true, userID: action.payload.payload.result}}),
+        onFail: (state, action) => ({ui: {...state.ui, joinTeam: false, joinTeamMsg: action.payload}}),
     },
     [actionTypes.DELETE_RESOURCE]: {
         onSuccess: (state, action) => ({
-            data: { ...state.data, resources: { ...state.data.resources, [action.meta.id]: {} } }, //Remove the data object (or set it to blank)
-            ui: { ...state.ui, resources: state.ui.resources.filter((val) => val != action.meta.id) } //Remove the id from the resources array
-        }), //Remove all instances of the id 
+                ...state,
+                data: {...state.data, resources: {...state.data.resources, [action.meta.id]: {}}}, //Remove the data object (or set it to blank)
+                ui: {...state.ui, resources: state.ui.resources.filter((val) => val != action.meta.id)} //Remove the id from the resources array
+            }), //Remove all instances of the id 
         onFail: (state, action) => ({})
     },
-    [actionTypes.SEND_INVITES]: {
-        onSuccess: (state, action) => ({ ...state, ui: { ...state.ui, inviteSuccess: true, inviteMsg: '' } }),
-        onFail: (state, action) => ({ ...state, ui: { ...state.ui, inviteSuccess: false, inviteMsg: action.payload.error } })
+    [actionTypes.DELETE_COMMENT]: {
+        onSuccess: (state, action) => ({
+                ...state, 
+                data: { 
+                    ...state.data,
+                    comments: { 
+                        ...state.data.comments, 
+                        [action.meta.commentId]: {}
+                    },
+                    resources: {
+                        ...state.data.resources,
+                        [action.meta.resourceId]: { 
+                            ...state.data.resources[action.meta.resourceId],
+                            comments: state.data.resources[action.meta.resourceId].comments.filter(
+                                (id) => id != action.meta.commentId
+                            ) //Remove commentID
+                        }
+                    }
+                }
+            }),
+        onFail: (state, action) => ({
+            
+            })
     },
     [actionTypes.REMOVE_USER_FROM_TEAM]: {
         onSuccess: (state, action) => ({
@@ -184,7 +215,7 @@ export default function rootReducer(state = initialState, action) {
             return { ...state, ui: { ...state.ui, inviteSuccess: null, inviteMsg: '' } }
         default:
             if (action.payload && action.payload.payload && action.payload.payload.entities)
-                state = merge({}, state, { data: action.payload.payload.entities })
+                state = merge({}, state, {data: action.payload.payload.entities})
     }
     if (functionalReducers[action.type]) {
         state = createReducer(state, action, functionalReducers[action.type].onSuccess, functionalReducers[action.type].onFail);
@@ -200,8 +231,8 @@ export default function rootReducer(state = initialState, action) {
 
 const createReducer = (state, action, onSuccess, onFail) =>
     action.payload.success
-        ? { ...state, ...mergeEntities(state, action), ...onSuccess(state, action) /* Add other properties here */ }
-        : { ...state, ...onFail(state, action) } //Error Handling
+            ? {...state, ...mergeEntities(state, action), ...onSuccess(state, action) /* Add other properties here */}
+    : {...state, ...onFail(state, action)} //Error Handling
 
 
 
@@ -209,15 +240,15 @@ const createReducer = (state, action, onSuccess, onFail) =>
 const loginReducer = (state, action) => {
     let payload = action.payload.payload;
     if (action.payload.success) {
-        return { //ORDER is important. The spread operator does a shallow merge BUT it will overwrite. So call it first
+        return {//ORDER is important. The spread operator does a shallow merge BUT it will overwrite. So call it first
             ...state,
             data: merge({}, state.data, payload.entities),
-            misc: { ...state.misc, loggedIn: true, userID: payload.result },
+            misc: {...state.misc, loggedIn: true, userID: payload.result},
         }
     } else {
         return {
             ...state,
-            ui: { loginMsg: "Incorrect username or password" }
+            ui: {loginMsg: "Incorrect username or password"}
 
         }
     }
@@ -230,5 +261,5 @@ const loginReducer = (state, action) => {
  */
 const mergeEntities = (state, action) =>
     (action.payload && action.payload.payload && action.payload.payload.entities)
-        ? merge({}, state, { data: action.payload.payload.entities })
-        : state
+            ? merge({}, state, {data: action.payload.payload.entities})
+            : state

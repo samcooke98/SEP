@@ -27,9 +27,13 @@ export const logout = createAction(actionTypes.LOGOUT, async () => {
     return get("logout")
 })
 
+export const logout = createAction( actionTypes.LOGOUT, async () => { 
+    return get("logout")
+})
 
-export const register = createAction(actionTypes.REGISTER, async (username, password, firstName, lastName, teamName, description, category) => {
-    return post("register", { username, password, firstName, lastName, teamName, description, category })
+
+export const register = createAction(actionTypes.REGISTER, async (username, password, firstName, lastName, teamName, description, category, avatar) => {
+    return post("register", { username, password, firstName, lastName, teamName, description, category, avatar })
 })
 
 export const getUserDetails = createAction(actionTypes.GET_USER, async () => {
@@ -69,6 +73,11 @@ export const getComments = createAction(actionTypes.GET_COMMENTS, async (resourc
     )
 })
 
+export const deleteComment = createAction(actionTypes.DELETE_COMMENT, async (resourceId, commentId) => {
+    return del( `resource/${resourceId}/comments/${commentId}`);
+}, (resourceId,commentId) => ({ resourceId: resourceId, commentId:commentId}) ) //Create a meta part, containing the comment that was deleted
+
+
 export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID, tags) => {
     return post(`resource`, { url, title, description, team: teamID, tags }).then(
 
@@ -76,8 +85,8 @@ export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (u
     )
 })
 
-export const updateDetails = createAction(actionTypes.UPDATE_DETAILS, async (email, password, firstName, lastName) => {
-    return post('updateDetails', { email, password, firstName, lastName }).then((val) => normalize(normalizr.normalizeUser, val))
+export const updateDetails = createAction(actionTypes.UPDATE_DETAILS, async (email, newPassword, firstName, lastName) => {
+    return post('updateDetails', {email, newPassword, firstName, lastName}).then( (val) => normalize( normalizr.normalizeUser, val))
 })
 
 export const getResource = createAction(actionTypes.GET_RESOURCE, async (resId) =>

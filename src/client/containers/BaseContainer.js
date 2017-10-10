@@ -16,7 +16,6 @@ import { RouteWithSubRoutes } from "../Routes.js";
 import IndexPageContainer from "./IndexPageContainer.js"
 import User from "../components/UserButton/UserButton.js";
 import { logout } from "../redux/actions.js";
-import NavigationList from "../components/NavigationList.js";
 
 /**
  * Data to populate the navigation list with 
@@ -88,6 +87,46 @@ class BaseContainer extends React.Component {
                                 } />
                             </User>
                         }
+                    </Navigation>
+                </AppBar>
+                <NavDrawer pinned active clipped permanentAt='sm'>
+                    <Navigation type='vertical'>
+                        <List selectable ripple>
+                            {/*So we wrap the router on */}
+                            {
+                                NavigationList.map((val, index) => {
+                                    /* return (val.caption !== undefined && val.to !== undefined
+                                        ? <ListItem
+                                            {...val}
+                                            onClick={this.navigateWithRouter.bind(this, val.to)}
+                                            className={this.props.location.pathname == val.to ? 'active' : ''}
+                                            key={index}
+                                        />
+                                        : <ListDivider key={index} />) */
+                                    if (val.loginOnly) {
+                                        if (this.props.loggedIn) {
+                                            return (<ListItem
+                                                {...val}
+                                                onClick={this.navigateWithRouter.bind(this, val.to)}
+                                                className={this.props.location.pathname == val.to ? 'active' : ''}
+                                                key={index}
+                                            />);
+                                        }
+                                    } else {
+                                        if (val.caption !== undefined && val.to !== undefined) {
+                                            return (<ListItem
+                                                {...val}
+                                                onClick={this.navigateWithRouter.bind(this, val.to)}
+                                                className={this.props.location.pathname == val.to ? 'active' : ''}
+                                                key={index}
+                                            />)
+                                        } else {
+                                            return (<ListDivider key={index} />)
+                                        }
+                                    }
+                                } />
+                            </User>
+                        }
                         {
                             !this.props.loggedIn &&
                             <Navigation type="horizontal">
@@ -120,18 +159,26 @@ class BaseContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     if (!state.misc.loggedIn)
+<<<<<<< HEAD
         return {
             loggedIn: false,
             teams: []
         }
+=======
+        return { loggedIn: false }
+>>>>>>> 3a536bdb3d38810d0078641fa89d9efd2f509e38
     else {
         const user = state.data.users[state.misc.userID]
 
         return {
             loggedIn: state.misc.loggedIn,
             name: user.firstName + " " + user.lastName,
+<<<<<<< HEAD
             avatar: user.avatarURI,
             teams: user.teams.map((val) => state.data.teams[val])
+=======
+            avatar: user.avatarURI
+>>>>>>> 3a536bdb3d38810d0078641fa89d9efd2f509e38
         }
     }
 }
