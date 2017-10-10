@@ -1,21 +1,5 @@
 
 import React from 'react';
-        import { Route } from 'react-router';
-        import HelloWorld from "./components/HelloWorld";
-        import LoginContainer from "./containers/LoginContainer";
-        import IndexPageContainer from "./containers/IndexPageContainer";
-        import RegistrationContainer from "./containers/RegistrationContainer"
-        import FeedView from "./containers/FeedView.js";
-        import TeamManagement from "./containers/TeamManagement.js"
-        import InvitePage from "./containers/InvitePage.js";
-        import ResetContainer from "./containers/ResetContainer.js";
-        import PasswordResetContainer from "./containers/PasswordResetContainer.js";
-        import BaseContainer from "./containers/BaseContainer.js";
-        import CommentContainer from "./containers/CommentContainer.js";
-        import SettingsContainer from "./containers/SettingsContainer.js";
-        export const routes = [
-
-
 import HelloWorld from "./components/HelloWorld";
 import LoginContainer from "./containers/LoginContainer";
 import IndexPageContainer from "./containers/IndexPageContainer";
