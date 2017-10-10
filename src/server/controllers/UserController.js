@@ -14,7 +14,7 @@ import q from 'q';
  * Expects username, password, firstName, lastName, teamName, description, category in the body of the request
  */
 export function registerUser(req, res) {
-    let newUser = new User({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName });
+    let newUser = new User({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName, avatarURI: req.body.avatar });
     User.register(newUser, req.body.password, function (err, account) {
         if (err) {
             return res.json(sendError(err));
@@ -170,3 +170,13 @@ export async function getUsersInTeam(teamID) {
     return result;
 }
 
+
+export async function setAvatar(userID, uri) {
+    try {
+        const result = await User.find({ _id: userID });
+        result.avatarURI = uri;
+        return sendPayload(await result.save());
+    } catch (err) {
+        return sendError(err);
+    }
+}

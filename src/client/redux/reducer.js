@@ -43,6 +43,16 @@ var functionalReducers = {
 
             })
     },
+    [actionTypes.LOGOUT]: {
+        onSuccess: (state, action) => ({ 
+            ...state,
+            misc: { 
+                ...state.misc,
+                loggedIn: false,
+                userID: undefined
+            }
+        })
+    },
     [actionTypes.CREATE_COMMENT]: {
         onSuccess: (state, action) => ({
                 misc: {

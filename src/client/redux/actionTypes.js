@@ -1,5 +1,6 @@
-export const LOGIN 		= "LOGIN";
-export const REGISTER 		= "REGISTER";
+export const LOGIN 				= "LOGIN";
+export const LOGOUT             = "LOGOUT";
+export const REGISTER 			= "REGISTER";
 
 export const GET_USER 		= "GET_USER";
 export const SEND_INVITES 	= "SEND_INVITES";
