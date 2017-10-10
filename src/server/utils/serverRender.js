@@ -4,7 +4,16 @@ import { matchPath } from 'react-router-dom'
 export default async function serverRender(req, res, next) {
     const matches = recursive(req.url, clientRoutes);
     if (matches) {
-        res.send( await renderApp(req.url, req));
+
+        try {
+            res.send( await renderApp(req.url, req));
+        }
+        catch (err) {
+            console.log("error output============");
+            console.log(err);
+            next(err);
+        }
+       
     } else {
         next();
     }

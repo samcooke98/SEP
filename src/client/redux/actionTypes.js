@@ -13,8 +13,9 @@ export const GET_RESOURCES 		= "GET_RESOURCES";
 export const GET_RESOURCE       = "GET_RESOURCE";
 export const DELETE_RESOURCE    = "DELETE_RESOURCE";
 
-export const JOIN_TEAM          = "JOIN_TEAM";
+export const UPDATE_DETAILS     = "UPDATE_DETAILS";
 
+export const JOIN_TEAM          = "JOIN_TEAM";
 export const CREATE_COMMENT     = "CREATE_COMMENT";
 export const GET_COMMENTS       = "GET_COMMENTS";
 export const DELETE_COMMENT     = "DELETE_COMMENT";

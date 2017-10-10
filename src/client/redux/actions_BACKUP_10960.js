@@ -65,27 +65,26 @@ export const getComments = createAction(actionTypes.GET_COMMENTS, async (resourc
     )
 })
 
-export const deleteComment = createAction(actionTypes.DELETE_COMMENT, async (resourceId, commentId) => {
-    return del( `resource/${resourceId}/comments/${commentId}`);
-}, (resourceId,commentId) => ({ resourceId: resourceId, commentId:commentId}) ) //Create a meta part, containing the comment that was deleted
-
-
-export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID, tags) => {
-    return post(`resource`, { url, title, description, team: teamID, tags }).then(
+export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID) => {
+    return post(`resource`, { url, title, description, team: teamID }).then(
 
         (payload) => normalize( normalizr.normalizeResource, payload) 
     )
 })
 
-export const updateDetails = createAction(actionTypes.UPDATE_DETAILS, async (email, newPassword, firstName, lastName) => {
-    return post('updateDetails', {email, newPassword, firstName, lastName}).then( (val) => normalize( normalizr.normalizeUser, val))
+<<<<<<< HEAD
+export const updateDetails = createAction(actionTypes.UPDATE_DETAILS, async (email, password, firstName, lastName) => {
+    return post('updateDetails', {email, password, firstName, lastName}).then( (val) => normalize( normalizr.normalizeUser, val))
 })
 
+export const getResources = createAction(actionTypes.GET_RESOURCE, async (teamID) => {
+=======
 export const getResource = createAction(actionTypes.GET_RESOURCE, async (resId) => 
     get(`resource/${resId}`).then( (payload) => normalize(normalizr.normalizeResource, payload)  )
 )
 
 export const getResources = createAction(actionTypes.GET_RESOURCES, async (teamID) => {
+>>>>>>> 8fce3797ad1bd12b46c0cb089050a05e3f252710
     return get(`resource?team=${teamID}`).then( 
         (payload) => normalize( normalizr.normalizeResources, payload) 
     )
