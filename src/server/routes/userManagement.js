@@ -47,6 +47,22 @@ router.get("/user/:id", isLoggedIn, async (req, res) => {
     res.json(sendPayload(data));
 })
 
+router.delete("/user/teams/:teamID", isLoggedIn, async (req, res) => {
+
+    try {
+        if (TeamController.isOwner(req.user._id.str, req.params.teamID) != true) {
+            TeamController.removeFromTeam(req.user._id, req.params.teamID);
+            res.json(sendPayload(UserController.getDetails(req.user._id)))
+        } else {
+            res.json(sendPayload("You can't leave while you're the owner of the team!"))
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.json(sendError(error))
+    }
+})
+
 router.post("/user/notify", isLoggedIn, async (req, res) => {
     console.log(req.body);
     var data = await UserController.addNotification(req.body, req.user._id);

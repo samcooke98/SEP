@@ -20,7 +20,7 @@ export async function get(id) {
 export async function isOwner(userID, teamID) {
     const team = await get(teamID)
 
-    return team.owner == teamID
+    return team.owner.str === userID
 }
 
 export async function removeFromTeam(userID, teamID) {

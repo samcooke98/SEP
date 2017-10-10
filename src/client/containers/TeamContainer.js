@@ -11,7 +11,7 @@ import InviteDialog from "../components/InviteDialog.js";
 
 import ResourceList from "../components/ResourceList.js";
 
-import { getResources, sendInvitations } from "../redux/actions.js";
+import { getResources, sendInvitations, leaveTeam } from "../redux/actions.js";
 
 
 class TeamContainer extends React.Component {
@@ -35,7 +35,7 @@ class TeamContainer extends React.Component {
 
     closeInvite = () => this.setState({ dialogOpen: false })
 
-    handleChange= (value, argsb) => this.setState({value: value}) 
+    handleChange = (value, argsb) => this.setState({ value: value })
 
     render() {
         const { team, user } = this.props;
@@ -48,26 +48,38 @@ class TeamContainer extends React.Component {
                         <p> {team.description} </p>
                     </span>
 
-                    {isOwner &&
-                        <IconMenu icon="more_vert">
+                    <IconMenu icon="more_vert">
+
+                        {isOwner &&
                             <MenuItem value="edit_user" caption="Edit Members" onClick={
                                 () => this.props.history.push(`/team/${team._id}/edit`)
                             } />
-                        </IconMenu>
-                    }
+                        }
+                        {!isOwner &&
+                            <MenuItem
+                                value="leave" caption="Leave Team" onClick={
+                                    () => {
+                                        this.props.leaveTeam();
+                                        this.props.history.push("/feed")
+                                    }
+                                }
+                            />
+                        }
+                    </IconMenu>
+
                 </div >
                 {isOwner &&
                     <Button icon='email' label='Invite Users' raised primary onClick={this.openInvite} />
                 }
-                <InviteDialog 
+                <InviteDialog
                     active={this.state.dialogOpen}
                     close={this.closeInvite}
                     error={this.state.inviteSuccess ? '' : this.props.inviteMsg}
                     handleChange={this.handleChange}
                     value={this.state.value}
-                    onClick={() => this.props.send( this.state.value) }
+                    onClick={() => this.props.send(this.state.value)}
                 />
-                <p/>
+                <p />
                 <ResourceList
                     resources={this.props.resources}
                 />
@@ -95,8 +107,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     console.log(teamID);
     return {
         getResources: () => dispatch(getResources(teamID)),
-        send: (emails) => dispatch(sendInvitations(teamID, emails))
-        
+        send: (emails) => dispatch(sendInvitations(teamID, emails)),
+        leaveTeam: () => dispatch(leaveTeam(teamID))
+
 
     }
 }
