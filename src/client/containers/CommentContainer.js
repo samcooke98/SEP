@@ -6,7 +6,7 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import CommentInput from "../components/CommentInput.js";
-import { getUserDetails, getUsersInTeam, createComment, getResource, deleteComment } from "../redux/actions.js";
+import { getUserDetails, getUsers, createComment, getResource, deleteComment } from "../redux/actions.js";
 
 import { withProtection } from "./Protector.js";
 
@@ -90,7 +90,6 @@ class CommentContainer extends React.Component {
     
 
     render() {
-    
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                     <h2>Comments</h2>
@@ -149,7 +148,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         getUser: () => dispatch(getUserDetails()),
-        getUsersInTeam: (teamId) => dispatch(getUsersInTeam(teamId)),
+        getUsersInTeam: (teamId) => dispatch(getUsers(teamId)),
         createComment: (resourceId, userId, comments) => dispatch(createComment(resourceId, userId, comments)),
         getResource: (resourceId) => dispatch(getResource(resourceId)),
         getComments: (resourceId) => dispatch(getComments(resourceId)),

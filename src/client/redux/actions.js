@@ -36,10 +36,7 @@ export const getUserDetails = createAction(actionTypes.GET_USER, async () => {
     return get("user").then((val) => normalize(normalizr.normalizeUser, val))
 })
 
-export const getUsersInTeam = createAction(actionTypes.GET_USERS, async (teamId) => {
-    return get(`users/${teamId}`).then((val) => normalize(normalizr.normalizeUsers, val))
-    //todo: normalize and store data as it possibly returns a team info
-})
+
 
 
 export const sendInvitations = createAction(actionTypes.SEND_INVITES, async (id, emails) => {
