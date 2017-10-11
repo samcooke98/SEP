@@ -1,5 +1,7 @@
 
 import React from 'react';
+import { Route} from "react-router-dom";
+
 import HelloWorld from "./components/HelloWorld";
 import LoginContainer from "./containers/LoginContainer";
 import IndexPageContainer from "./containers/IndexPageContainer";
@@ -17,13 +19,11 @@ import EditTeamContainer from "./containers/EditTeamContainer.js";
 import NotificationContainer from "./containers/NotificationContainer.js";
 
 export const routes = [
-
         {
                 path: "/",
                 // exact: true,
                 component: BaseContainer,
                 routes: [
-
                         {
                                 path: "/feed",
                                 exact: true,
