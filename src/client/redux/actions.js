@@ -28,8 +28,8 @@ export const logout = createAction(actionTypes.LOGOUT, async () => {
 })
 
 
-export const register = createAction(actionTypes.REGISTER, async (username, password, firstName, lastName, teamName, description, category) => {
-    return post("register", { username, password, firstName, lastName, teamName, description, category })
+export const register = createAction(actionTypes.REGISTER, async (username, password, firstName, lastName, teamName, description, category, avatar) => {
+    return post("register", { username, password, firstName, lastName, teamName, description, category, avatar })
 })
 
 export const getUserDetails = createAction(actionTypes.GET_USER, async () => {
@@ -68,6 +68,11 @@ export const getComments = createAction(actionTypes.GET_COMMENTS, async (resourc
         (payload) => normalize(normalizr.normalizeComment, payload)
     )
 })
+
+export const deleteComment = createAction(actionTypes.DELETE_COMMENT, async (resourceId, commentId) => {
+    return del( `resource/${resourceId}/comments/${commentId}`);
+}, (resourceId,commentId) => ({ resourceId: resourceId, commentId:commentId}) ) //Create a meta part, containing the comment that was deleted
+
 
 export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (url, title, description, teamID, tags) => {
     return post(`resource`, { url, title, description, team: teamID, tags }).then(

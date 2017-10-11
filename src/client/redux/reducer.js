@@ -7,14 +7,14 @@ import * as actionTypes from "./actionTypes.js";
 import merge from "lodash/merge";
 
 const initialState = {
-    data: { //Entities are placed in here 
+    data: {//Entities are placed in here 
         users: {},
         teams: {},
         resources: {},
         comments: {}
     },
     ui: {}, //UI Data is placed here -> Like error messages for example
-    misc: { // Anything that doesn't fit above can go here, (or in a new node if you want ) 
+    misc: {// Anything that doesn't fit above can go here, (or in a new node if you want ) 
         loggedIn: false,
 
     },
@@ -41,6 +41,16 @@ var functionalReducers = {
         }),
         onFail: (state, action) => ({
 
+        })
+    },
+    [actionTypes.LOGOUT]: {
+        onSuccess: (state, action) => ({
+            ...state,
+            misc: {
+                ...state.misc,
+                loggedIn: false,
+                userID: undefined
+            }
         })
     },
     [actionTypes.CREATE_COMMENT]: {
@@ -171,24 +181,68 @@ var functionalReducers = {
     },
     [actionTypes.LEAVE_TEAM]: {
         onSuccess: (state, action) => ({
-            ...state, 
-            data: { 
-                ...state.data, users: { ...state.data.users, ...action.payload.payload.entities.users}
+            ...state,
+            data: {
+                ...state.data, users: { ...state.data.users, ...action.payload.payload.entities.users }
             }
         }),
-        onFail: (state, action) => ({...state})
+        onFail: (state, action) => ({ ...state })
     },
-    [actionTypes.CREATE_TEAM]: { 
-        onSuccess: (state,action) => ({
+    [actionTypes.CREATE_TEAM]: {
+        onSuccess: (state, action) => ({
             ...state,
-            data: { ...state.data, users: { 
-                [state.misc.userID]: { 
-                    ...state.data.users[state.misc.userID],
-                    teams: [...state.data.users[state.misc.userID].teams, action.payload.payload.result ] //Add the team to the user 
+            data: {
+                ...state.data, users: {
+                    [state.misc.userID]: {
+                        ...state.data.users[state.misc.userID],
+                        teams: [...state.data.users[state.misc.userID].teams, action.payload.payload.result] //Add the team to the user 
+                    }
                 }
-            }}
+            }
         }),
-        onFail: (state,action) => ({state})
+        onFail: (state, action) => ({ state })
+    },
+    [actionTypes.DELETE_COMMENT]: {
+        onSuccess: (state, action) => ({
+            ...state,
+            data: {
+                ...state.data,
+                comments: {
+                    ...state.data.comments,
+                    [action.meta.commentId]: {}
+                },
+                resources: {
+                    ...state.data.resources,
+                    [action.meta.resourceId]: {
+                        ...state.data.resources[action.meta.resourceId],
+                        comments: state.data.resources[action.meta.resourceId].comments.filter(
+                            (id) => id != action.meta.commentId
+                        ) //Remove commentID
+                    }
+                }
+            }
+        }),
+        onFail: (state, action) => ({
+
+        })
+    },
+    [actionTypes.REMOVE_USER_FROM_TEAM]: {
+        onSuccess: (state, action) => ({
+            ...state, data: {
+                ...state.data,
+                users: {
+                    ...state.data.users,
+                    [action.meta.userID]: {
+                        ...state.data.users[action.meta.userID],
+                        teams: state.data.users[action.meta.userID].teams.filter((id) => id != action.meta.teamID)
+                    }
+                },
+                teams: {
+                    ...state.data.teams,
+                    ...action.payload.payload.entities.teams
+                }
+            }
+        })
     }
 
 
@@ -230,7 +284,7 @@ const createReducer = (state, action, onSuccess, onFail) =>
 const loginReducer = (state, action) => {
     let payload = action.payload.payload;
     if (action.payload.success) {
-        return { //ORDER is important. The spread operator does a shallow merge BUT it will overwrite. So call it first
+        return {//ORDER is important. The spread operator does a shallow merge BUT it will overwrite. So call it first
             ...state,
             data: merge({}, state.data, payload.entities),
             misc: { ...state.misc, loggedIn: true, userID: payload.result },

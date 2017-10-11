@@ -2,9 +2,9 @@ export const LOGIN 				= "LOGIN";
 export const LOGOUT             = "LOGOUT";
 export const REGISTER 			= "REGISTER";
 
-export const GET_USER 			= "GET_USER";
-export const SEND_INVITES 		= "SEND_INVITES";
-export const GET_INVITE 		= "GET_INVITE";
+export const GET_USER 		    = "GET_USER";
+export const SEND_INVITES 	    = "SEND_INVITES";
+export const GET_INVITE 	    = "GET_INVITE";
 
 export const RESET_PASS         = "RESET_PASS";
 export const RESET_PASS_CONFIRM = "RESET_PASS_CONFIRM";
@@ -25,3 +25,4 @@ export const REMOVE_USER_FROM_TEAM = "REMOVE_USER_FROM_TEAM"
 export const GET_USER_BY_ID     = "GET_USER_BY_ID";
 export const LEAVE_TEAM         = "LEAVE_TEAM";
 export const CREATE_TEAM        = "CREATE_TEAM";
+export const DELETE_COMMENT     = "DELETE_COMMENT";

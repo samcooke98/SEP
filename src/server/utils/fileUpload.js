@@ -10,6 +10,12 @@ export default (req, res) => {
     const s3 = new aws.S3();
     const fileName = req.query['file-name'];
     const fileType = req.query['file-type'];
+
+    if(!fileType.includes("image")) { 
+        res.send( JSON.stringify({ error: true})); 
+        return;
+    }
+    
     const s3Params = {
         Bucket: S3_BUCKET,
         Key: fileName,

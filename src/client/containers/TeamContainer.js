@@ -35,7 +35,7 @@ class TeamContainer extends React.Component {
 
     closeInvite = () => this.setState({ dialogOpen: false })
 
-    handleChange = (value, argsb) => this.setState({ value: value })
+    handleChange = (value) => this.setState({ value: value })
 
     render() {
         const { team, user } = this.props;
