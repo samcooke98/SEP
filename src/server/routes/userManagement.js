@@ -7,11 +7,13 @@ var Team = require('../models/team');
 var moment = require('moment');
 import * as ResetLinkController from "../controllers/ResetLinkController.js";
 import * as UserController from "../controllers/UserController.js";
+import * as TeamController from "../controllers/TeamController.js";
+
 import { isLoggedIn } from "../utils/request.js"
 
 import { sendError, sendPayload } from "../utils/apiResponse.js";
 import { ensureLoggedIn } from "connect-ensure-login"
-
+import fileUploader from "../utils/fileUpload.js";
 
 router.post('/register', UserController.registerUser);
 
@@ -42,10 +44,25 @@ router.get("/user", isLoggedIn, async (req, res) => {
     res.json(sendPayload(data));
 })
 
-router.get("/users/:teamId", isLoggedIn, async (req, res) => {
-    var data = await UserController.getUsersInTeam(req.params.teamId);
-    console.log(data);
+router.get("/user/:id", isLoggedIn, async (req, res) => {
+    var data = await UserController.getPublic(req.params.id);
     res.json(sendPayload(data));
+})
+
+router.delete("/user/teams/:teamID", isLoggedIn, async (req, res) => {
+
+    try {
+        if (TeamController.isOwner(req.user._id.str, req.params.teamID) != true) {
+            await TeamController.removeFromTeam(req.user._id, req.params.teamID);
+            res.json(sendPayload(await UserController.getDetails(req.user._id)))
+        } else {
+            res.json(sendPayload("You can't leave while you're the owner of the team!"))
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.json(sendError(err))
+    }
 })
 
 router.post("/user/notify", isLoggedIn, async (req, res) => {
@@ -62,6 +79,21 @@ router.delete("/user/notify", isLoggedIn, async (req, res) => {
     res.json(data);
 
 })
+
+router.get("/updateDetails", isLoggedIn, async (req, res) => {
+    var data = await UserController.getDetails(req.user._id);
+    res.json(sendPayload(data));
+    console.log(req.body);
+
+})
+
+router.post("/updateDetails", isLoggedIn, async (req, res) => {
+    var data = await UserController.updateUserDetails(req.body.email, req.body.firstName, req.body.lastName, req.body.newPassword);
+    console.log(data);
+    res.json(sendPayload(data));
+})
+
+router.get("/sign-s3", fileUploader)
 
 
 

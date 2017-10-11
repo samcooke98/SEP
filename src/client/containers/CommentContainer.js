@@ -6,7 +6,8 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import CommentInput from "../components/CommentInput.js";
-import { getUserDetails, getUsersInTeam, createComment, getResource } from "../redux/actions.js";
+import { getUserDetails, getUsersInTeam, createComment, getResource, deleteComment } from "../redux/actions.js";
+
 import { withProtection } from "./Protector.js";
 
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
@@ -83,8 +84,13 @@ class CommentContainer extends React.Component {
         // if(nextProps.usersInTeam)nextProps.team )&& !(this.props || nextProps).usersInTeam) 
     }
     
+    remove = (resourceID,commentId) => {
+        this.props.deleteComment(resourceID,commentId);        
+    }
+    
 
     render() {
+    
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                     <h2>Comments</h2>
@@ -146,7 +152,8 @@ const mapDispatchToProps = (dispatch) => {
         getUsersInTeam: (teamId) => dispatch(getUsersInTeam(teamId)),
         createComment: (resourceId, userId, comments) => dispatch(createComment(resourceId, userId, comments)),
         getResource: (resourceId) => dispatch(getResource(resourceId)),
-        getComments: (resourceId) => dispatch(getComments(resourceId))  
+        getComments: (resourceId) => dispatch(getComments(resourceId)),
+        deleteComment: (resourceId,commentId) => dispatch(deleteComment(resourceId,commentId))
     }
 }
 

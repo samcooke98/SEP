@@ -23,6 +23,7 @@ module.exports = {
 			/^react-toolbox/, //Regex actually works, strings didn't seem to be 
 			/^react-css-themr/,
 			/\.(?!(?:jsx?|json|css|scss)$).{1,5}$/i,
+			/^react-tagsinput/
 
 		]
 	}), {
@@ -42,7 +43,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				include: /(node_modules|bower_components)/,
+				// include: /(node_modules|bower_components)/,
 				use: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
 					use: [

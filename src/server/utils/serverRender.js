@@ -4,7 +4,16 @@ import { matchPath } from 'react-router-dom'
 export default async function serverRender(req, res, next) {
     const matches = recursive(req.url, clientRoutes);
     if (matches) {
-        res.send( await renderApp(req.url, req));
+
+        try {
+            res.send( await renderApp(req.url, req));
+        }
+        catch (err) {
+            console.log("error output============");
+            console.log(err);
+            next(err);
+        }
+       
     } else {
         next();
     }
@@ -37,19 +46,20 @@ const renderApp = async (location, req) => {
     const context = {};
     if (req.user) {
         let userDetails = await userController.getDetails(req.user._id);
+
         let teamObj = {};
-        let userObj = {};
+        let userObj = Object.assign({}, userDetails._doc, { teams: [] } )
         for (var team of userDetails.teams) {
-            teamObj[team._id] = team
+            teamObj[team._id] = team;
+            userObj.teams.push(team._id);
         }
-        console.log('----------------', store);
         store.dispatch({
             type: "LOGIN",
             payload: {
                 success: true, payload: {
                     result: req.user._id,
                     entities: {
-                        users: { [req.user._id]: req.user },
+                        users: { [req.user._id]: userObj },
                         teams: teamObj
                     }
                 }

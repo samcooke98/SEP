@@ -1,5 +1,8 @@
 import Link from "../models/invitationLinks.js";
 
+import * as UserController from "./UserController";
+import * as TeamController from "./TeamController.js";
+
 //TODO: Don't think we should be referencing other models in here? 
 import User from "../models/account.js";
 import Team from "../models/team.js";
@@ -54,6 +57,7 @@ export async function createAccount(req, res) {
                     }
                 });
                 account.teams.push(link.teamID);
+                TeamController.addUser(account._id, link.teamID);
                 account.save();
                 res.json(sendPayload(await account.populate('team').execPopulate()));
 

@@ -1,6 +1,6 @@
 import { normalize, schema } from 'normalizr';
 
-const teamEntity = new schema.Entity("teams", {}, {idAttribute: '_id'});
+const teamEntity = new schema.Entity("teams", { users: [userEntity] }, {idAttribute: '_id'});
 
 const commentEntity = new schema.Entity("comments", {}, {idAttribute: '_id'});
 

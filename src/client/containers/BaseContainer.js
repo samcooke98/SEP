@@ -3,58 +3,37 @@
 */
 import React from "react";
 import { withRouter, Switch } from "react-router-dom";
-import { connect } from "react-redux";
-
+import { connect } from "react-redux"
 import { Layout } from "react-toolbox/lib/layout";
-
-import { RouteWithSubRoutes } from "../Routes.js";
 import { AppBar, Panel, NavDrawer, Link as RTLink } from 'react-toolbox';
 import { List, ListItem, ListDivider } from "react-toolbox";
 import Navigation from 'react-toolbox/lib/navigation';
 import Link from 'react-toolbox/lib/link';
+import { Button } from "react-toolbox";
+import { MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
+
+import { RouteWithSubRoutes } from "../Routes.js";
 import IndexPageContainer from "./IndexPageContainer.js"
+import User from "../components/UserButton/UserButton.js";
+import { logout, createTeam } from "../redux/actions.js";
+import NavigationList from "../components/NavigationList.js";
+import styles from './BaseContainer.css';
+import CreateTeam from "../components/CreateTeam.js";
 
-/**
- * Data to populate the navigation list with 
- */
-const link = (caption, to) => ({ caption, to, ...arguments })
-
-const NavigationList = [
-    {
-        caption: "Login", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-        to: "/login"
-    },
-    link("Register", "/register"),
-    {
-        divider: true //Any object that doesn't have 'to', and 'caption' defined will render as a divider
-    },
-    {
-        caption: "Feed", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-        to: "/feed",
-        loginOnly: true
-    },
-    {
-        caption: "Team Management",
-        to: "/manage",
-        loginOnly: true
-    },
-    {
-        divider: true,
-    },
-    link("Settings", "/settings")
-]
 
 
 class BaseContainer extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = { 
+            createTeamDialog: false,
+        }
     }
 
     navigateWithRouter = (to, event) => {
         //We will use React-Router to route, instead of making a request
         //This pretty much comes from the react-router code
-        console.log(arguments);
-        console.log(to);
         if (
             !event.defaultPrevented && // onClick prevented default
             event.button === 0  // ignore everything but left clicks
@@ -63,54 +42,60 @@ class BaseContainer extends React.Component {
             this.props.history.push(to)
         }
     }
+
+    toggleDialog = (evt) => { 
+        this.setState({createTeamDialog: !this.state.createTeamDialog})
+    }
+
     render() {
         return (
             <Layout>
-                <AppBar title='TeamShare' fixed flat />
-                <NavDrawer pinned active clipped permanentAt='sm'>
-                    <Navigation type='vertical'>
-                        <List selectable ripple>
-                            {/*So we wrap the router on */}
-                            {
-                                NavigationList.map((val, index) => {
-                                    /* return (val.caption !== undefined && val.to !== undefined
-                                        ? <ListItem
-                                            {...val}
-                                            onClick={this.navigateWithRouter.bind(this, val.to)}
-                                            className={this.props.location.pathname == val.to ? 'active' : ''}
-                                            key={index}
-                                        />
-                                        : <ListDivider key={index} />) */
-                                    if (val.loginOnly) {
-                                        if (this.props.loggedIn) {
-                                            return (<ListItem
-                                                {...val}
-                                                onClick={this.navigateWithRouter.bind(this, val.to)}
-                                                className={this.props.location.pathname == val.to ? 'active' : ''}
-                                                key={index}
-                                            />);
-                                        }
-                                    } else {
-                                        if (val.caption !== undefined && val.to !== undefined) {
-                                            return (<ListItem
-                                                {...val}
-                                                onClick={this.navigateWithRouter.bind(this, val.to)}
-                                                className={this.props.location.pathname == val.to ? 'active' : ''}
-                                                key={index}
-                                            />)
-                                        } else {
-                                            return (<ListDivider key={index} />)
-                                        }
+                <AppBar title='TeamShare' fixed flat>
+                    <Navigation type='horizontal'>
+                        {this.props.loggedIn &&
+                            <User
+                                avatar={this.props.avatar}
+                                name={this.props.name}
+                            >
+                                {/* We can put MenuItems here */}
+                                <MenuItem value="edit" caption="Edit Profile" onClick={
+                                    () => this.props.history.push('/edit')
+                                } />
+                                <MenuItem value="notifications" caption="Notifications" onClick={
+                                    () => this.props.history.push('/notifications')
+                                } />
+                                <MenuDivider />
+                                <MenuItem value="blah" caption="Logout" onClick={
+                                    () => {
+                                        this.props.logout();
+                                        this.props.history.push("/");
                                     }
-
-
-                                }
-                                )
-                            }
-                        </List>
-
+                                } />
+                            </User>
+                        }
+                        {
+                            !this.props.loggedIn &&
+                            <Navigation type="horizontal">
+                                <RTLink href="/login" label="Login" active />
+                                <RTLink href="/register" label="Register" />
+                                <RTLink href="/" label="Home" />
+                            </Navigation>
+                        }
                     </Navigation>
+                </AppBar>
+                <NavDrawer pinned={this.props.loggedIn} active={false} clipped className={styles.navList} >
+                    {this.props.loggedIn &&
+                        <NavigationList className={styles.navBody}
+                            teams={this.props.teams}
+                        />
+                    }
+                    <footer className={styles.footer}> <Button label="Create a Team" floating={false} primary flat onClick={this.toggleDialog} /> </footer>
                 </NavDrawer>
+                <CreateTeam 
+                    active={this.state.createTeamDialog}
+                    close={this.toggleDialog}
+                    createTeam={this.props.createTeam}
+                />
                 <Panel>
                     <Switch>
                         {this.props.routes.map((route, i) => (
@@ -125,14 +110,27 @@ class BaseContainer extends React.Component {
 
 
 const mapStateToProps = (state) => {
-    return {
-        loggedIn: state.misc.loggedIn
+    if (!state.misc.loggedIn)
+        return {
+            loggedIn: false,
+            teams: []
+        }
+    else {
+        const user = state.data.users[state.misc.userID]
+
+        return {
+            loggedIn: state.misc.loggedIn,
+            name: user.firstName + " " + user.lastName,
+            avatar: user.avatarURI,
+            teams: user.teams.map((val) => state.data.teams[val])
+        }
     }
 }
 //Typically would implement actions
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        logout: () => dispatch(logout()),
+        createTeam: ( teamName, teamDesc ) => dispatch( createTeam( teamName, teamDesc ) ) 
     }
 }
 

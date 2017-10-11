@@ -5,6 +5,7 @@ import { notifySimple } from "../utils/pushNotify.js";
 
 import passport from "passport";
 import moment from "moment";
+import q from 'q';
 
 /**
  * Creates a user and team 
@@ -13,7 +14,7 @@ import moment from "moment";
  * Expects username, password, firstName, lastName, teamName, description, category in the body of the request
  */
 export function registerUser(req, res) {
-    let newUser = new User({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName });
+    let newUser = new User({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName, avatarURI: req.body.avatar });
     User.register(newUser, req.body.password, function (err, account) {
         if (err) {
             return res.json(sendError(err));
@@ -35,7 +36,9 @@ export function registerUser(req, res) {
                 } else {
                     //Add the team to the user
                     account.teams.push(team._id);
+                    team.members.push(account._id);
                     account.save();
+                    team.save();
                     res.json(sendPayload(await getDetails(req.user._id)));
                 }
             })
@@ -43,6 +46,60 @@ export function registerUser(req, res) {
     });
 }
 
+export async function updateUserDetails(email, firstName, lastName, newPassword) {
+    if (req.body.password === req.body.newPassword) {
+        Account.findOneAndUpdate({ _id: req.user._id }, {
+            $set: {
+                username: req.body.email,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                password: req.body.newPassword
+            }
+        }, { new: true }, (err, updatedUser) => {
+            if (err) {
+                console.log("===============ERROR WHEN UPDATING USER=============");
+                console.log(err);
+            }
+            else {
+                console.log(updatedUser);
+                //      res.json(sendPayload( await getDetails(req.user._id)));
+            }
+        });
+    }
+
+    console.log("******************** UPDATE BELOW *************");
+    console.log(update);
+    
+    if (newPassword) {
+        console.log("************ I AM AT NEW PASSWORD. THE NEW PASSWORD IS:" + newPassword)
+        const user = await User.findById(userID);
+        console.log("******************** THIS IS THE USER: " + user);
+        user.setPassword(newPassword, () => {
+            user.save();
+            console.log("Updated password!");
+        })
+    }
+
+    User.findOneAndUpdate({ _id: userID }, {
+        $set: update
+    }, { new: true }, (err, updatedUser) => {
+        console.log("*************** A *****************")
+        if (err) {
+            console.log("===============ERROR WHEN UPDATING USER=============");
+            console.log(err);
+            deferred.resolve(sendPayload(err));
+
+        }
+        else {
+
+            deferred.resolve(sendPayload(updatedUser));
+
+            //      res.json(sendPayload( await getDetails(req.user._id)));
+        }
+    });
+
+    return deferred.promise;
+}
 /**
  * Get the Feed for the logged in user
  * @param {*} req 
@@ -75,7 +132,13 @@ export function logout(req, res) {
 
 export async function getDetails(id) {
     var user = await User.findById(id);
-    return user.populate('teams').execPopulate()
+    return user.populate('notifications').populate("teams").execPopulate()
+}
+
+export async function getPublic( id) { 
+    const user = await User.findById(id);
+    //TODO: Remove password d? 
+    return user;
 }
 
 /**
@@ -83,14 +146,14 @@ export async function getDetails(id) {
  * @param {Object({endpoint, keys: { p256dh, auth }})} notifyPayload 
  * @param {} userID - ID of the User to add
  */
-export async function addNotification(notifyPayload, userID) {
+export async function addNotificationEndpoint(notifyPayload, userID) {
     console.log(notifyPayload);
     console.log("^^^");
     var user = await User.findById(userID);
     //TODO: Currently storing arbitary data - WE must validate the data at some point
 
     //Check if the endpoint already exists 
-    if (user.notifications.find((value) => {
+    if (user.notificationsURL.find((value) => {
         return (value.endpoint == notifyPayload.endpoint)
     })) {
         console.log("Already exists");
@@ -98,7 +161,7 @@ export async function addNotification(notifyPayload, userID) {
     } else {
 
         //Save 
-        user.notifications.push(notifyPayload);
+        user.notificationsURL.push(notifyPayload);
         return user.save().then(() => sendPayload("Added Notification"), (err) => {
             console.log(err)
             return sendError(err)
@@ -109,13 +172,13 @@ export async function addNotification(notifyPayload, userID) {
 export async function removeNotification(endpointURL, userID) {
     let user = await User.findById(userID);
 
-    for (let index in user.notifications) {
-        let notification = user.notifications[index]
+    for (let index in user.notificationsURL) {
+        let notification = user.notificationsURL[index]
         if (notification.endpoint == endpointURL) {
-            user.notifications.splice(index, 1);
-            return user.save().exec().then( () => { 
+            user.notificationsURL.splice(index, 1);
+            return user.save().exec().then(() => {
                 return sendPayload("Successfully removed entry")
-                
+
             })
         }
     }
@@ -127,3 +190,19 @@ export async function getUsersInTeam(teamID) {
     return result;
 }
 
+
+export async function setAvatar(userID, uri) {
+    try {
+        const result = await User.find({ _id: userID });
+        result.avatarURI = uri;
+        return sendPayload(await result.save());
+    } catch (err) { 
+        return sendError(err);
+    }
+}
+
+export async function removeFromTeam(userID, teamID) { 
+    const user = await User.findById(userID);
+    user.teams.splice( user.teams.indexOf(teamID) , 1 );
+    await user.save();
+}
