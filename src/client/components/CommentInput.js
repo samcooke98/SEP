@@ -1,5 +1,5 @@
 import React from "react";
-import {Checkbox, Input, Link, Chip, Autocomplete, Avatar}  from "react-toolbox/lib";
+import { Checkbox, Input, Link, Chip, Autocomplete, Avatar } from "react-toolbox/lib";
 
 /**
  * Component that renders a form for inputting resource links
@@ -7,32 +7,47 @@ import {Checkbox, Input, Link, Chip, Autocomplete, Avatar}  from "react-toolbox/
 // const countriesObject = {'ES-es': 'Spain', 'TH-th': 'Thailand', 'EN-gb': 'England', 'EN-en': 'USA'};
 
 export default class CommentInput extends React.Component {
-        // state = {
-        //     userTagged: null,
-        // };
-      handleChange = (value) => {
-        
-      };
+    // state = {
+    //     userTagged: null,
+    // };
+    handleChange = (value) => {
 
-      handleMultipleChange = (value) => {
-        this.setState({multiple: value});
-      };
+    };
 
-      handleUserTag(user) {
+    handleMultipleChange = (value) => {
+        this.setState({ multiple: value });
+    };
+
+    handleUserTag(user) {
         event.preventDefault();
 
-          
-      }
 
-      render () {
-          console.log(this.props.taggedUsers)
-            return (
-                <div>
-                    {
+    }
+
+    render() {
+        const props = this.props;
+        return (
+            <div>
+                <Input
+                    type='text'
+                    label='Comment'
+                    name='comment'
+                    onChange={(val) => this.props.handleChange(val, "comment")}
+                    value={props.value}
+                />
+                
+            
+            </div>
+        );
+    }
+}
+
+/*
+                    { 
                         this.props.users != null && this.props.taggedUsers == []
                         ? this.props.users && this.props.users.map( (val, i) =>
                             this.props.taggedUsers.map((user, i) => {
-                                conosle.log(user);
+                                console.log(user);
                                 <div>
                                     <Link active onClick={this.handleUserTag}>
                                         <Chip>
@@ -58,9 +73,4 @@ export default class CommentInput extends React.Component {
                                 
                             />
                     }
-                    
-                        
-                </div>
-            );
-    }
-}
+                    */
