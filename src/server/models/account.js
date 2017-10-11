@@ -11,7 +11,7 @@ var Account = new Schema({
     teams: [{ type: Schema.ObjectId, ref: 'Team' }], //TODO: Ensure unique-ness ($addToSet).
     notificationsURL: [{}], //Push notifications
     notifications: [{type: Schema.ObjectId, ref: "Notification", required: false}], //The Actual notification objects
-    avatarURI: {type: String, default: 'https://placeimg.com/80/80/animals'}, // String to the User's Avatar
+    avatarURI: {type: String, default: '', required: false}, // String to the User's Avatar
 });
 
 Account.plugin(passportLocalMongoose);

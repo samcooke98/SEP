@@ -24,18 +24,16 @@ class CommentContainer extends React.Component {
         this.state = {
             comment: '',
 
-
             resourceId: this.props.match.params.resourceId,
             userId: '',
             usersInTeam: null,
-            taggedUsers: [],
+            taggedUsers: [], //An array of ids of people we have tagged. It is hacky but who cares?
         }
     }
 
     submitForm = (evt) => {
         //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
-
-        this.props.createComment(this.props.user._id, this.state.comment).then( (val) => { 
+        this.props.createComment(this.props.user._id, this.state.comment, this.state.taggedUsers).then( (val) => { 
             console.log(val);
             this.props.getResource();
             if(val.payload.success) { 
@@ -59,14 +57,6 @@ class CommentContainer extends React.Component {
     }
 
     handleChange = (value, name) => {
-        // if(value == '@'){
-        //     let data = ['Joshua Somma'];
-        //     this.props.usersInTeam && this.props.usersInTeam.map((val) =>  (
-        //         data.push(this.props.allUsers[val].firstName + " " + this.props.allUsers[val].lastName)
-        //     ))
-        //     console.log(data);
-        //     this.setState({taggedUsers: data});
-        // }
         this.setState({ [name]: value })
         if(value.endsWith("@") ){ 
             this.setState({isTagging: true}) 
@@ -79,7 +69,6 @@ class CommentContainer extends React.Component {
     remove = (commentId) => {
         this.props.deleteComment( commentId);
     }
-
 
     render() {
         return (
@@ -101,19 +90,24 @@ class CommentContainer extends React.Component {
                 </List>
 
                 <CommentInput
-                    value={this.state.comment}
+                    value={(this.state.comment)}
                     handleChange={this.handleChange}
+
                 />
                 {
                     this.state.isTagging && 
                      
                     this.props.members.map ( (user, counter) => { 
                         if( ( typeof user ) === "string") { 
+                            this.props.getUserById(user);
                             return <p key={counter}> Loading... </p> 
                         } else {                         
                             console.log(user);
                             return (
-                                <span onClick={() => this.handleChange(`${this.state.comment}${user.firstName} ${user.lastName}`, "comment")}>
+                                <span onClick={() => {
+                                    this.setState({taggedUsers: [...this.state.taggedUsers, user._id]})
+                                    this.handleChange(`${this.state.comment}${user.firstName} ${user.lastName}`, 'comment')
+                                }}>
                                     <Chip key={counter}> 
                                         {user.firstName} {user.lastName}
                                     </Chip>
@@ -156,7 +150,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         getUser: () => dispatch(getUserDetails()),
         getUserById: (id) => dispatch( getUserById (id) ),
         getUsersInTeam: (teamId) => dispatch(getUsers(teamId)),
-        createComment: (userId, comments) => dispatch(createComment(resourceID, userId, comments)),
+        createComment: (userId, comments, taggedUser) => dispatch(createComment(resourceID, userId, comments, taggedUser)),
         getResource: () => dispatch(getResource(resourceID)),
         deleteComment: ( commentId) => dispatch(deleteComment(resourceID, commentId))
     }
@@ -167,20 +161,3 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default withProtection(
     withRouter(connect(mapStateToProps, mapDispatchToProps)(CommentContainer))
 );
-
-/* 
-{ 
-                        this.state.taggedUsers != null
-                        ? <CommentInput
-                            taggedUsers={this.state.taggedUsers}
-                            user={this.props.user}
-                            comments={this.state.comments}
-                            users={this.props.usersInTeam && this.props.usersInTeam.map((val) =>  (this.props.allUsers[val]))}
-                            handleChange={this.handleChange}
-                            />
-                        : <CommentInput
-                            user={this.props.user}
-                            comments={this.state.comments}
-                            handleChange={this.handleChange}
-                            />
-                    }*/

@@ -26,6 +26,7 @@ export default class CommentInput extends React.Component {
 
     render() {
         const props = this.props;
+        // const 
         return (
             <div>
                 <Input

@@ -11,10 +11,13 @@ router.get("/testcomment", (req, res) => {
     res.send("It's alive!");
 })
 
-router.post("/:resourceId/comments", isLoggedIn, async (req, res) => {
+router.post("/:resourceId/comments", isLoggedIn, async (req, res, next) => {
+    const taggedUsers = req.body.taggedUsers;
+    console.log(taggedUsers);
     try {
         // If we get to here, we try to insert the Resource (failure reasons: url already exists)
-        var result = await CommentController.createComment(req.params.resourceId, req.body.userId, req.body.comment )
+        var result = await CommentController.createComment(req.params.resourceId, req.body.userId, req.body.comment, req.user, taggedUsers )
+        
         res.json(result);
         //TODO: Save on the Resource (!)
     } catch (err) {
