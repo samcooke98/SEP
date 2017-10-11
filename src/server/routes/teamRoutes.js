@@ -1,12 +1,11 @@
 import * as TeamController from "../controllers/TeamController.js";
+import * as UserController from "../controllers/UserController.js";
+
 import { sendError, sendPayload } from "../utils/apiResponse.js";
 import { isLoggedIn, canDo } from "../utils/request.js"
 
 import { Router } from "express";
 const router = new Router();
-
-
-router.get("team-test", (req, res) => res.json({ msg: "Alive!" }));
 
 
 router.get('/team/:id/users', isLoggedIn, async (req, res) => {
@@ -37,6 +36,20 @@ router.delete('/team/:id/users/:userID', isLoggedIn, async (req, res) => {
         }
     } else {
         res.json(sendError("You can't remove people from this team!"));
+    }
+})
+
+router.post("/team", isLoggedIn, async (req, res) => {
+    //Create a new teamm
+    const teamName = req.body.name;
+    const teamDesc = req.body.description;
+    const userID = req.user._id;
+    try {
+        const result = await TeamController.createTeam(teamName, teamDesc, userID);
+        res.json(sendPayload(result));
+    } catch (err) {
+        console.warn(err);
+        res.json(sendError(err))
     }
 })
 

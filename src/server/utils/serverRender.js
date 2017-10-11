@@ -46,18 +46,21 @@ const renderApp = async (location, req) => {
     const context = {};
     if (req.user) {
         let userDetails = await userController.getDetails(req.user._id);
+
         let teamObj = {};
-        let userObj = {};
+        let userObj = Object.assign({}, userDetails._doc, { teams: [] } )
         for (var team of userDetails.teams) {
-            teamObj[team._id] = team
+            teamObj[team._id] = team;
+            userObj.teams.push(team._id);
         }
+
         store.dispatch({
             type: "LOGIN",
             payload: {
                 success: true, payload: {
                     result: req.user._id,
                     entities: {
-                        users: { [req.user._id]: req.user },
+                        users: { [req.user._id]: userObj },
                         teams: teamObj
                     }
                 }

@@ -132,7 +132,13 @@ export function logout(req, res) {
 
 export async function getDetails(id) {
     var user = await User.findById(id);
-    return user.populate('teams').execPopulate()
+    return user.populate('notifications').populate("teams").execPopulate()
+}
+
+export async function getPublic( id) { 
+    const user = await User.findById(id);
+    //TODO: Remove password d? 
+    return user;
 }
 
 /**
@@ -140,14 +146,14 @@ export async function getDetails(id) {
  * @param {Object({endpoint, keys: { p256dh, auth }})} notifyPayload 
  * @param {} userID - ID of the User to add
  */
-export async function addNotification(notifyPayload, userID) {
+export async function addNotificationEndpoint(notifyPayload, userID) {
     console.log(notifyPayload);
     console.log("^^^");
     var user = await User.findById(userID);
     //TODO: Currently storing arbitary data - WE must validate the data at some point
 
     //Check if the endpoint already exists 
-    if (user.notifications.find((value) => {
+    if (user.notificationsURL.find((value) => {
         return (value.endpoint == notifyPayload.endpoint)
     })) {
         console.log("Already exists");
@@ -155,7 +161,7 @@ export async function addNotification(notifyPayload, userID) {
     } else {
 
         //Save 
-        user.notifications.push(notifyPayload);
+        user.notificationsURL.push(notifyPayload);
         return user.save().then(() => sendPayload("Added Notification"), (err) => {
             console.log(err)
             return sendError(err)
@@ -166,10 +172,10 @@ export async function addNotification(notifyPayload, userID) {
 export async function removeNotification(endpointURL, userID) {
     let user = await User.findById(userID);
 
-    for (let index in user.notifications) {
-        let notification = user.notifications[index]
+    for (let index in user.notificationsURL) {
+        let notification = user.notificationsURL[index]
         if (notification.endpoint == endpointURL) {
-            user.notifications.splice(index, 1);
+            user.notificationsURL.splice(index, 1);
             return user.save().exec().then(() => {
                 return sendPayload("Successfully removed entry")
 

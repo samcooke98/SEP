@@ -1,0 +1,15 @@
+.navList{ 
+    display: flex;
+    flex-direction: column;
+}
+
+.navBody { 
+    flex-grow: 1;
+}
+
+.footer { 
+    box-sizing: border-box;
+    padding: 16px;
+}
+
+.footer > * { display: block; margin-left:auto; margin-right: auto; }

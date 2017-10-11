@@ -128,7 +128,6 @@ class RegistrationContainer extends React.Component {
 				<LoggedInRedirector />
 				<form>
 					<h2> Your Details </h2>
-
 					<Input type='text' name='email' label='Email' value={this.state.email.value} error={this.state.email.error} onChange={this.handleChange.bind(this, "email")} />
 					<Input type='password' name='password' label='Password' value={this.state.password.value} error={this.state.password.error} onChange={this.handleChange.bind(this, "password")} />
 					<Input type='password' name='passwordConfirm' label="Confirm Password" value={this.state.passwordConfirm.value}

@@ -1,5 +1,7 @@
 
 import React from 'react';
+import { Route} from "react-router-dom";
+
 import HelloWorld from "./components/HelloWorld";
 import LoginContainer from "./containers/LoginContainer";
 import IndexPageContainer from "./containers/IndexPageContainer";
@@ -14,15 +16,14 @@ import SettingsContainer from "./containers/SettingsContainer.js";
 import UpdateDetailsContainer from "./containers/UpdatedDetailsInput.js";
 import TeamContainer from "./containers/TeamContainer.js";
 import EditTeamContainer from "./containers/EditTeamContainer.js";
+import NotificationContainer from "./containers/NotificationContainer.js";
 
 export const routes = [
-
         {
                 path: "/",
                 // exact: true,
                 component: BaseContainer,
                 routes: [
-
                         {
                                 path: "/feed",
                                 exact: true,
@@ -44,11 +45,6 @@ export const routes = [
                                 component: RegistrationContainer
                         },
                         {
-                                path: '/manage',
-                                exact: true,
-                                component: TeamManagement
-                        },
-                        {
                                 path: "/invite/:id",
                                 component: InvitePage
                         }, {
@@ -61,10 +57,6 @@ export const routes = [
                         },
                         {
                                 path: "/resource/:resourceId/comments",
-                                component: CommentContainer
-                        },
-                        {
-                                path: "/resource/:resourceId/comments/:commentID",
                                 component: CommentContainer
                         },
                         {
@@ -81,9 +73,8 @@ export const routes = [
                                 exact: true
                         },
                         {
-                                path: "/",
-                                exact: true,
-                                component: IndexPageContainer
+                                path: "/notifications",
+                                component: NotificationContainer
                         },
                 ]
         },
