@@ -9,20 +9,8 @@ import { AppBar, Panel, NavDrawer, Link as RTLink } from 'react-toolbox';
 import { List, ListItem, ListDivider } from "react-toolbox";
 import Navigation from 'react-toolbox/lib/navigation';
 import Link from 'react-toolbox/lib/link';
-<<<<<<< HEAD
 import { Button } from "react-toolbox";
 import { MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
-
-=======
-import { MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
-
-
-import { RouteWithSubRoutes } from "../Routes.js";
-import IndexPageContainer from "./IndexPageContainer.js"
-import User from "../components/UserButton/UserButton.js";
-import { logout } from "../redux/actions.js";
-import NavigationList from "../components/NavigationList.js";
->>>>>>> master
 
 import { RouteWithSubRoutes } from "../Routes.js";
 import IndexPageContainer from "./IndexPageContainer.js"
@@ -32,33 +20,6 @@ import NavigationList from "../components/NavigationList.js";
 import styles from './BaseContainer.css';
 import CreateTeam from "../components/CreateTeam.js";
 
-<<<<<<< HEAD
-=======
-// const NavigationList = [
-//     {
-//         caption: "Login", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-//         to: "/login"
-//     },
-//     link("Register", "/register"),
-//     {
-//         divider: true //Any object that doesn't have 'to', and 'caption' defined will render as a divider
-//     },
-//     {
-//         caption: "Feed", //You can define an entry like this, or use the helper function. Any extra arguments will be passed as props
-//         to: "/feed",
-//         loginOnly: true
-//     },
-//     {
-//         caption: "Team Management",
-//         to: "/manage",
-//         loginOnly: true
-//     },
-//     {
-//         divider: true,
-//     },
-//     link("Settings", "/settings")
-// ]
->>>>>>> master
 
 
 class BaseContainer extends React.Component {
