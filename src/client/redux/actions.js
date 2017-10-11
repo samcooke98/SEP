@@ -101,15 +101,16 @@ export const getUsers = createAction(actionTypes.GET_USERS, async (teamID) => {
 }, (teamID) => ({ teamID }))
 
 export const removeUserFromTeam = createAction(actionTypes.REMOVE_USER_FROM_TEAM, async (userID, teamID) => {
-    return del(`team/${teamID}/users/${userID}`).then((payload) => normalize(normalizr.normalizeTeam, payload) )
-}, (userID, teamID) => ({userID,teamID}))
+    return del(`team/${teamID}/users/${userID}`).then((payload) => normalize(normalizr.normalizeTeam, payload))
+}, (userID, teamID) => ({ userID, teamID }))
 
-export const getUserById = createAction( actionTypes.GET_USER_BY_ID, async( userID ) => { 
-    return get(`user/${userID}`).then( val => normalize(normalizr.normalizeUser, val) )
+export const getUserById = createAction(actionTypes.GET_USER_BY_ID, async (userID) => {
+    return get(`user/${userID}`).then(val => normalize(normalizr.normalizeUser, val))
 })
 
-export const leaveTeam = createAction( actionTypes.LEAVE_TEAM, async (teamID) => del(`user/teams/${teamID}`).then((val)=> normalize(normalizr.normalizeUser, val)) )
+export const leaveTeam = createAction(actionTypes.LEAVE_TEAM, async (teamID) => del(`user/teams/${teamID}`).then((val) => normalize(normalizr.normalizeUser, val)))
 
+export const createTeam = createAction(actionTypes.CREATE_TEAM, async (name, description) => post(`team`, { name, description }).then((val) => normalize(normalizr.normalizeTeam, val)))
 //At some point, it could be cool to generate these at runtime? 
 // const apiActions = [ 
 //     {

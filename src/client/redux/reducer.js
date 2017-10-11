@@ -177,6 +177,18 @@ var functionalReducers = {
             }
         }),
         onFail: (state, action) => ({...state})
+    },
+    [actionTypes.CREATE_TEAM]: { 
+        onSuccess: (state,action) => ({
+            ...state,
+            data: { ...state.data, users: { 
+                [state.misc.userID]: { 
+                    ...state.data.users[state.misc.userID],
+                    teams: [...state.data.users[state.misc.userID].teams, action.payload.payload.result ] //Add the team to the user 
+                }
+            }}
+        }),
+        onFail: (state,action) => ({state})
     }
 
 

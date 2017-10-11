@@ -5,7 +5,7 @@ import { notifySimple } from "../utils/pushNotify.js";
 import { sendError, sendPayload } from "../utils/apiResponse.js";
 
 
-export async function addUser(userID, teamID) { 
+export async function addUser(userID, teamID) {
     const team = await get(teamID);
     team.members.push(userID);
     await team.save();
@@ -16,6 +16,19 @@ export async function get(id) {
     return Team.findById(id);
 }
 
+export async function createTeam(teamName, teamDesc, teamOwner) {
+    const team = new Team({
+        teamName,
+        description: teamDesc,
+        status: 'active',
+        owner: teamOwner,
+        members: [teamOwner]
+    });
+    const userObj = await UserController.getPublic(teamOwner);
+    userObj.teams.push(team._id); 
+    await userObj.save();
+    return await team.save(); 
+}
 
 export async function isOwner(userID, teamID) {
     const team = await get(teamID)

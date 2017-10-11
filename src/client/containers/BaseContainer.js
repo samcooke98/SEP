@@ -16,19 +16,20 @@ import { MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
 import { RouteWithSubRoutes } from "../Routes.js";
 import IndexPageContainer from "./IndexPageContainer.js"
 import User from "../components/UserButton/UserButton.js";
-import { logout } from "../redux/actions.js";
+import { logout, createTeam } from "../redux/actions.js";
 import NavigationList from "../components/NavigationList.js";
 import styles from './BaseContainer.css';
+import CreateTeam from "../components/CreateTeam.js";
 
-/**
- * Data to populate the navigation list with 
- */
-const link = (caption, to) => ({ caption, to, ...arguments })
 
 
 class BaseContainer extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = { 
+            createTeamDialog: false,
+        }
     }
 
     navigateWithRouter = (to, event) => {
@@ -42,6 +43,11 @@ class BaseContainer extends React.Component {
             this.props.history.push(to)
         }
     }
+
+    toggleDialog = (evt) => { 
+        this.setState({createTeamDialog: !this.state.createTeamDialog})
+    }
+
     render() {
         return (
             <Layout>
@@ -84,8 +90,13 @@ class BaseContainer extends React.Component {
                             teams={this.props.teams}
                         />
                     }
-                    <footer className={styles.footer}> <Button label="Create a Team" floating={false} primary flat /> </footer>
+                    <footer className={styles.footer}> <Button label="Create a Team" floating={false} primary flat onClick={this.toggleDialog} /> </footer>
                 </NavDrawer>
+                <CreateTeam 
+                    active={this.state.createTeamDialog}
+                    close={this.toggleDialog}
+                    createTeam={this.props.createTeam}
+                />
                 <Panel>
                     <Switch>
                         {this.props.routes.map((route, i) => (
@@ -119,7 +130,8 @@ const mapStateToProps = (state) => {
 //Typically would implement actions
 const mapDispatchToProps = (dispatch) => {
     return {
-        logout: () => dispatch(logout())
+        logout: () => dispatch(logout()),
+        createTeam: ( teamName, teamDesc ) => dispatch( createTeam( teamName, teamDesc ) ) 
     }
 }
 

@@ -24,3 +24,4 @@ export const GET_USERS          = "GET_USERS";
 export const REMOVE_USER_FROM_TEAM = "REMOVE_USER_FROM_TEAM"
 export const GET_USER_BY_ID     = "GET_USER_BY_ID";
 export const LEAVE_TEAM         = "LEAVE_TEAM";
+export const CREATE_TEAM        = "CREATE_TEAM";
