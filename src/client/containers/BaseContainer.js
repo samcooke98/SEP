@@ -2,7 +2,7 @@
 * Basic Container Component Template
 */
 import React from "react";
-import { withRouter, Switch } from "react-router-dom";
+import { withRouter, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux"
 import { Layout } from "react-toolbox/lib/layout";
 import { AppBar, Panel, NavDrawer, Link as RTLink } from 'react-toolbox';
@@ -59,7 +59,7 @@ class BaseContainer extends React.Component {
                             >
                                 {/* We can put MenuItems here */}
                                 <MenuItem value="edit" caption="Edit Profile" onClick={
-                                    () => this.props.history.push('/edit')
+                                    () => this.props.history.push('/updateDetails')
                                 } />
                                 <MenuItem value="notifications" caption="Notifications" onClick={
                                     () => this.props.history.push('/notifications')

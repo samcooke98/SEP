@@ -4,11 +4,10 @@
 import React from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { StyleSheet, View, Text, Image } from "react-primitives"
 
 
 
-class IndexPageContainer extends React.Component {
+export default class IndexPageContainer extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -26,7 +25,7 @@ class IndexPageContainer extends React.Component {
                         <br />
                         <p style={stylesheet.spacing}> New to Teamshare? Register as a team leader here! </p>
                         <Link to="/register" style={stylesheet.button}> Register </Link>
-                    </div >
+                    </div>
                 </div>
             </div>
         )
@@ -108,21 +107,21 @@ const stylesheet = ({
     },
 
 })
-const mapStateToProps = (state) => {
-    return {
+// const mapStateToProps = (state) => {
+//     return {
 
-    }
-}
+//     }
+// }
 
 
 
-//Typically would implement actions
-const mapDispatchToProps = (dispatch) => {
-    return {
+// //Typically would implement actions
+// const mapDispatchToProps = (dispatch) => {
+//     return {
 
-    }
-}
+//     }
+// }
 
-//withRouter connects to react-router: (https://reacttraining.com/react-router/web/guides/redux-integration) 
-//Connect connects to the redux store: (redux.js.org/docs/basics/UsageWithReact.html) 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(IndexPageContainer));
+// //withRouter connects to react-router: (https://reacttraining.com/react-router/web/guides/redux-integration) 
+// //Connect connects to the redux store: (redux.js.org/docs/basics/UsageWithReact.html) 
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(IndexPageContainer));
