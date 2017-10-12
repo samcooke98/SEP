@@ -27,6 +27,7 @@ export async function notifyTeam(teamID, triggerUser, description, url, shouldPu
     //add the notification object
     //send push notifications
 
+<<<<<<< HEAD
 }
 
 export async function notifyUser ( userId, triggerUser, description, url, shouldPush ) { 
@@ -48,4 +49,6 @@ export async function notifyUser ( userId, triggerUser, description, url, should
     if(shouldPush) 
         userObj.notify(description, '', url);
 
+=======
+>>>>>>> master
 }

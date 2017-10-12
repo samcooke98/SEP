@@ -53,6 +53,7 @@ const renderApp = async (location, req) => {
             teamObj[team._id] = team;
             userObj.teams.push(team._id);
         }
+
         store.dispatch({
             type: "LOGIN",
             payload: {
