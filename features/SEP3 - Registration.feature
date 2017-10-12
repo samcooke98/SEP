@@ -18,7 +18,8 @@ Feature: Registration
 
     Scenario: Existing Email
         Given I am on the "/register" page
-        When I put "sam_cooke@outlook.com" in the field "email"
+            And I have an account called "sam_cookeoutlook.com" with a password of "sam"
+        When I put "sam_cookeoutlook.com" in the field "email"
             And I put "Sam" in the field "password"
             And I put "Sam" in the field "passwordConfirm" 
             And I put "Sam" in the field "firstname"
@@ -40,7 +41,7 @@ Feature: Registration
             And I put "Team Ten Test" in the field "teamdesc" 
             And I put "Business" in the field "teamcategory"
             And I submit the form
-        Then I should see "The passwords do not match" 
+        Then I should see an error 
 
     # Scenario: Invalid Email
     #     Given I am on the "/register" page
