@@ -39,16 +39,15 @@ export async function post(endpoint, params) {
 }
 
 export async function get(endpoint) {
-    console.log(API_URL + endpoint);
-    return fetch(API_URL + endpoint, {
+    const opts = {
         method: "GET",
-        credentials: "same-origin"
-    }).then((response) => {
+        credentials: "same-origin",
+    }
+    return fetch(API_URL + endpoint, opts).then((response) => {
         if (response.status == 401) {
             return { success: false, msg: "Server returned unauthorised" }
         }
         try {
-            console.log('here', response.json);
             return response.json()
         } catch (err) {
             console.warn('error when parsing json');

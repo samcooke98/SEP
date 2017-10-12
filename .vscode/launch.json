@@ -5,6 +5,7 @@
             {
                 "type": "node",
                 "request": "attach",
+                "protocol": "inspector",
                 "name": "Attach by Process ID",
                 "processId": "${command:PickProcess}"
             },

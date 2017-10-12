@@ -36,10 +36,14 @@ export const getUserDetails = createAction(actionTypes.GET_USER, async () => {
     return get("user").then((val) => normalize(normalizr.normalizeUser, val))
 })
 
-export const sendInvitations = createAction(actionTypes.SEND_INVITES, async (teamID, emails) => {
-    return post("invite", { id: teamID, emails })
+
+
+
+export const sendInvitations = createAction(actionTypes.SEND_INVITES, async (id, emails) => {
+    return post("invite", { id, emails })
 })
-//ID: inviteID
+
+
 export const getInviteInfo = createAction(actionTypes.GET_INVITE, async (id) => {
     return get(`invite/${id}`).then((val) => normalize(normalizr.normalizeTeam, val))
     //todo: normalize and store data as it possibly returns a team info
@@ -57,8 +61,8 @@ export const resetPassConfirm = createAction(actionTypes.RESET_PASS_CONFIRM, asy
     return post(`reset/confirmAction`, { RID, password })
 })
 
-export const createComment = createAction(actionTypes.CREATE_COMMENT, async (resourceId, userId, comment) => {
-    return post(`${resourceId}/comments`, { resourceId, userId, comment }).then(
+export const createComment = createAction(actionTypes.CREATE_COMMENT, async (resourceId, userId, comment, taggedUsers) => {
+    return post(`${resourceId}/comments`, { resourceId, userId, comment, taggedUsers}).then(
         (payload) => normalize(normalizr.normalizeComment, payload)
     )
 })

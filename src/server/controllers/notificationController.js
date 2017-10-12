@@ -27,4 +27,28 @@ export async function notifyTeam(teamID, triggerUser, description, url, shouldPu
     //add the notification object
     //send push notifications
 
+<<<<<<< HEAD
+}
+
+export async function notifyUser ( userId, triggerUser, description, url, shouldPush ) { 
+    console.log("HERE");
+    const notification = new Notification({ 
+        url,
+        triggerPerson: triggerUser,
+        description: description,
+    });
+    notification.save();
+    console.log("Notification Controller");
+
+    const userObj = await getUser(userId);
+    console.log("Adding notification");
+    userObj.addNotification(notification._id);
+    console.log("here");
+    await userObj.save();
+
+    if(shouldPush) 
+        userObj.notify(description, '', url);
+
+=======
+>>>>>>> master
 }

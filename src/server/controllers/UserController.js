@@ -190,6 +190,10 @@ export async function getUsersInTeam(teamID) {
     return result;
 }
 
+export async function getUserById( userId) { 
+    return await User.findById(userId);
+    
+}
 
 export async function setAvatar(userID, uri) {
     try {

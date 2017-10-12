@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var moment = require('moment');
 var passportLocalMongoose = require('passport-local-mongoose');
 
 var Comment = new Schema({

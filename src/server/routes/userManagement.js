@@ -37,7 +37,7 @@ router.post("/login", passport.authenticate('local'), async (req, res) => {
     res.json(sendPayload(await UserController.getDetails(req.user._id)))
 })
 
-router.get("/logout", UserController.logout)
+router.get("/logout", UserController.logout);
 
 router.get("/user", isLoggedIn, async (req, res) => {
     var data = await UserController.getDetails(req.user._id);
