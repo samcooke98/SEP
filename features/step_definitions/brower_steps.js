@@ -18,7 +18,7 @@ defineSupportCode(function ({ Given, When, Then }) {
 
 	Given("I have an account called {string} with a password of {string}", (username, pass) => {
 		return makeAdminAccount(username, pass).then((val) => {
-			console.log(val);
+			//console.log(val);
 			logout()
 		})
 	})
@@ -49,7 +49,7 @@ defineSupportCode(function ({ Given, When, Then }) {
 
 	When('I submit the form', function () {
 		return this.driver.findElement({ tagName: "form" }).then((element) => {
-			console.log("click");
+			//console.log("click");
 			element.submit();
 			this.driver.sleep(2000);
 			return element;
@@ -61,6 +61,14 @@ defineSupportCode(function ({ Given, When, Then }) {
 			return element.click();
 		});
 	});
+
+	When('I click on {string} button', function (text) {
+		return this.driver.findElement({name: text}).then(function (element) {
+			return element.click();
+		});
+	});
+
+	
 
 	Then('I should see {string}', function (text) {
 		var xpath = "//*[contains(text(),'" + text + "')]";
@@ -74,17 +82,15 @@ defineSupportCode(function ({ Given, When, Then }) {
 	});
 
 	Then("I should see an error", function () {
-		// const condition = seleniumWebdriver.By.css('.theme--error--2k5JzPbP');
-		// return this.driver.wait(seleniumWebdriver.until.elementLocated(condition), 5000)
+
 		//Tries to find a style containing "theme--error--"
-		return this.driver.findElement({ css: '[class^="theme--error--1p4yC2ps"]' })
-		// this.driver.sleep(5000);
-		// return this.driver.findElement({ css: '.theme--error--2k5JzPbP' })
+		return this.driver.findElement({ css: '[class*="theme--error"]' })
+		
 
 	})
 
 	Then("I should see no errors", function () {
-		return this.driver.findElement({ css: '[class^="theme--error--1p4yC2ps"]' }).catch(() => true).then(() => false, () => true)
+		return this.driver.findElement({ css: '[class*="theme--error"]' }).catch(() => true).then(() => false, () => true)
 	})
 
 
@@ -97,7 +103,7 @@ defineSupportCode(function ({ Given, When, Then }) {
 const responseToBool = (response) => response.success
 
 const post = (endpoint, body) => {
-	console.log("here");
+	//console.log("here");
 	return fetch(url + "/api/" + endpoint, {
 		method: "POST",
 		headers: {
@@ -106,16 +112,16 @@ const post = (endpoint, body) => {
 		credentials: 'same-origin',
 		body: JSON.stringify(body)
 	}
-	).then((response) => { console.log(response); return response.json() })
-	.then((json) => { console.log(json); return json })
+	).then((response) => { return response.json() }) //console.log(response); return response.json() })
+	.then((json) => { return json}) //console.log(json); return json })
 }
 const makeAdminAccount = (username, password) => {
-	console.log("HERE");
+	//console.log("HERE");
 	var params = {
 		username: username,
 		password: password, passwordConfirm: password, firstName: "Admin", lastName: "Test", teamName: "Admin Team", teamDesc: "Test", category: "test"
 	}
-	return post("register", params).then((json) => { console.log(json); return json; })
+	return post("register", params).then((json) => { return json;}) //console.log(json); return json; })
 }
 
 const logout = () => {

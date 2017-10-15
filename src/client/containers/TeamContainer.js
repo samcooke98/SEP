@@ -69,7 +69,7 @@ class TeamContainer extends React.Component {
 
                 </div >
                 {isOwner &&
-                    <Button icon='email' label='Invite Users' raised primary onClick={this.openInvite} />
+                    <Button icon='email' name='inviteUser' label='Invite Users' raised primary onClick={this.openInvite} />
                 }
                 <InviteDialog
                     active={this.state.dialogOpen}

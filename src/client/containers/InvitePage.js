@@ -70,7 +70,7 @@ class InviteContainer extends React.Component {
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                 <h1> Join the team: "{(this.props.teams[this.props.invitedID]).teamName}" on TeamShare </h1>
 
-                <form>
+                <form onSubmit={this.submitForm}>
                     <Input type='text' name='email' label='Email' value={this.state.email.value} error={this.state.email.error} onChange={this.handleChange.bind(this, "email")} />
                     <Input type='password' name='password' label='Password' value={this.state.password.value} error={this.state.password.error} onChange={this.handleChange.bind(this, "password")} />
                     <Input type='password' name='passwordConfirm' label="Confirm Password" value={this.state.passwordConfirm.value}
