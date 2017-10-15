@@ -135,7 +135,11 @@ class RegistrationContainer extends React.Component {
 					/>
 					<Input type='text' name='firstname' label="First Name" value={this.state.firstname.value} error={this.state.firstname.error} onChange={this.handleChange.bind(this, "firstname")} />
 					<Input type='text' name='lastname' label="Last Name" value={this.state.lastname.value} error={this.state.lastname.error} onChange={this.handleChange.bind(this, "lastname")} />
-					<AvatarSelection selected={this.state.avatarURI} onChange={(uri) => this.setState({ avatarURI: uri })} />
+					<AvatarSelection
+						URI={this.state.avatarURI}
+						setURI={(uri) => this.setState({ avatarURI: uri })}
+						name={this.state.firstname.value}
+					/>
 					<h2> Team Details </h2>
 					<Input type='text' name='teamname' label='Team Name' value={this.state.teamname.value} error={this.state.teamname.error} onChange={this.handleChange.bind(this, "teamname")} />
 					<Input type='text' name='teamdesc' label='Team Description' value={this.state.teamdesc.value} error={this.state.teamdesc.error} onChange={this.handleChange.bind(this, "teamdesc")} />
