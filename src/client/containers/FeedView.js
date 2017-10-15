@@ -113,6 +113,7 @@ class FeedView extends React.Component {
                         this.props.resourceIDs.map((id) => {
                             let resource = this.props.resources[id]
                             return <LinkCard
+                                key = {id}
                                 title={resource.title || ''}
                                 subtitle={resource.url}
                                 text={resource.description}
@@ -139,7 +140,7 @@ const mapStateToProps = (state) => {
         user: user,
         teams: state.data.teams,
         resources: state.data.resources || {},
-        resourceIDs: state.ui.resource || []
+        resourceIDs: Object.keys(state.data.resources) || []
     }
 }
 //Typically would implement actions
