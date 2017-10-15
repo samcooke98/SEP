@@ -113,6 +113,7 @@ class FeedView extends React.Component {
                     <ResourceList
                         resources={this.props.resourceIDs.map((id) => this.props.resources[id])}
                         navigate={(to) => this.props.history.push(to)}
+                        deleteResource={this.props.rmResource}
                         userOwnedTeams={Object.keys(this.props.teams).map(id =>
                             this.props.teams[id].owner == this.props.user._id
                                 ? id 

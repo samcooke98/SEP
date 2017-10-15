@@ -8,14 +8,12 @@ import LinkCard from "./LinkCard.js";
  */
 const ResourceList = (props) => {
     const resources = props.resources;
-    console.log(props.userOwnedTeams);
+    console.log(resources);
     return (
         <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
             { /*TODO: Sort the order */
                 resources.map((resource, i) => {
-                    console.log(resource.team)
-                    console.log(props.userOwnedTeams.includes(resource.team))
-                    
+                    if(resource === null || resource === undefined) return null;
                     return <LinkCard
                         key={resource._id}
                         title={resource.title || ''}
@@ -25,8 +23,8 @@ const ResourceList = (props) => {
                         url={resource.url}
                         resourceId={resource._id}
                         openFunc={() => openURL(resource.url) }
-                        commentFunc={() => props.navigate(`resource/${resource._id}/comments`)}
-                        removeFunc={() => console.log("TODO: DELETE")}
+                        commentFunc={() => props.navigate(`/resource/${resource._id}/comments`)}
+                        removeFunc={() => props.deleteResource(resource._id)}
                         showDelete={ props.userOwnedTeams.includes(resource.team)} 
                     />
                 })
@@ -43,8 +41,6 @@ const openURL = (url) => {
     )
 }
 
-const openComments = (id) => { 
-    this.navigateWithRouter.bind(this, "resource/" + resource._id + "/comments")
-}
+
 
 export default ResourceList;
