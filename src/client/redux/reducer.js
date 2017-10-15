@@ -5,6 +5,7 @@ import { handleAction, handleActions } from "redux-actions"
 import combineReducers from "redux"
 import * as actionTypes from "./actionTypes.js";
 import merge from "lodash/merge";
+import omit from "lodash/omit";
 
 const initialState = {
     data: {//Entities are placed in here 
@@ -35,7 +36,7 @@ var functionalReducers = {
             },
             ui: {
                 ...state.ui,
-                resource: [...(state.ui && state.ui.resource || []), action.payload.payload.result]
+                // resource: [...(state.ui && state.ui.resource || []), action.payload.payload.result]
                 // ^ Kinda complicated but basically either expands the array or creates a blank one, then merges the result in
             },
         }),
@@ -164,8 +165,8 @@ var functionalReducers = {
     },
     [actionTypes.DELETE_RESOURCE]: {
         onSuccess: (state, action) => ({
-            data: { ...state.data, resources: { ...state.data.resources, [action.meta.id]: {} } }, //Remove the data object (or set it to blank)
-            ui: { ...state.ui, resources: state.ui.resources.filter((val) => val != action.meta.id) } //Remove the id from the resources array
+            ...state, 
+            data: { ...state.data, resources: { ...omit(state.data.resources, action.meta.id) } }, //Remove the data object (or set it to blank)
         }), //Remove all instances of the id 
         onFail: (state, action) => ({})
     },
