@@ -137,7 +137,7 @@ export function postLink(req, res) {
                 console.log("here");
                 console.log(email);
                 //TODO: Email<
-                sendEmail(email, "You've been invited to join a team on TeamShare", `<a href='${link.urlID}'> Join the team here </a> or paste http://localhost:3000/invite/${link.urlID}`, true);
+                sendEmail(email, "You've been invited to join a team on TeamShare", `<a href='http://teamshare-herokuapp.com/invite/${link.urlID}'> Join the team here </a> or paste http://teamshare.herokuapp.com/invite/${link.urlID}`, true);
 
             }
             res.json(sendPayload("Sent the invitation"));
