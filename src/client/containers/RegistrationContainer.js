@@ -126,7 +126,7 @@ class RegistrationContainer extends React.Component {
 		return (
 			<div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
 				<LoggedInRedirector />
-				<form>
+				<form onSubmit={this.submitForm}>
 					<h2> Your Details </h2>
 					<Input type='text' name='email' label='Email' value={this.state.email.value} error={this.state.email.error} onChange={this.handleChange.bind(this, "email")} />
 					<Input type='password' name='password' label='Password' value={this.state.password.value} error={this.state.password.error} onChange={this.handleChange.bind(this, "password")} />
@@ -149,7 +149,7 @@ class RegistrationContainer extends React.Component {
 						source={categories}
 						onChange={this.handleChange.bind(this, "teamcategory")}
 					/>
-					<Button label='Submit' raised primary onClick={this.submitForm} />
+					<Button id='submitBtn' label='Submit' raised primary onClick={this.submitForm} />
 				</form>
 			</div>
 		)
