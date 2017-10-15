@@ -20,7 +20,7 @@ export default class LinkCard extends React.PureComponent {
                     {this.props.tags.map((val, i) => <p key={i}>{val}</p>)}
                 </CardText>
                 <CardActions>
-                    <Button flat icon='open_in_browser' label="Open" onClick={this.openFunc} />
+                    <Button flat icon='open_in_browser' label="Open" onClick={this.onClick} />
                     <Button flat label="Comment" onClick={this.props.commentFunc} />
                     <Button icon="delete" accent label='delete' onClick={this.props.removeFunc} />
                 </CardActions>
@@ -34,7 +34,13 @@ export default class LinkCard extends React.PureComponent {
     }
 
     onClick = (evt) => {
-        open(this.props.url)
+        window.open(
+            this.props.url.includes("http://") || this.props.url.includes('https://')
+                ? this.props.url
+                : "https://" + this.props.url
+        )
+        //We should probably validate urls more so thatn we currently do 
+        //Also yeah this doesn't really work well.
     }
 
     delete = () => {
