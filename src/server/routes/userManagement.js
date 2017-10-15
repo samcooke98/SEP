@@ -32,7 +32,11 @@ router.post('/reset/confirmAction', function (req, res) {
 
 router.get('/feed', isLoggedIn, UserController.getFeed);
 
-router.post("/login", passport.authenticate('local'), async (req, res) => {
+router.post("/login", (req, res, next) => {
+    //Lower case username
+    req.body.username = req.body.username.toLowerCase();
+    next();    
+}, passport.authenticate('local'), async (req, res) => {
     console.log(req.user);
     res.json(sendPayload(await UserController.getDetails(req.user._id)))
 })
@@ -66,15 +70,12 @@ router.delete("/user/teams/:teamID", isLoggedIn, async (req, res) => {
 })
 
 router.post("/user/notify", isLoggedIn, async (req, res) => {
-    console.log(req.body);
     var data = await UserController.addNotification(req.body, req.user._id);
-    console.log(data);
     res.json(sendPayload(data));
 })
 
 router.delete("/user/notify", isLoggedIn, async (req, res) => {
     let endpoint = req.query.endpoint;
-    console.log("Removing Endpoint " + endpoint + "")
     var data = await UserController.removeNotification(endpoint, req.user._id);
     res.json(data);
 

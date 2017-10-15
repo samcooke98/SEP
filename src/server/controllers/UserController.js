@@ -14,7 +14,8 @@ import q from 'q';
  * Expects username, password, firstName, lastName, teamName, description, category in the body of the request
  */
 export function registerUser(req, res) {
-    let newUser = new User({ username: req.body.username, firstName: req.body.firstName, lastName: req.body.lastName, avatarURI: req.body.avatar });
+    req.body.username = req.body.username.toLowerCase();
+    let newUser = new User({ username: req.body.username.toLowerCase(), firstName: req.body.firstName, lastName: req.body.lastName, avatarURI: req.body.avatar });
     User.register(newUser, req.body.password, function (err, account) {
         if (err) {
             return res.json(sendError(err));
@@ -50,7 +51,7 @@ export async function updateUserDetails(email, firstName, lastName, newPassword)
     if (req.body.password === req.body.newPassword) {
         Account.findOneAndUpdate({ _id: req.user._id }, {
             $set: {
-                username: req.body.email,
+                username: req.body.email.toLowerCase(),
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 password: req.body.newPassword
@@ -67,25 +68,18 @@ export async function updateUserDetails(email, firstName, lastName, newPassword)
         });
     }
 
-    console.log("******************** UPDATE BELOW *************");
-    console.log(update);
-    
+
     if (newPassword) {
-        console.log("************ I AM AT NEW PASSWORD. THE NEW PASSWORD IS:" + newPassword)
         const user = await User.findById(userID);
-        console.log("******************** THIS IS THE USER: " + user);
         user.setPassword(newPassword, () => {
             user.save();
-            console.log("Updated password!");
         })
     }
 
     User.findOneAndUpdate({ _id: userID }, {
         $set: update
     }, { new: true }, (err, updatedUser) => {
-        console.log("*************** A *****************")
         if (err) {
-            console.log("===============ERROR WHEN UPDATING USER=============");
             console.log(err);
             deferred.resolve(sendPayload(err));
 
