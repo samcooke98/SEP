@@ -81,6 +81,12 @@ defineSupportCode(function ({ Given, When, Then }) {
 		return this.driver.wait(seleniumWebdriver.until.urlIs(url + string))
 	});
 
+	Then("I should be redirecred to the landing page", function () {
+		return this.driver.get(url + "/").then(() => {
+			return this.driver.wait(seleniumWebdriver.until.urlIs(url + "/"))
+		})
+	})
+
 	Then("I should see an error", function () {
 
 		//Tries to find a style containing "theme--error--"

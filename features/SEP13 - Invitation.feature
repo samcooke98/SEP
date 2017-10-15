@@ -16,6 +16,7 @@ Feature: Invitation
             And I click on "sendInvite" button 
         Then I should see no errors
 
+   
     Scenario: Incorrect Information
         Given I am on the "/feed" page
         When I click on "Admin Team"
