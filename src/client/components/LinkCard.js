@@ -24,7 +24,8 @@ export default class LinkCard extends React.PureComponent {
                     {this.props.text}
                 </CardText>
                 <CardActions className={styles.cardFooter}>
-                    <Button flat icon='open_in_browser' label="Open" onClick={this.props.openFunc} />
+                  {/*<Button flat icon='open_in_browser' label="Open" onClick={this.props.openFunc} />*/}
+                    <Button flat icon='open_in_browser' label="Open" onClick={this.onClick} />
                     <Button flat label="Comment" onClick={this.props.commentFunc} />
                     {this.props.showDelete &&
                         <Button icon="delete" accent label='delete' onClick={this.props.removeFunc} />
@@ -43,5 +44,5 @@ export default class LinkCard extends React.PureComponent {
         )
         //We should probably validate urls more so thatn we currently do 
         //Also yeah this doesn't really work well.
-    }
+
 }
