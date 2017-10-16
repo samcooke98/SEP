@@ -76,17 +76,6 @@ class AvatarSelection extends React.Component {
     render() {
         return (
             <div>
-                {
-                    avatars.map((val, i) => {
-                        return (
-                            <IconButton key={i} onClick={(evt) => this.onButtonClick.bind(this, evt, val)()} style={{ margin: '8px' }}>
-                                <Avatar image={val} style={
-                                    this.props.selected == val ? { border: "2px solid blue" } : {}
-                                } />
-                            </IconButton>
-                        )
-                    })
-                }
                 <Avatar image={this.props.URI} title={this.props.name || ""} />
                 <input id='file-input' type='file' />
                 <button onClick={this.onSubmit}> Upload </button>
@@ -96,3 +85,15 @@ class AvatarSelection extends React.Component {
 }
 
 export default AvatarSelection;
+
+/* {
+                    avatars.map((val, i) => {
+                        return (
+                            <IconButton key={i} onClick={(evt) => this.onButtonClick.bind(this, evt, val)()} style={{ margin: '8px' }}>
+                                <Avatar image={val} style={
+                                    this.props.selected == val ? { border: "2px solid blue" } : {}
+                                } />
+                            </IconButton>
+                        )
+                    })
+                }*/ 
