@@ -10,7 +10,8 @@ let Resource = new mongoose.Schema({
 	tags: [{
 		type: String, required: false
 	}],
-    comments: [{type: mongoose.Schema.ObjectId, required: true, ref:'Comment' }]
+	comments: [{type: mongoose.Schema.ObjectId, required: true, ref:'Comment' }],
+	imgURL: {type: String, required: false}
 })
 
 export default mongoose.model("Resource", Resource);

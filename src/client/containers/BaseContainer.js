@@ -2,15 +2,13 @@
 * Basic Container Component Template
 */
 import React from "react";
-import { withRouter, Switch, Route } from "react-router-dom";
+import { withRouter, Switch, Route, Link, NavLink } from "react-router-dom";
 import { connect } from "react-redux"
 import { Layout } from "react-toolbox/lib/layout";
 import { AppBar, Panel, NavDrawer, Link as RTLink } from 'react-toolbox';
 import { List, ListItem, ListDivider } from "react-toolbox";
 import Navigation from 'react-toolbox/lib/navigation';
-import Link from 'react-toolbox/lib/link';
-import { Button } from "react-toolbox";
-import { MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
+import { Button, MenuItem, MenuDivider } from "react-toolbox";
 
 import { RouteWithSubRoutes } from "../Routes.js";
 import IndexPageContainer from "./IndexPageContainer.js"
@@ -26,7 +24,7 @@ class BaseContainer extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { 
+        this.state = {
             createTeamDialog: false,
         }
     }
@@ -43,21 +41,27 @@ class BaseContainer extends React.Component {
         }
     }
 
-    toggleDialog = (evt) => { 
-        this.setState({createTeamDialog: !this.state.createTeamDialog})
+    toggleDialog = (evt) => {
+        this.setState({ createTeamDialog: !this.state.createTeamDialog })
     }
 
     render() {
         return (
             <Layout>
-                <AppBar title='TeamShare' fixed flat>
-                    <Navigation type='horizontal'>
+                <AppBar
+                    title={
+                        <Link to={this.props.loggedIn ? "/feed" : "/"} style={{ textDecoration: 'none' }}>
+                            <h3> TeamShare </h3>
+                        </Link>
+                    } fixed flat
+                    className={styles.appBar}
+                >
+                    <Navigation type='horizontal' >
                         {this.props.loggedIn &&
                             <User
                                 avatar={this.props.avatar}
                                 name={this.props.name}
                             >
-                                {/* We can put MenuItems here */}
                                 <MenuItem value="edit" caption="Edit Profile" onClick={
                                     () => this.props.history.push('/updateDetails')
                                 } />
@@ -76,9 +80,9 @@ class BaseContainer extends React.Component {
                         {
                             !this.props.loggedIn &&
                             <Navigation type="horizontal">
-                                <RTLink href="/login" label="Login" active />
-                                <RTLink href="/register" label="Register" />
-                                <RTLink href="/" label="Home" />
+                                <NavigationLink to="/login" label="Login" />
+                                <NavigationLink to="/register" label="Register" />
+                                <NavigationLink to="/" label="Home" />
                             </Navigation>
                         }
                     </Navigation>
@@ -91,7 +95,7 @@ class BaseContainer extends React.Component {
                     }
                     <footer className={styles.footer}> <Button label="Create a Team" floating={false} primary flat onClick={this.toggleDialog} /> </footer>
                 </NavDrawer>
-                <CreateTeam 
+                <CreateTeam
                     active={this.state.createTeamDialog}
                     close={this.toggleDialog}
                     createTeam={this.props.createTeam}
@@ -130,10 +134,20 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         logout: () => dispatch(logout()),
-        createTeam: ( teamName, teamDesc ) => dispatch( createTeam( teamName, teamDesc ) ) 
+        createTeam: (teamName, teamDesc) => dispatch(createTeam(teamName, teamDesc))
     }
 }
 
 //withRouter connects to react-router: (https://reacttraining.com/react-router/web/guides/redux-integration) 
 //Connect connects to the redux store: (redux.js.org/docs/basics/UsageWithReact.html) 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BaseContainer));
+
+const NavigationLink = (props) =>
+    <NavLink to={props.to}
+        exact
+        activeStyle={{ color: '#adadad' }}
+        style={{ textDecoration: 'none', marginRight: '12px' }}
+    >
+        {props.label}
+    </NavLink>
+

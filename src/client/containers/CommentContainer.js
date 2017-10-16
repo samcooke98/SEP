@@ -76,14 +76,21 @@ class CommentContainer extends React.Component {
                 <h2>Comments</h2>
                 <List selectable ripple>
                     {this.props.resource && this.props.resource.comments.map((id) => {
+                        const user = this.props.users[this.props.comments[id].userId] || {};
+                        let name;
+                        if(user) {
+                            name = user.firstName + ' ' + user.lastName
+                        }
                         return <ListItem
                             key={id}
-                            avatar='https://dl.dropboxusercontent.com/u/2247264/assets/m.jpg'
+                            avatar={<Avatar image={user.avatarURI} title={name} />}
                             caption={this.props.comments && this.props.comments[id].comment}
-                            legend={this.props.user.firstName + ' ' + this.props.user.lastName}
-                            rightActions={[
-                                <IconButton key={1} icon='delete' onClick={()=> this.remove(id)} />
-                            ]}
+                            legend={name}
+                            rightActions={this.props.userIsOwner 
+                            ?   [
+                                    <IconButton key={1} icon='delete' onClick={()=> this.remove(id)} />
+                                ] 
+                            : []}
 
                         />
                     })}
@@ -137,6 +144,8 @@ const mapStateToProps = (state, ownProps) => {
     // const userIDs = state.data.
     return {
         user: user,
+        userIsOwner: team.owner == user._id,
+        users: state.data.users,
         members: team.members && team.members.map( id => state.data.users[id] || id ),
         comments: state.data.comments || {},
         resource: state.data.resources && state.data.resources[ownProps.match.params.resourceId] || null,

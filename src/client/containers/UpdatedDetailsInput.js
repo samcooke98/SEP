@@ -27,18 +27,24 @@ class UpdatedDetailsInput extends React.Component {
         this.setState({ [name]: { value, error: this.state[name].error } }, () => this.calcErrors())
     }
 
+    //TO-DO -> focus on the this later.
     submitForm = (evt) => {
         evt.preventDefault();
 
         const shouldSubmit = !this.hasErrors();
+        console.log(this.state.email.value);
+        console.log(this.state.newPassword.value);
+        console.log(this.state.firstName.value);
+        console.log(this.state.lastName.value);
 
         if (shouldSubmit) {
-            this.props.updateDetails(
+            const data = this.props.updateDetails(
                 this.state.email.value,
                 this.state.newPassword.value,
                 this.state.firstName.value,
                 this.state.lastName.value
             )
+            console.log(data);
             this.clearErrors();
         }
     }
@@ -106,7 +112,7 @@ class UpdatedDetailsInput extends React.Component {
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
 
                 <form onSubmit={this.submitForm}>
-                    <Input type='text' label='Email' name='email' value={this.state.email.value} error={this.state.email.error} onChange={(val) => this.handleChange(val, "email")} />
+                    <Input type='text' name='email' label='Email' value={this.state.email.value} error={this.state.email.error} onChange={(val) => this.handleChange(val, "email")} />
                     <Input type='text' label='First Name' name='firstName' value={this.state.firstName.value} error={this.state.firstName.error} onChange={(val) => this.handleChange(val, "firstName")} />
                     <Input type='text' label='Last Name' name='lastName' value={this.state.lastName.value} error={this.state.lastName.error} onChange={(val) => this.handleChange(val, "lastName")} />
                     {/* <Input type='password' label='Old password' name='oldPassword' onChange={(val) => this.handleChange(val, "oldPassword")} /> */}

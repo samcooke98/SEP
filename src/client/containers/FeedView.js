@@ -120,6 +120,7 @@ class FeedView extends React.Component {
                                 : null
                         )}
                     />
+
                 </div>
             </div>
         )

@@ -17,7 +17,7 @@ const ResourceList = (props) => {
                     return <LinkCard
                         key={resource._id}
                         title={resource.title || ''}
-                        subtitle={resource.url}
+                        img={resource.imgURL || ''}
                         text={resource.description}
                         tags={resource.tags}
                         url={resource.url}

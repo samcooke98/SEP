@@ -1,12 +1,21 @@
 import Resource from "../models/resource.js";
 import { get } from "../controllers/TeamController.js";
 import { sendError, sendPayload } from "../utils/apiResponse.js";
+import getOG from 'open-graph-scraper'
 
+const makeURL = (url) => url.includes('http://') || url.includes('https://') 
+    ? url
+    : "https://" + url
 
 export async function createResource(url, title, description, userID, teamID, tags) {
     var newRes = new Resource({ url: url, owner: userID, title, description, team: teamID, tags});
-
     try {
+        const meta = await getOG({url: makeURL(url) })
+        console.log("---meta ---")
+        console.log(meta);   
+        if(meta.success) {
+            newRes.imgURL = meta.data.ogImage && meta.data.ogImage.url || ''
+        }     
         await newRes.save();
         if (newRes) {
             // var team = await get(teamID);

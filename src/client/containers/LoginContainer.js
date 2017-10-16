@@ -30,14 +30,15 @@ class LoginContainer extends React.Component {
     render() {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
-                <h1> Login </h1> 
-                {this.props.loggedIn && <Redirect to='/feed' />}
-                <h3> {this.props.errorMsg} </h3>
-                <Input type='text' label="Email" name='email' value={this.state.email} onChange={this.handleUpdate.bind(this, "email")} />
-                <Input type='password' label='Password' name='password' value={this.state.password} onChange={this.handleUpdate.bind(this, "password")} />
-                <Link to='/resetpassword'> Forgot Password? </Link> <br/> <br/>
-                <Button label='Submit' raised primary onClick={this.submitForm}/>
-
+                <form onSubmit={this.submitForm}>
+                    <h1> Login </h1> 
+                    {this.props.loggedIn && <Redirect to='/feed' />}
+                    <h3> {this.props.errorMsg} </h3>
+                    <Input type='text' label="Email" name='email' value={this.state.email} onChange={this.handleUpdate.bind(this, "email")} />
+                    <Input type='password' label='Password' name='password' value={this.state.password} onChange={this.handleUpdate.bind(this, "password")} />
+                    <Link to='/resetpassword'> Forgot Password? </Link> <br/> <br/>
+                    <Button label='Submit' raised primary onClick={this.submitForm}/>
+                </form>
             </div>
         )
     }
