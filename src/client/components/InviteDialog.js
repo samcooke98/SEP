@@ -13,7 +13,7 @@ export default class InviteDialog extends React.Component {
             value: '',
         }
     }
-
+    // TODO-Fix email validation
     render() {
         return (
             <Dialog
@@ -31,7 +31,7 @@ export default class InviteDialog extends React.Component {
                     value={this.props.value} 
                 /> <br />
 
-                <Button icon="email" label="Send Invitations" onClick={this.props.onClick}/>
+                <Button name="sendInvite" icon="email" label="Send Invitations" onClick={this.props.onClick}/>
             </Dialog>
         )
     }

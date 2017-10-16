@@ -10,14 +10,17 @@ defineSupportCode(function ({ Given, When, Then }) {
 		})
 	})
 
-	Given("I am on the landing page", function(){
-		return this.driver.get(url+"/").then(() => {
-			return this.driver.wait(seleniumWebdriver.until.urlIs(url+"/"))
+	Given("I am on the landing page", function () {
+		return this.driver.get(url + "/").then(() => {
+			return this.driver.wait(seleniumWebdriver.until.urlIs(url + "/"))
 		})
 	})
 
 	Given("I have an account called {string} with a password of {string}", (username, pass) => {
-		return makeAdminAccount(username, pass).then((val) => logout())
+		return makeAdminAccount(username, pass).then((val) => {
+			//console.log(val);
+			logout()
+		})
 	})
 
 	Given("is logged out", () => {
@@ -45,16 +48,27 @@ defineSupportCode(function ({ Given, When, Then }) {
 	});
 
 	When('I submit the form', function () {
-		return this.driver.findElement({ tagName: "button" }).then((element) => {
-			return element.click();
+		return this.driver.findElement({ tagName: "form" }).then((element) => {
+			//console.log("click");
+			element.submit();
+			this.driver.sleep(2000);
+			return element;
 		})
 	})
 
 	When('I click on {string}', function (text) {
-		return this.driver.findElement({linkText: text}).then(function(element) {
-		  return element.click();
+		return this.driver.findElement({ linkText: text }).then(function (element) {
+			return element.click();
 		});
-	  });
+	});
+
+	When('I click on {string} button', function (text) {
+		return this.driver.findElement({name: text}).then(function (element) {
+			return element.click();
+		});
+	});
+
+	
 
 	Then('I should see {string}', function (text) {
 		var xpath = "//*[contains(text(),'" + text + "')]";
@@ -67,16 +81,25 @@ defineSupportCode(function ({ Given, When, Then }) {
 		return this.driver.wait(seleniumWebdriver.until.urlIs(url + string))
 	});
 
+	Then("I should be redirecred to the landing page", function () {
+		return this.driver.get(url + "/").then(() => {
+			return this.driver.wait(seleniumWebdriver.until.urlIs(url + "/"))
+		})
+	})
+
 	Then("I should see an error", function () {
+
 		//Tries to find a style containing "theme--error--"
-		return this.driver.findElement({ css: '[class^="theme--error"]' })
+		return this.driver.findElement({ css: '[class*="theme--error"]' })
+		
+
 	})
 
 	Then("I should see no errors", function () {
-		return this.driver.findElement({ css: '[class^="theme--error"]' }).catch( () => true).then(  () => false, () => true ) 
+		return this.driver.findElement({ css: '[class*="theme--error"]' }).catch(() => true).then(() => false, () => true)
 	})
 
-	
+
 
 });
 
@@ -85,21 +108,26 @@ defineSupportCode(function ({ Given, When, Then }) {
 /* Helper functions */
 const responseToBool = (response) => response.success
 
-const post = (endpoint, body) => fetch(url + "/api/" + endpoint, {
-	method: "POST",
-	headers: {
-		'Content-Type': 'application/json'
-	},
-	credentials: 'same-origin',
-	body: JSON.stringify(body)
-}).then((response) => response.json())
-
+const post = (endpoint, body) => {
+	//console.log("here");
+	return fetch(url + "/api/" + endpoint, {
+		method: "POST",
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		credentials: 'same-origin',
+		body: JSON.stringify(body)
+	}
+	).then((response) => { return response.json() }) //console.log(response); return response.json() })
+	.then((json) => { return json}) //console.log(json); return json })
+}
 const makeAdminAccount = (username, password) => {
+	//console.log("HERE");
 	var params = {
 		username: username,
 		password: password, passwordConfirm: password, firstName: "Admin", lastName: "Test", teamName: "Admin Team", teamDesc: "Test", category: "test"
 	}
-	return post("register", params).then((json) => json.success)
+	return post("register", params).then((json) => { return json;}) //console.log(json); return json; })
 }
 
 const logout = () => {

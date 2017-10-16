@@ -7,7 +7,7 @@ var { defineSupportCode } = require('cucumber');
 const chromeCapabilities = seleniumWebdriver.Capabilities.chrome();
 chromeCapabilities.set('chromeOptions', {
 	'args': [
-		'--headless',
+		// '--headless',
 	]
 });
 
