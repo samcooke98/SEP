@@ -1,15 +1,23 @@
-.navList{ 
+.navList {
     display: flex;
     flex-direction: column;
 }
 
-.navBody { 
+.navBody {
     flex-grow: 1;
 }
 
-.footer { 
+.footer {
     box-sizing: border-box;
     padding: 16px;
 }
 
-.footer > * { display: block; margin-left:auto; margin-right: auto; }
+.footer > * {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.appBar > div {
+    justify-content: space-between;
+}
