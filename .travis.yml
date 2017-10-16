@@ -6,7 +6,8 @@ before_script:
 - npm run dev &
 - sleep 45
 script:
-- npm run test
+# - npm run test
+- yarn build
 
 #Addons (Chrome for BDD tests)
 addons:
