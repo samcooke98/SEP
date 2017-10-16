@@ -115,7 +115,8 @@ class FeedView extends React.Component {
                             return <LinkCard
                                 key = {id}
                                 title={resource.title || ''}
-                                subtitle={resource.url}
+                                url={resource.url}
+                                imgURL={resource.imgURL}
                                 text={resource.description}
                                 tags={resource.tags}
                                 url={resource.url}
