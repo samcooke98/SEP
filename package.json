@@ -27,6 +27,8 @@
     "mongoose": "^4.11.8",
     "nock": "^9.0.14",
     "normalizr": "^3.2.3",
+    "open-graph": "^0.2.3",
+    "open-graph-scraper": "^3.0.2",
     "passport": "^0.4.0",
     "passport-local-mongoose": "^4.2.1",
     "postcss": "^6.0.11",
