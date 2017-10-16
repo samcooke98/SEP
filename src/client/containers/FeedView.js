@@ -11,6 +11,7 @@ import ResourceForm from "../components/ResourceForm.js";
 import LinkCard from "../components/LinkCard.js";
 import LoggedInRedirector from "./LoggedInRedirector"
 import { withProtection } from "./Protector.js";
+import ResourceList from "../components/ResourceList.js";
 
 class FeedView extends React.Component {
     constructor(props) {
@@ -60,12 +61,12 @@ class FeedView extends React.Component {
 
         //Create a property to hold if the team is checked or not
         teams = teams.map((val) => (val.checked = false, val))
-        
+
         ////Insert it into state 
         this.setState({ teams: teams })
 
         //Get the resources for each team that the user belongs to
-        teams.map((team) =>{
+        teams.map((team) => {
             this.props.getResources(team._id)
         })
 
@@ -75,7 +76,7 @@ class FeedView extends React.Component {
         //We will use React-Router to route, instead of making a request
         //This pretty much comes from the react-router code
         console.log(arguments);
-        
+
         if (
             !event.defaultPrevented && // onClick prevented default
             event.button === 0  // ignore everything but left clicks
@@ -109,22 +110,17 @@ class FeedView extends React.Component {
                     <Button icon='add' floating onMouseUp={this.submit} />
                 </Dialog>
                 <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
-                    { /*TODO: Show only teams that user belongs to, Sort the order */
-                        this.props.resourceIDs.map((id) => {
-                            let resource = this.props.resources[id]
-                            return <LinkCard
-                                key = {id}
-                                title={resource.title || ''}
-                                subtitle={resource.url}
-                                text={resource.description}
-                                tags={resource.tags}
-                                url={resource.url}
-                                resourceId={resource._id}
-                                commentFunc={this.navigateWithRouter.bind(this, "resource/" + resource._id + "/comments")}
-                                removeFunc={this.remove.bind(this, resource._id)}
-                            />
-                        })
-                    }
+                    <ResourceList
+                        resources={this.props.resourceIDs.map((id) => this.props.resources[id])}
+                        navigate={(to) => this.props.history.push(to)}
+                        deleteResource={this.props.rmResource}
+                        userOwnedTeams={Object.keys(this.props.teams).map(id =>
+                            this.props.teams[id].owner == this.props.user._id
+                                ? id 
+                                : null
+                        )}
+                    />
+
                 </div>
             </div>
         )
@@ -139,6 +135,7 @@ const mapStateToProps = (state) => {
     return {
         user: user,
         teams: state.data.teams,
+        userTeams: user.teams,
         resources: state.data.resources || {},
         resourceIDs: Object.keys(state.data.resources) || []
     }

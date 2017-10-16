@@ -42,10 +42,12 @@ class ResetContainer extends React.Component {
         else
             return (
                 <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
-                    <h1> Forgot your password? </h1>
-                    <p> No worries, just enter your registered email address below, and we'll send you the next steps </p>
-                    <Input type='text' label="Email" name='email' value={this.state.email} onChange={this.handleChange} />
-                    <Button label='Submit' raised primary onClick={this.submitForm} />
+                    <form onSubmit={this.submitForm}>
+                        <h1> Forgot your password? </h1>
+                        <p> No worries, just enter your registered email address below, and we'll send you the next steps </p>
+                        <Input type='text' label="Email" name='email' value={this.state.email} onChange={this.handleChange} />
+                        <Button label='Submit' raised primary onClick={this.submitForm} />
+                    </form>
                 </div>
             )
     }

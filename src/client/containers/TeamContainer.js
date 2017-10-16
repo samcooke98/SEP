@@ -11,7 +11,7 @@ import InviteDialog from "../components/InviteDialog.js";
 
 import ResourceList from "../components/ResourceList.js";
 
-import { getResources, sendInvitations, leaveTeam } from "../redux/actions.js";
+import { getResources, sendInvitations, leaveTeam, deleteResource } from "../redux/actions.js";
 
 
 class TeamContainer extends React.Component {
@@ -40,6 +40,7 @@ class TeamContainer extends React.Component {
     render() {
         const { team, user } = this.props;
         const isOwner = team.owner == user._id;
+        
         return (
             <Container>
                 <div style={{ display: 'flex', alignItems: "center" }}>
@@ -69,7 +70,7 @@ class TeamContainer extends React.Component {
 
                 </div >
                 {isOwner &&
-                    <Button icon='email' label='Invite Users' raised primary onClick={this.openInvite} />
+                    <Button icon='email' name='inviteUser' label='Invite Users' raised primary onClick={this.openInvite} />
                 }
                 <InviteDialog
                     active={this.state.dialogOpen}
@@ -82,6 +83,9 @@ class TeamContainer extends React.Component {
                 <p />
                 <ResourceList
                     resources={this.props.resources}
+                    navigate={(to) => this.props.history.push(to)}
+                        deleteResource={this.props.rmResource}
+                        userOwnedTeams={ [ this.props.team._id ]}
                 />
 
             </Container >
@@ -96,7 +100,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         team: team,
         user: state.data.users[state.misc.userID],
-        resources: (team.resources || []).map((resourceID) => state.data.resources[resourceID]),
+        resources: (team.resources || []).map((resourceID) => state.data.resources[resourceID] || null),
         inviteSuccess: state.ui.inviteSuccess || null,
         inviteMsg: state.ui.inviteMsg || ''
     }
@@ -108,8 +112,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         getResources: () => dispatch(getResources(teamID)),
         send: (emails) => dispatch(sendInvitations(teamID, emails)),
-        leaveTeam: () => dispatch(leaveTeam(teamID))
-
+        leaveTeam: () => dispatch(leaveTeam(teamID)),
+        rmResource: (id) => dispatch(deleteResource(id)),
+        
 
     }
 }
