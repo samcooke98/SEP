@@ -9,12 +9,13 @@ import { updateDetails } from "../redux/actions.js";
 import Button from "react-toolbox/lib/button";
 import Input from "react-toolbox/lib/input";
 
+import isEmail from "validator/lib/isEmail"
+
 class UpdatedDetailsInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             email: { value: '', error: '' },
-            // oldPassword: { value: '', error: '' },
             newPassword: { value: '', error: '' },
             confirmNewPassword: { value: '', error: '' },
             firstName: { value: '', error: '' },
@@ -45,12 +46,13 @@ class UpdatedDetailsInput extends React.Component {
 
     // TODO: GET THE PASSWORD CHECK WORKING!!!! THIS DOES NOT WORK @SAM @VISH @JOEY
     calcErrors = () => {
+        let hasError = false;
         if (this.state.newPassword.value != this.state.confirmNewPassword.value) {
             this.setState({
                 newPassword: { ...this.state.newPassword, error: "The passwords do not match" },
                 confirmNewPassword: { ...this.state.confirmNewPassword, error: "The passwords do not match" }
             })
-
+            hasError = true;
         } else {
             this.setState({
                 newPassword: { ...this.state.newPassword, error: "" },
@@ -60,11 +62,21 @@ class UpdatedDetailsInput extends React.Component {
 
         for (var container in this.state) {
             if (this.state[container].value === '' || this.state[container].value === "") {
+                hasError = true;
                 this.setState({ [container]: { ...this.state[container], error: "Cannot be empty" } })
             } else {
                 this.setState({ [container]: { ...this.state[container], error: "" } })
             }
         }
+
+        if (isEmail(this.state.email.value)) {
+            this.setState({ email: { value: this.state.email.value, error: "" } })
+        } else {
+            hasError = true;
+            this.setState({ email: { value: this.state.email.value, error: "Invalid Email" } })
+        }
+
+        return hasError;
 
     }
 
@@ -74,7 +86,6 @@ class UpdatedDetailsInput extends React.Component {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -98,8 +109,6 @@ class UpdatedDetailsInput extends React.Component {
         this.setState({ firstName: { value: props.user.firstName } })
         this.setState({ lastName: { value: props.user.lastName } })
     }
-
-
 
     render() {
         return (
@@ -138,5 +147,8 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UpdatedDetailsInput));
+export default
+    withProtection(
+        withRouter(connect(mapStateToProps, mapDispatchToProps)(UpdatedDetailsInput))
+    );
 

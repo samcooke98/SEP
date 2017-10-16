@@ -47,39 +47,33 @@ export function registerUser(req, res) {
     });
 }
 
-export async function updateUserDetails(email, firstName, lastName, newPassword) {
-    if (req.body.password === req.body.newPassword) {
-        Account.findOneAndUpdate({ _id: req.user._id }, {
-            $set: {
-                username: req.body.email.toLowerCase(),
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                password: req.body.newPassword
-            }
-        }, { new: true }, (err, updatedUser) => {
-            if (err) {
-                console.log("===============ERROR WHEN UPDATING USER=============");
-                console.log(err);
-            }
-            else {
-                console.log(updatedUser);
-                //      res.json(sendPayload( await getDetails(req.user._id)));
-            }
-        });
+export async function updateUserDetails(email, firstName, lastName, newPassword, userID) {
+    const deferred = q.defer();
+    const update = {
+        username: email,
+        firstName: firstName,
+        lastName: lastName,
     }
 
+    console.log("******************** UPDATE BELOW *************");
+    console.log(update);
 
     if (newPassword) {
+        console.log("*****r******* I AM AT NEW PASSWORD. THE NEW PASSWORD IS:" + newPassword)
         const user = await User.findById(userID);
+        console.log("******************** THIS IS THE USER: " + user);
         user.setPassword(newPassword, () => {
             user.save();
+            console.log("Updated password!");
         })
     }
 
     User.findOneAndUpdate({ _id: userID }, {
         $set: update
     }, { new: true }, (err, updatedUser) => {
+        console.log("*************** A *****************")
         if (err) {
+            console.log("===============ERROR WHEN UPDATING USER=============");
             console.log(err);
             deferred.resolve(sendPayload(err));
 
@@ -129,7 +123,7 @@ export async function getDetails(id) {
     return user.populate('notifications').populate("teams").execPopulate()
 }
 
-export async function getPublic( id) { 
+export async function getPublic(id) {
     const user = await User.findById(id);
     //TODO: Remove password d? 
     return user;
@@ -184,23 +178,25 @@ export async function getUsersInTeam(teamID) {
     return result;
 }
 
-export async function getUserById( userId) { 
+export async function getUserById(userId) {
     return await User.findById(userId);
-    
+
 }
+
+
 
 export async function setAvatar(userID, uri) {
     try {
         const result = await User.find({ _id: userID });
         result.avatarURI = uri;
         return sendPayload(await result.save());
-    } catch (err) { 
+    } catch (err) {
         return sendError(err);
     }
 }
 
-export async function removeFromTeam(userID, teamID) { 
+export async function removeFromTeam(userID, teamID) {
     const user = await User.findById(userID);
-    user.teams.splice( user.teams.indexOf(teamID) , 1 );
+    user.teams.splice(user.teams.indexOf(teamID), 1);
     await user.save();
 }
