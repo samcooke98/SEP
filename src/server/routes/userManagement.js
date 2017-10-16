@@ -35,7 +35,7 @@ router.get('/feed', isLoggedIn, UserController.getFeed);
 router.post("/login", (req, res, next) => {
     //Lower case username
     req.body.username = req.body.username.toLowerCase();
-    next();    
+    next();
 }, passport.authenticate('local'), async (req, res) => {
     console.log(req.user);
     res.json(sendPayload(await UserController.getDetails(req.user._id)))
@@ -89,9 +89,11 @@ router.get("/updateDetails", isLoggedIn, async (req, res) => {
 })
 
 router.post("/updateDetails", isLoggedIn, async (req, res) => {
-    var data = await UserController.updateUserDetails(req.body.email, req.body.firstName, req.body.lastName, req.body.newPassword);
+    var data = await UserController.updateUserDetails(
+        req.body.email, req.body.firstName, req.body.lastName, req.body.newPassword, req.body.URI, req.user._id
+    );
     console.log(data);
-    res.json(sendPayload(data));
+    res.json(data);
 })
 
 router.get("/sign-s3", fileUploader)

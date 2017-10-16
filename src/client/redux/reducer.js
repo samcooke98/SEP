@@ -256,6 +256,14 @@ var functionalReducers = {
                 }
             }
         })
+    },
+    [actionTypes.UPDATE_DETAILS]: { 
+        onSuccess: (state, action) => console.log(action), //({
+        //     ...state, data: { ...state.data, 
+        //         users: { ...state.data.users, ...action.payload.payload.entities }
+        //     }
+        // }),
+        onFail: (state,action) => ({...state})
     }
 
 

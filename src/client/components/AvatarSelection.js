@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Avatar from 'react-toolbox/lib/avatar';
+import {Avatar} from 'react-toolbox';
 import Button, { IconButton } from "react-toolbox/lib/button";
 
 
@@ -8,21 +8,6 @@ import Button, { IconButton } from "react-toolbox/lib/button";
 Component that renders a bunch of avatars, and provides a parent with the active value
 
 */
-
-const avatars = [
-    "http://placeimg.com/80/80/animals?a",
-    "http://placeimg.com/80/80/animals?c",
-    "http://placeimg.com/80/80/animals?g",
-    "http://placeimg.com/80/80/animals?e",
-    "http://placeimg.com/80/80/people?f",
-    "http://placeimg.com/80/80/people?h",
-    "http://placeimg.com/80/80/people?b",
-    "http://placeimg.com/80/80/people?d",
-]
-
-
-
-
 class AvatarSelection extends React.Component {
     constructor(props) {
         super(props);
@@ -74,9 +59,10 @@ class AvatarSelection extends React.Component {
     }
 
     render() {
+        console.log(this.props.image)
         return (
             <div>
-                <Avatar image={this.props.URI} title={this.props.name || ""} />
+                <Avatar image={this.props.image} title={this.props.name || ""} />
                 <input id='file-input' type='file' />
                 <button onClick={this.onSubmit}> Upload </button>
             </div>

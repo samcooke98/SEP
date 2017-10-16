@@ -8,18 +8,20 @@ import { updateDetails } from "../redux/actions.js";
 
 import Button from "react-toolbox/lib/button";
 import Input from "react-toolbox/lib/input";
+import AvatarSelection from "../components/AvatarSelection.js";
+
+import isEmail from "validator/lib/isEmail"
 
 class UpdatedDetailsInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             email: { value: '', error: '' },
-            // oldPassword: { value: '', error: '' },
             newPassword: { value: '', error: '' },
             confirmNewPassword: { value: '', error: '' },
             firstName: { value: '', error: '' },
             lastName: { value: '', error: '' },
-
+            avatarURI: {value: '', error: ''}
         }
     }
 
@@ -42,21 +44,28 @@ class UpdatedDetailsInput extends React.Component {
                 this.state.email.value,
                 this.state.newPassword.value,
                 this.state.firstName.value,
-                this.state.lastName.value
-            )
-            console.log(data);
+                this.state.lastName.value,
+                this.state.avatarURI.value
+            ).then( (result) => { 
+                console.log(result);
+                if(result.payload.success)
+                    this.props.history.back() //('/feed')
+            })
             this.clearErrors();
+        } else { 
+            // console.log(shouldSubmit)
         }
     }
 
     // TODO: GET THE PASSWORD CHECK WORKING!!!! THIS DOES NOT WORK @SAM @VISH @JOEY
     calcErrors = () => {
+        let hasError = false;
         if (this.state.newPassword.value != this.state.confirmNewPassword.value) {
             this.setState({
                 newPassword: { ...this.state.newPassword, error: "The passwords do not match" },
                 confirmNewPassword: { ...this.state.confirmNewPassword, error: "The passwords do not match" }
             })
-
+            hasError = true;
         } else {
             this.setState({
                 newPassword: { ...this.state.newPassword, error: "" },
@@ -66,11 +75,21 @@ class UpdatedDetailsInput extends React.Component {
 
         for (var container in this.state) {
             if (this.state[container].value === '' || this.state[container].value === "") {
+                hasError = true;
                 this.setState({ [container]: { ...this.state[container], error: "Cannot be empty" } })
             } else {
                 this.setState({ [container]: { ...this.state[container], error: "" } })
             }
         }
+
+        if (isEmail(this.state.email.value)) {
+            this.setState({ email: { value: this.state.email.value, error: "" } })
+        } else {
+            hasError = true;
+            this.setState({ email: { value: this.state.email.value, error: "Invalid Email" } })
+        }
+
+        return hasError;
 
     }
 
@@ -80,7 +99,6 @@ class UpdatedDetailsInput extends React.Component {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -105,8 +123,6 @@ class UpdatedDetailsInput extends React.Component {
         this.setState({ lastName: { value: props.user.lastName } })
     }
 
-
-
     render() {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
@@ -118,6 +134,7 @@ class UpdatedDetailsInput extends React.Component {
                     {/* <Input type='password' label='Old password' name='oldPassword' onChange={(val) => this.handleChange(val, "oldPassword")} /> */}
                     <Input type='password' label='New Password' name='newPassword' value={this.state.newPassword.value} error={this.state.newPassword.error} onChange={(val) => this.handleChange(val, "newPassword")} />
                     <Input type='password' label='Confirm New Password' name='confirmNewPassword' value={this.state.confirmNewPassword.value} error={this.state.confirmNewPassword.error} onChange={(val) => this.handleChange(val, "confirmNewPassword")} />
+                    <AvatarSelection name={this.state.firstName.value} image={this.state.avatarURI.value} setURI={(uri) => this.setState({ avatarURI: {value: uri } })} />
                     <Button label='Submit' raised primary onClick={this.submitForm} />
                 </form>
 
@@ -138,11 +155,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 
     return {
-        updateDetails: (email, newPassword, firstName, lastName) => dispatch(updateDetails(email, newPassword, firstName, lastName))
-        //   this.props.updateDetails(email, password, firstName, lastName)
+        updateDetails: (email, newPassword, firstName, lastName, avatarURI) => dispatch(updateDetails(email, newPassword, firstName, lastName, avatarURI))
 
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UpdatedDetailsInput));
+export default
+    withProtection(
+        withRouter(connect(mapStateToProps, mapDispatchToProps)(UpdatedDetailsInput))
+    );
 
