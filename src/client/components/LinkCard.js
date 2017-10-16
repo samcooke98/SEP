@@ -44,5 +44,5 @@ export default class LinkCard extends React.PureComponent {
         )
         //We should probably validate urls more so thatn we currently do 
         //Also yeah this doesn't really work well.
-
+    }
 }

@@ -89,7 +89,9 @@ router.get("/updateDetails", isLoggedIn, async (req, res) => {
 })
 
 router.post("/updateDetails", isLoggedIn, async (req, res) => {
-    var data = await UserController.updateUserDetails(req.body.email, req.body.firstName, req.body.lastName, req.body.newPassword, req.user._id);
+    var data = await UserController.updateUserDetails(
+        req.body.email, req.body.firstName, req.body.lastName, req.body.newPassword, req.body.URI, req.user._id
+    );
     console.log(data);
     res.json(data);
 })

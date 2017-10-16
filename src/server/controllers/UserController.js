@@ -47,12 +47,13 @@ export function registerUser(req, res) {
     });
 }
 
-export async function updateUserDetails(email, firstName, lastName, newPassword, userID) {
+export async function updateUserDetails(email, firstName, lastName, newPassword, uri, userID) {
     const deferred = q.defer();
     const update = {
         username: email,
         firstName: firstName,
         lastName: lastName,
+        avatarURI: uri
     }
 
     console.log("******************** UPDATE BELOW *************");
