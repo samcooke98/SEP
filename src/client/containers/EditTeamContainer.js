@@ -46,12 +46,12 @@ class EditTeamContainer extends React.Component {
                 </div>
                 {/* Really need to take this into a Grid Component  */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row' }} >
-
                     {this.props.users.map(
                         (user) => user && (
                             <UserCard
                                 key={user._id}
                                 _id={user._id}
+                                isTeamOwner={user._id == this.props.teamOwner}
                                 avatar={user.avatarURI}
                                 name={user.firstName + " " + user.lastName}
                                 onRemove={() => { this.removeUser(user._id) }}
@@ -59,7 +59,6 @@ class EditTeamContainer extends React.Component {
                         )
                     )}
                 </div>
-                <Button label="Test" onClick={() => this.setState({ active: true })} />
                 {/* <Snackbar
                     action="Undo"
                     label="Removed ${name} from the team"
@@ -83,6 +82,7 @@ const mapStateToProps = (state, ownProps) => {
 
     return {
         team: team,
+        teamOwner: team.owner,
         user: state.data.users[state.misc.userID],
         users: team.members.map((id) => state.data.users[id]),
         resources: (team.resources || []).map((resourceID) => state.data.resources[resourceID])
