@@ -94,7 +94,7 @@ class TeamContainer extends React.Component {
                     active={this.state.dialogOpen}
                     close={this.closeInvite}
                     error={this.state.inviteSuccess ? '' : this.props.inviteMsg}
-                    handleChange={(value) => this.setState({value: value})}
+                    handleChange={(value) => this.setState({ value: value })}
                     value={this.state.value}
                     onClick={this.onInviteSend}
                 />
@@ -109,24 +109,27 @@ class TeamContainer extends React.Component {
             </Container >
         )
     }
-    onInviteSend = () => { 
-        this.props.send(this.state.value).then( (val) => { 
-            if(val.payload.success) { 
-                this.setState({dialogOpen: false});
+    onInviteSend = () => {
+        this.props.send(this.state.value).then((val) => {
+            if (val.payload.success) {
+                this.setState({ dialogOpen: false });
             }
         })
     }
     openSubmit = () => this.setState({ resourceFormOpen: true })
     handleChange = (value, name) => this.setState({ [name]: value })
 
-    createResource= (evt) => { 
+    createResource = (evt) => {
         evt.preventDefault();
-        this.props.createResource(this.state.url, this.state.title, this.state.description, this.state.tags).then( 
+        this.props.createResource(this.state.url, this.state.title, this.state.description, this.state.tags).then(
             (value) => {
                 console.log(value);
-                if(value.payload.success) { 
-                    this.setState({resourceFormOpen: false})
-                } else { 
+                if (value.payload.success) {
+                    this.setState({
+                        resourceFormOpen: false, error: '', url: '', title: '', description: '', tags: []
+                    })
+
+                } else {
                     console.log("ERROR")
                     console.log(value)
                 }
