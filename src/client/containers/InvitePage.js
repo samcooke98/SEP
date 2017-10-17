@@ -10,6 +10,8 @@ import { getInviteInfo, joinTeam } from "../redux/actions.js";
 import Input from "react-toolbox/lib/input";
 import Button from "react-toolbox/lib/button";
 
+import isEmail from 'validator/lib/isEmail';
+
 class InviteContainer extends React.Component {
     constructor(props) {
         super(props);
@@ -24,7 +26,7 @@ class InviteContainer extends React.Component {
     }
 
     handleChange = (name, value) => {
-        this.setState({ [name]: { value, error: this.state[name].error } })
+        this.setState({ [name]: { value, error: this.state[name].error } }, () => this.calcErrors())
     }
 
 
@@ -34,19 +36,78 @@ class InviteContainer extends React.Component {
         }
     }
 
-    submitForm = (evt) => {
-        evt.preventDefault();
-        //Confirm password's match
-        if (this.state.password.value == this.state.passwordConfirm.value) {
-            this.clearErrors();
-            this.props.submit(this.state.email.value, this.state.firstname.value, this.state.lastname.value, this.state.password.value, this.props.match.params.id)
+    // calcErrors = () => {
+    //     if (this.state.password.value == this.state.passwordConfirm.value) {
+    //         this.setState({
+    //             password: { value: this.state.password.value, error: '' },
+    //             passwordConfirm: { value: this.state.passwordConfirm.value, error: '' }
+    //         });
+    //     } else {
+    //         this.setState({
+    //             password: { value: this.state.password.value, error: 'Oops! Doesn\'t look like the passwords match' },
+    //             passwordConfirm: { value: this.state.passwordConfirm.value, error: 'Oops! Doesn\'t look like the passwords match' }
+    //         });
+    //     }
+    // }
+
+    calcErrors = () => {
+        let hasError = false;
+        
+        this.setState({
+            email: { value: this.state.email.value, error: (this.state.email.value == '') ? "Cannot be blank"  : '' },
+            firstname: { value: this.state.firstname.value, error: (this.state.firstname.value == '') ? "Cannot be blank"  : '' },
+            lastname: { value: this.state.lastname.value, error: (this.state.lastname.value == '') ? "Cannot be blank"  : '' },
+            password: { value: this.state.password.value, error: (this.state.password.value == '') ? "Cannot be blank"  : '' },
+            passwordConfirm: { value: this.state.passwordConfirm.value, error: (this.state.passwordConfirm.value == '') ? "Cannot be blank"  : '' },
+            
+        })
+
+        if(isEmail(this.state.email.value)) { 
+            this.setState({
+                email: { value: this.state.email.value, error: ''}
+            })
+        } else { 
+            this.setState({
+                email: { value: this.state.email.value, error: "Oops, that doesn't look an email"}
+            })
         }
-        else {
+
+        if (this.state.password.value != this.state.passwordConfirm.value) {
+            console.log("here");
             this.setState({
                 password: { ...this.state.password, error: "The passwords do not match" },
                 passwordConfirm: { ...this.state.passwordConfirm, error: "The passwords do not match" }
             })
+            hasError = true;
+        } else {
+            this.setState({
+                password: { ...this.state.password, error: "" },
+                passwordConfirm: { ...this.state.passwordConfirm, error: "" }
+            })
         }
+        return hasError;
+    }
+
+    submitForm = (evt) => {
+        evt.preventDefault();
+
+        const shouldSubmit = !this.calcErrors();
+        if (shouldSubmit) {
+            this.props.submit(this.state.email.value, this.state.firstname.value, this.state.lastname.value, this.state.password.value, this.props.match.params.id).then(
+                (val) => {
+                    if(val.payload.success) { 
+                        this.props.history.push("/feed");
+                        this.setState({error: ''});
+                    } else { 
+                        this.setState({
+                            error: val.payload.payload
+                        })
+                    }
+                }
+            )
+        }
+
+
         //TODO: Validate username, firstname,lastname, password
     }
 
@@ -55,8 +116,8 @@ class InviteContainer extends React.Component {
         this.props.getInfo(this.props.match.params.id);
     }
 
-    componentWillUpdate( nextProps, nextState ) {
-        if(nextProps.worked && this.state.submitted) { 
+    componentWillUpdate(nextProps, nextState) {
+        if (nextProps.worked && this.state.submitted) {
             console.log(nextProps);
             console.log(this.props);
             //Render Success Page 
@@ -65,11 +126,12 @@ class InviteContainer extends React.Component {
     }
 
     render() {
+        console.log(this.state.error)
         if (this.props.invitedID == undefined) return <div> Loading </div>
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                 <h1> Join the team: "{(this.props.teams[this.props.invitedID]).teamName}" on TeamShare </h1>
-
+                <p style={{color: 'red'}}> {this.state.error} </p>
                 <form onSubmit={this.submitForm}>
                     <Input type='text' name='email' label='Email' value={this.state.email.value} error={this.state.email.error} onChange={this.handleChange.bind(this, "email")} />
                     <Input type='password' name='password' label='Password' value={this.state.password.value} error={this.state.password.error} onChange={this.handleChange.bind(this, "password")} />
