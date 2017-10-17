@@ -30,6 +30,16 @@ var functionalReducers = {
     [actionTypes.CREATE_RESOURCE]: {
         onSuccess: (state, action) => ({
             ...state,
+            data: { 
+                ...state.data, 
+                teams: { 
+                    ...state.data.teams,
+                    [action.meta.teamID]: {
+                        ...state.data.teams[action.meta.teamID],
+                        resources: [ ...state.data.teams[action.meta.teamID].resources, action.payload.payload.result ]
+                    }
+                }
+            },
             misc: {
                 ...state.misc,
                 worked: true
@@ -45,14 +55,7 @@ var functionalReducers = {
         })
     },
     [actionTypes.LOGOUT]: {
-        onSuccess: (state, action) => ({
-            ...state,
-            misc: {
-                ...state.misc,
-                loggedIn: false,
-                userID: undefined
-            }
-        })
+        onSuccess: (state, action) => (initialState)
     },
     [actionTypes.CREATE_COMMENT]: {
         onSuccess: (state, action) => ({

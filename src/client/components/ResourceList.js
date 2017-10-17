@@ -8,7 +8,6 @@ import LinkCard from "./LinkCard.js";
  */
 const ResourceList = (props) => {
     const resources = props.resources;
-    console.log(resources);
     return (
         <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
             { /*TODO: Sort the order */

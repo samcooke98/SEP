@@ -22,7 +22,8 @@ class FeedView extends React.Component {
             description: '',
             teams: [],
             isDialogOpen: false,
-            tags: []
+            tags: [],
+            resourceFormOpen: false
 
         }
     }
@@ -41,7 +42,10 @@ class FeedView extends React.Component {
     submit = (evt) => {
         for (var team of this.state.teams) {
             if (team.checked)
-                this.props.createResource(this.state.url, this.state.title, this.state.description, team._id, this.state.tags)
+                this.props.createResource(this.state.url, this.state.title, this.state.description, team._id, this.state.tags).then((val) => {
+                    if (val.payload.success)
+                        this.toggleDialog();
+                })
         }
         console.log('this evt' + evt);
         //this.toggleDialog();
@@ -93,22 +97,17 @@ class FeedView extends React.Component {
                 <div style={{}}>
                     <Button label='Add a new entry' flat primary onMouseUp={this.toggleDialog} />
                 </div>
-                <Dialog
+                <ResourceForm
                     active={this.state.isDialogOpen}
-                    onEscKeyDown={this.toggleDialog}
-                    onOverlayClick={this.toggleDialog}
-                    title='Add new entry'
-                >
-                    <ResourceForm
-                        url={this.state.url}
-                        title={this.state.title}
-                        tags={this.state.tags}
-                        description={this.state.description}
-                        teams={this.state.teams}
-                        handleChange={this.handleChange}
-                    />
-                    <Button icon='add' floating onMouseUp={this.submit} />
-                </Dialog>
+                    toggleDialog={() => this.setState({ isDialogOpen: !this.state.isDialogOpen })}
+                    url={this.state.url}
+                    title={this.state.title}
+                    tags={this.state.tags}
+                    handleChange={this.handleChange}
+                    description={this.state.description}
+                    submit={this.submit}
+                    teams={this.state.teams}
+                />
                 <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
                     <ResourceList
                         resources={this.props.resourceIDs.map((id) => this.props.resources[id])}
@@ -116,7 +115,7 @@ class FeedView extends React.Component {
                         deleteResource={this.props.rmResource}
                         userOwnedTeams={Object.keys(this.props.teams).map(id =>
                             this.props.teams[id].owner == this.props.user._id
-                                ? id 
+                                ? id
                                 : null
                         )}
                     />

@@ -12,6 +12,8 @@ import Button, { IconButton } from "react-toolbox/lib/button";
 import Autocomplete from 'react-toolbox/lib/autocomplete';
 
 import AvatarSelection from "../components/AvatarSelection.js";
+import isEmail from "validator/lib/isEmail";
+
 
 const categories = [
 	"Business", "School", "Fun", "Friends"
@@ -39,10 +41,16 @@ class RegistrationContainer extends React.Component {
 		this.setState({ [name]: { value, error: this.state[name].error } })
 	}
 
+	calcErrors = ( ) => { 
+
+	}
+
+	
+
+
 	submitForm = (evt) => {
 		evt.preventDefault();
 		const avatarURI = this.state.avatarURI;
-		console.log(avatarURI);
 		var shouldSubmit = true;
 
 		//Check no fields are empty
@@ -54,9 +62,8 @@ class RegistrationContainer extends React.Component {
 			}
 		}
 
-		//TODO: Validate email
-		// if(validateEmail(this.state.email) && this.state.email !== "")
-		// 	this.setState( { email: { ...this.state.email, error: "Invalid Email address!"}})
+		if(!isEmail(this.state.email.value) && this.state.email.value !== "")
+			this.setState( { email: { ...this.state.email, error: "Invalid Email address!"}})
 
 		//Check passwords match
 		if (this.state.password.value != this.state.passwordConfirm.value) {
@@ -77,16 +84,24 @@ class RegistrationContainer extends React.Component {
 				this.state.teamdesc.value,
 				this.state.teamcategory.value,
 				this.state.avatarURI
-			)
-			//Clear all errors
-			for (var container in this.state) {
-				this.setState({ [container]: { ...this.state[container], error: "" } })
-			}
+			).then( (val) => { 
+				
+				if(val.payload.success) { 
+					this.setState({success: true});
+				} else { 
+					//Errors when submitting
+					console.log(val);
+					this.handleErrors(val.payload.payload)
+					
+				}
+			})
+			this.clearErrors();
 		}
 	}
 
 	clearErrors = () => {
 		for (var container in this.state) {
+			if(container != 'success' && container != "avatarURI")
 			this.setState({ [container]: { ...this.state[container], error: "" } })
 		}
 	}
@@ -101,18 +116,6 @@ class RegistrationContainer extends React.Component {
 				default:
 					console.log("Unknown Error");
 			}
-	}
-
-	componentWillReceiveProps(nextProps) {
-		console.log(nextProps);
-		console.log(this.props);
-		if (nextProps.success && !this.props.success) {
-			this.setState({ success: true })
-			this.clearErrors();
-		} else {
-			this.setState({ success: false })
-			this.handleErrors(nextProps.errorMsg)
-		}
 	}
 
 	render() {
@@ -136,7 +139,7 @@ class RegistrationContainer extends React.Component {
 					<Input type='text' name='firstname' label="First Name" value={this.state.firstname.value} error={this.state.firstname.error} onChange={this.handleChange.bind(this, "firstname")} />
 					<Input type='text' name='lastname' label="Last Name" value={this.state.lastname.value} error={this.state.lastname.error} onChange={this.handleChange.bind(this, "lastname")} />
 					<AvatarSelection
-						URI={this.state.avatarURI}
+						image={this.state.avatarURI}
 						setURI={(uri) => this.setState({ avatarURI: uri })}
 						name={this.state.firstname.value}
 					/>
@@ -153,6 +156,7 @@ class RegistrationContainer extends React.Component {
 						source={categories}
 						onChange={this.handleChange.bind(this, "teamcategory")}
 					/>
+					<input type='submit' style={{display: 'none'}} onSubmit={this.submitForm}/>
 					<Button id='submitBtn' label='Submit' raised primary onClick={this.submitForm} />
 				</form>
 			</div>
@@ -170,7 +174,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		submitRegistration: (username, password, firstName, lastName, teamName, description, category, avatar) => {
-			dispatch(register(username, password, firstName, lastName, teamName, description, category, avatar))
+			return dispatch(register(username, password, firstName, lastName, teamName, description, category, avatar))
 		}
 	}
 }

@@ -28,7 +28,7 @@ export default class CommentInput extends React.Component {
         const props = this.props;
         // const 
         return (
-            <div>
+            <form onSubmit={this.props.onSubmit}>
                 <Input
                     type='text'
                     label='Comment'
@@ -36,9 +36,8 @@ export default class CommentInput extends React.Component {
                     onChange={(val) => this.props.handleChange(val, "comment")}
                     value={props.value}
                 />
-                
-            
-            </div>
+                <input type='submit' onSubmit={this.props.onSubmit} style={{display: 'none'}}/>
+            </form>
         );
     }
 }

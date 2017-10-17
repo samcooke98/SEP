@@ -58,7 +58,10 @@ export function createLink(time, username) {
             })
             var bodyText = "A password reset has been requested for your account. \n";
             bodyText += "To change your password visit the following URL: \n";
-            bodyText += "http://localhost:3000/reset/confirm?RID=" + newRID + "\n\n";
+            bodyText += `http://${
+                process.env.NODE_ENV == 'production' 
+                ? "teamshare-sep.herokuapp.com" 
+                : "localhost:3000"}/reset/confirm?RID=${newRID}\n\n`;
             bodyText += "This link will expire in 30 minutes. \n\n";
             bodyText += "Regards, \n\n";
             bodyText += "The TeamShare Team!";

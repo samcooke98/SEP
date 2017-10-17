@@ -31,13 +31,11 @@ class UpdatedDetailsInput extends React.Component {
 
     //TO-DO -> focus on the this later.
     submitForm = (evt) => {
+        console.log("Submitting form");
         evt.preventDefault();
 
         const shouldSubmit = !this.hasErrors();
-        console.log(this.state.email.value);
-        console.log(this.state.newPassword.value);
-        console.log(this.state.firstName.value);
-        console.log(this.state.lastName.value);
+        console.log(shouldSubmit);
 
         if (shouldSubmit) {
             const data = this.props.updateDetails(
@@ -49,7 +47,7 @@ class UpdatedDetailsInput extends React.Component {
             ).then( (result) => { 
                 console.log(result);
                 if(result.payload.success)
-                    this.props.history.back() //('/feed')
+                    this.props.history.push('/feed')
             })
             this.clearErrors();
         } else { 
@@ -60,6 +58,18 @@ class UpdatedDetailsInput extends React.Component {
     // TODO: GET THE PASSWORD CHECK WORKING!!!! THIS DOES NOT WORK @SAM @VISH @JOEY
     calcErrors = () => {
         let hasError = false;
+        for (var container in this.state) {
+            if (this.state[container].value === '' || this.state[container].value === "") {
+                if(container == "avatarURI") continue;
+                hasError = true;
+                console.log("blank error @ " + container)
+                
+                this.setState({ [container]: { ...this.state[container], error: "Cannot be empty" } })
+            } else {
+                this.setState({ [container]: { ...this.state[container], error: "" } })
+            }
+        }
+
         if (this.state.newPassword.value != this.state.confirmNewPassword.value) {
             this.setState({
                 newPassword: { ...this.state.newPassword, error: "The passwords do not match" },
@@ -73,24 +83,14 @@ class UpdatedDetailsInput extends React.Component {
             })
         }
 
-        for (var container in this.state) {
-            if (this.state[container].value === '' || this.state[container].value === "") {
-                hasError = true;
-                this.setState({ [container]: { ...this.state[container], error: "Cannot be empty" } })
-            } else {
-                this.setState({ [container]: { ...this.state[container], error: "" } })
-            }
-        }
-
         if (isEmail(this.state.email.value)) {
             this.setState({ email: { value: this.state.email.value, error: "" } })
         } else {
             hasError = true;
+            console.log("invalid email")            
             this.setState({ email: { value: this.state.email.value, error: "Invalid Email" } })
         }
-
-        return hasError;
-
+        return hasError;      
     }
 
     hasErrors = () => {
