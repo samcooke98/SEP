@@ -96,7 +96,7 @@ class TeamContainer extends React.Component {
                     error={this.state.inviteSuccess ? '' : this.props.inviteMsg}
                     handleChange={(value) => this.setState({value: value})}
                     value={this.state.value}
-                    onClick={() => this.props.send(this.state.value)}
+                    onClick={this.onInviteSend}
                 />
                 <p />
                 <ResourceList
@@ -109,7 +109,13 @@ class TeamContainer extends React.Component {
             </Container >
         )
     }
-
+    onInviteSend = () => { 
+        this.props.send(this.state.value).then( (val) => { 
+            if(val.payload.success) { 
+                this.setState({dialogOpen: false});
+            }
+        })
+    }
     openSubmit = () => this.setState({ resourceFormOpen: true })
     handleChange = (value, name) => this.setState({ [name]: value })
 
