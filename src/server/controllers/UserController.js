@@ -48,6 +48,7 @@ export function registerUser(req, res) {
 }
 
 export async function updateUserDetails(email, firstName, lastName, newPassword, uri, userID) {
+    console.log("********* DIS THE NEW PASSWORD " + newPassword);
     const deferred = q.defer();
     const update = {
         username: email,
