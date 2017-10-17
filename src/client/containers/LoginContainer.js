@@ -14,6 +14,7 @@ class LoginContainer extends React.Component {
         this.state = {
             email: '',
             password: '',
+            errorMsg: ''
         }
     }
 
@@ -24,20 +25,22 @@ class LoginContainer extends React.Component {
 
     submitForm = (evt) => {
         evt.preventDefault();
-        this.props.signIn(this.state.email, this.state.password)
+        this.props.signIn(this.state.email, this.state.password).then(
+            (val) => { if (!val.payload.success) this.setState({ errorMsg: "Incorrect username or password" }) }
+        )
     }
 
     render() {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                 <form onSubmit={this.submitForm}>
-                    <h1> Login </h1> 
+                    <h1> Login </h1>
                     {this.props.loggedIn && <Redirect to='/feed' />}
-                    <h3> {this.props.errorMsg} </h3>
+                    <h3> {this.state.errorMsg} </h3>
                     <Input type='text' label="Email" name='email' value={this.state.email} onChange={this.handleUpdate.bind(this, "email")} />
                     <Input type='password' label='Password' name='password' value={this.state.password} onChange={this.handleUpdate.bind(this, "password")} />
-                    <Link to='/resetpassword'> Forgot Password? </Link> <br/> <br/>
-                    <Button label='Submit' raised primary onClick={this.submitForm}/>
+                    <Link to='/resetpassword'> Forgot Password? </Link> <br /> <br />
+                    <input type='submit' style={{ display: 'none' }} onSubmit={this.submitForm} />
                 </form>
             </div>
         )
