@@ -83,7 +83,7 @@ export const createResource = createAction(actionTypes.CREATE_RESOURCE, async (u
 
         (payload) => normalize(normalizr.normalizeResource, payload)
     )
-})
+}, (url,tititle,description, teamID, tags) => ({teamID}) )
 
 export const updateDetails = createAction(actionTypes.UPDATE_DETAILS, async (email, password, firstName, lastName, avatar) => {
     return post('updateDetails', { email, password, firstName, lastName, URI:avatar }).then((val) => normalize(normalizr.normalizeUser, val))

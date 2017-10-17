@@ -30,6 +30,16 @@ var functionalReducers = {
     [actionTypes.CREATE_RESOURCE]: {
         onSuccess: (state, action) => ({
             ...state,
+            data: { 
+                ...state.data, 
+                teams: { 
+                    ...state.data.teams,
+                    [action.meta.teamID]: {
+                        ...state.data.teams[action.meta.teamID],
+                        resources: [ ...state.data.teams[action.meta.teamID].resources, action.payload.payload.result ]
+                    }
+                }
+            },
             misc: {
                 ...state.misc,
                 worked: true
