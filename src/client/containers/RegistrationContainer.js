@@ -45,11 +45,12 @@ class RegistrationContainer extends React.Component {
 
 	}
 
+	
+
 
 	submitForm = (evt) => {
 		evt.preventDefault();
 		const avatarURI = this.state.avatarURI;
-		console.log(avatarURI);
 		var shouldSubmit = true;
 
 		//Check no fields are empty
@@ -83,16 +84,24 @@ class RegistrationContainer extends React.Component {
 				this.state.teamdesc.value,
 				this.state.teamcategory.value,
 				this.state.avatarURI
-			)
-			//Clear all errors
-			for (var container in this.state) {
-				this.setState({ [container]: { ...this.state[container], error: "" } })
-			}
+			).then( (val) => { 
+				
+				if(val.payload.success) { 
+					this.setState({success: true});
+				} else { 
+					//Errors when submitting
+					console.log(val);
+					this.handleErrors(val.payload.payload)
+					
+				}
+			})
+			this.clearErrors();
 		}
 	}
 
 	clearErrors = () => {
 		for (var container in this.state) {
+			if(container != 'success' && container != "avatarURI")
 			this.setState({ [container]: { ...this.state[container], error: "" } })
 		}
 	}
@@ -107,18 +116,6 @@ class RegistrationContainer extends React.Component {
 				default:
 					console.log("Unknown Error");
 			}
-	}
-
-	componentWillReceiveProps(nextProps) {
-		console.log(nextProps);
-		console.log(this.props);
-		if (nextProps.success && !this.props.success) {
-			this.setState({ success: true })
-			this.clearErrors();
-		} else {
-			this.setState({ success: false })
-			this.handleErrors(nextProps.errorMsg)
-		}
 	}
 
 	render() {
@@ -177,7 +174,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		submitRegistration: (username, password, firstName, lastName, teamName, description, category, avatar) => {
-			dispatch(register(username, password, firstName, lastName, teamName, description, category, avatar))
+			return dispatch(register(username, password, firstName, lastName, teamName, description, category, avatar))
 		}
 	}
 }
