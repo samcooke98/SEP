@@ -23,7 +23,7 @@ class CommentContainer extends React.Component {
         super(props);
         this.state = {
             comment: '',
-
+            commentErr: '',
             resourceId: this.props.match.params.resourceId,
             userId: '',
             usersInTeam: null,
@@ -33,14 +33,20 @@ class CommentContainer extends React.Component {
 
     submitForm = (evt) => {
         evt.preventDefault();
-        //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
-        this.props.createComment(this.props.user._id, this.state.comment, this.state.taggedUsers).then( (val) => { 
-            console.log(val);
-            this.props.getResource();
-            if(val.payload.success) { 
-                this.setState({comment:''})
-            }
-        })
+        if(this.state.comment != '') { 
+            this.setState({commentErr: ""});
+            //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
+            this.props.createComment(this.props.user._id, this.state.comment, this.state.taggedUsers).then( (val) => { 
+                console.log(val);
+                this.props.getResource();
+                if(val.payload.success) { 
+                    this.setState({comment:''})
+                }
+            })
+        } else { 
+            this.setState({commentErr: "Cannot be empty!"});
+            
+        }   
     };
 
 
@@ -96,9 +102,9 @@ class CommentContainer extends React.Component {
                         />
                     })}
                 </List>
-
                 <CommentInput
                     value={(this.state.comment)}
+                    error={this.state.commentErr}
                     handleChange={this.handleChange}
                     onSubmit={this.submitForm}
                 />

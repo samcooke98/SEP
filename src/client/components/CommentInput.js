@@ -31,6 +31,7 @@ export default class CommentInput extends React.Component {
             <form onSubmit={this.props.onSubmit}>
                 <Input
                     type='text'
+                    error={props.error}
                     label='Comment'
                     name='comment'
                     onChange={(val) => this.props.handleChange(val, "comment")}
