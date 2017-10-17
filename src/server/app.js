@@ -22,14 +22,16 @@ for (var route in Routes) {
 // import resourceRoutes from "./resourceRoutes.js"
 //app.use("/api", resourceRoutes);
 
-//Handle React Stuff 
-app.use(  serverRenderer )
+
 
 //Send Bundle
 app.use(express.static(path.join(__dirname, 'static')))
 //Send Static from the Build directory 
 app.use(express.static(path.join(__dirname, "../static")))
+app.use(express.static(path.join(__dirname, 'build', "static")))
 
+//Handle React Stuff 
+app.use(  serverRenderer )
 
 /* Setup Mongo Connection */
 mongoose.connect(process.env.MONGO_URL || "mongodb://localhost:27017/boilerplate", {
