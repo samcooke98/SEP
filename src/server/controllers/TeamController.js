@@ -25,9 +25,9 @@ export async function createTeam(teamName, teamDesc, teamOwner) {
         members: [teamOwner]
     });
     const userObj = await UserController.getPublic(teamOwner);
-    userObj.teams.push(team._id); 
+    userObj.teams.push(team._id);
     await userObj.save();
-    return await team.save(); 
+    return await team.save();
 }
 
 export async function isOwner(userID, teamID) {
@@ -70,11 +70,11 @@ export async function notifyTeam(teamID, userID, title, message, url) {
         if (user._id == userID) //We skip
             continue;
         else {
-            if (user.notifications && user.notifications.length != 0) {
+            if (user.notificationsURL && user.notificationsURL.length != 0) {
                 console.log("here");
-                console.log(user.notifications)
+                console.log(user.notificationsURL)
                 //TODO: loop through
-                notifySimple(title, message, url, user.notifications[0])
+                notifySimple(title, message, url, user.notificationsURL[user.notificationsURL.length - 1])
             }
         }
     }

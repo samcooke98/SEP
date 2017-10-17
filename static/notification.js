@@ -7,7 +7,7 @@
  */
 
 self.addEventListener('push', function (event) {
-    coonsole.log(event);
+    // console.log(event);
     var payload = event.data ? event.data.json() : "No payload text";
 
     var result = self.registration.showNotification(payload.title, {
