@@ -12,7 +12,7 @@ export default class LinkCard extends React.PureComponent {
             <Card style={{ width: '350px', margin: '1rem', height: '450px'}}>
                 <CardMedia
                     aspectRatio='wide'
-                    image={this.props.imgURL}
+                    image={this.props.img}
                 />
                 <CardTitle
                     title={this.props.title}

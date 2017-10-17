@@ -11,8 +11,9 @@ import InviteDialog from "../components/InviteDialog.js";
 
 import ResourceList from "../components/ResourceList.js";
 
-import { getResources, sendInvitations, leaveTeam, deleteResource } from "../redux/actions.js";
+import { getResources, sendInvitations, leaveTeam, deleteResource, createResource } from "../redux/actions.js";
 
+import ResourceForm from "../components/ResourceForm.js";
 
 class TeamContainer extends React.Component {
 
@@ -22,6 +23,11 @@ class TeamContainer extends React.Component {
             dialogOpen: false,
             error: '',
             value: '',
+            resourceFormOpen: false,
+            url: '',
+            title: "",
+            tags: [],
+            description: '',
         }
     }
 
@@ -40,7 +46,7 @@ class TeamContainer extends React.Component {
     render() {
         const { team, user } = this.props;
         const isOwner = team.owner == user._id;
-        
+
         return (
             <Container>
                 <div style={{ display: 'flex', alignItems: "center" }}>
@@ -72,6 +78,18 @@ class TeamContainer extends React.Component {
                 {isOwner &&
                     <Button icon='email' name='inviteUser' label='Invite Users' raised primary onClick={this.openInvite} />
                 }
+                <Button name="addLink" label="Add a new Entry" raised primary onClick={this.openSubmit} />
+                <ResourceForm
+                    active={this.state.resourceFormOpen}
+                    toggleDialog={() => this.setState({ resourceFormOpen: !this.state.resourceFormOpen })}
+                    url={this.state.url}
+                    title={this.state.title}
+                    tags={this.state.tags}
+                    handleChange={this.handleChange}
+                    description={this.state.description}
+                    submit={this.createResource}
+
+                />
                 <InviteDialog
                     active={this.state.dialogOpen}
                     close={this.closeInvite}
@@ -84,11 +102,26 @@ class TeamContainer extends React.Component {
                 <ResourceList
                     resources={this.props.resources}
                     navigate={(to) => this.props.history.push(to)}
-                        deleteResource={this.props.rmResource}
-                        userOwnedTeams={ [ this.props.team._id ]}
+                    deleteResource={this.props.rmResource}
+                    userOwnedTeams={[this.props.team._id]}
                 />
 
             </Container >
+        )
+    }
+
+    openSubmit = () => this.setState({ resourceFormOpen: true })
+    handleChange = (value, name) => this.setState({ [name]: value })
+
+    createResource= (evt) => { 
+        evt.preventDefault();
+        this.props.createResource(this.state.url, this.state.title, this.state.description, this.state.tags).then( 
+            (value) => {
+                console.log(value);
+                if(value.payload.success) { 
+                    this.setState({resourceFormOpen: false})
+                }
+            }
         )
     }
 
@@ -114,7 +147,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         send: (emails) => dispatch(sendInvitations(teamID, emails)),
         leaveTeam: () => dispatch(leaveTeam(teamID)),
         rmResource: (id) => dispatch(deleteResource(id)),
-        
+        createResource: (url, title, description, tags) => dispatch(createResource(url, title, description, teamID, tags)),
+
 
     }
 }
