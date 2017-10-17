@@ -58,7 +58,6 @@ class UpdatedDetailsInput extends React.Component {
     // TODO: GET THE PASSWORD CHECK WORKING!!!! THIS DOES NOT WORK @SAM @VISH @JOEY
     calcErrors = () => {
         let hasError = false;
-
         for (var container in this.state) {
             if (this.state[container].value === '' || this.state[container].value === "") {
                 if(container == "avatarURI") continue;
@@ -77,14 +76,12 @@ class UpdatedDetailsInput extends React.Component {
                 confirmNewPassword: { ...this.state.confirmNewPassword, error: "The passwords do not match" }
             })
             hasError = true;
-            console.log("password error")
         } else {
             this.setState({
                 newPassword: { ...this.state.newPassword, error: "" },
                 confirmNewPassword: { ...this.state.confirmNewPassword, error: "" }
             })
         }
-
 
         if (isEmail(this.state.email.value)) {
             this.setState({ email: { value: this.state.email.value, error: "" } })
@@ -93,9 +90,7 @@ class UpdatedDetailsInput extends React.Component {
             console.log("invalid email")            
             this.setState({ email: { value: this.state.email.value, error: "Invalid Email" } })
         }
-        console.log("----- done -----");
-        return hasError;
-
+        return hasError;      
     }
 
     hasErrors = () => {
