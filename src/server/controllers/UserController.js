@@ -202,3 +202,8 @@ export async function removeFromTeam(userID, teamID) {
     user.teams.splice(user.teams.indexOf(teamID), 1);
     await user.save();
 }
+
+export async function findByUsername( username ) { 
+    const user = await User.findOne({username: username});
+    return user;
+}

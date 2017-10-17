@@ -24,6 +24,7 @@
     "jest": "^21.1.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
+    "mongo-store": "^0.0.2",
     "mongoose": "^4.11.8",
     "nock": "^9.0.14",
     "normalizr": "^3.2.3",

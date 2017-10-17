@@ -47,21 +47,41 @@ export async function createAccount(req, res) {
         //Create a user
         User.register(newUser, req.body.password, async (err, account) => {
             if (err) {
-                return res.json(sendError(err.message));
-            }
-            //Authenticate the user
-            passport.authenticate('local')(req, res, async function () {
-                req.session.save((err) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
-                account.teams.push(link.teamID);
-                TeamController.addUser(account._id, link.teamID);
-                account.save();
-                res.json(sendPayload(await account.populate('team').execPopulate()));
+                if (err.message === "A user with the given username is already registered") {
+                    // console.log(err)
+                    // console.log(account);
+                    // newUser.teams.push()
+                    const user = (await UserController.findByUsername(req.body.username));
+                    const team = await TeamController.get(link.teamID);
+                    console.log(user);
 
-            });
+                    TeamController.addUser(user._id, link.teamID);
+                    console.log("here");
+                    user.teams.push(link.teamID);
+                    console.log('line 61');
+                    user.save();
+                    passport.authenticate('local')(req, res, async function () {
+                        req.session.save((err) => console.log(err))
+                        res.json(sendPayload(await account.populate('team').execPopulate()));
+                    })
+                } else {
+                    return res.json(sendError(err.message));
+                }
+            } else {
+                //Authenticate the user
+                passport.authenticate('local')(req, res, async function () {
+                    req.session.save((err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                    account.teams.push(link.teamID);
+                    TeamController.addUser(account._id, link.teamID);
+                    account.save();
+                    res.json(sendPayload(await account.populate('team').execPopulate()));
+
+                });
+            }
         })
     } else
         res.json(sendError("That link has expired, sorry!"))

@@ -8,6 +8,9 @@ import http from "http";
 import express from 'express';
 import React from "react"
 
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
 
 import passport from "passport";
 import Account from "./models/account.js";
@@ -32,12 +35,18 @@ var LocalStrategy = require('passport-local').Strategy;
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
-
-app.use(require('express-session')({
-    secret: 'sakfofjeoiafjeo',
-    resave: false,
-    saveUninitialized: false
-}));
+if (process.env.NODE_ENV === "production") {
+    app.use(session({
+        secret: 'reacttoolboxjoiajgoigoirahjo',
+        store: new MongoStore(options)
+    }));
+} else {
+    app.use(require('express-session')({
+        secret: 'sakfofjeoiafjeo',
+        resave: false,
+        saveUninitialized: false
+    }));
+}
 app.use(passport.initialize());
 app.use(passport.session());
 
