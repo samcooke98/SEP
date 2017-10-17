@@ -41,7 +41,7 @@ class TeamContainer extends React.Component {
 
     closeInvite = () => this.setState({ dialogOpen: false })
 
-    handleChange = (value) => this.setState({ value: value })
+    handleChange = (value, name) => this.setState({ [name]: value })
 
     render() {
         const { team, user } = this.props;
@@ -94,7 +94,7 @@ class TeamContainer extends React.Component {
                     active={this.state.dialogOpen}
                     close={this.closeInvite}
                     error={this.state.inviteSuccess ? '' : this.props.inviteMsg}
-                    handleChange={this.handleChange}
+                    handleChange={(value) => this.setState({value: value})}
                     value={this.state.value}
                     onClick={() => this.props.send(this.state.value)}
                 />
