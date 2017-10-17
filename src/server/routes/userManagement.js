@@ -70,7 +70,7 @@ router.delete("/user/teams/:teamID", isLoggedIn, async (req, res) => {
 })
 
 router.post("/user/notify", isLoggedIn, async (req, res) => {
-    var data = await UserController.addNotification(req.body, req.user._id);
+    var data = await UserController.addNotificationEndpoint(req.body, req.user._id);
     res.json(sendPayload(data));
 })
 

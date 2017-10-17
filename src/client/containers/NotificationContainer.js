@@ -4,25 +4,24 @@ import { connect } from "react-redux";
 import { withProtection } from "./Protector.js";
 import { Avatar, ListItem, List } from "react-toolbox";
 import moment from 'moment';
-// import Switch from 'react-toolbox/lib/switch';
 
 import Container from "../components/Container.js";
 import { getUserById } from "../redux/actions.js";
+import { Switch} from "react-toolbox";
+import { post, del } from "../utils/api"
 
 //TODO: 
 /* We should distinguish between read and unread notificaitons */
 class NotificationContainer extends React.Component {
 
-    // constructor(props) {
-    //     super(props);
+    constructor(props) {
+        super(props);
 
-    //     this.state = {
-    //         switch_1: true,
-    //         canHave: false, //Are service workers supported? If they are we *can have* Notifications
-    //         hasSetup: false
-    //     }
-    // }
-
+        this.state = {
+            canEnable: false,
+            isEnabled: false
+        }
+    }
 
     componentDidMount() {
         this.props.neededUsers.map((id) => {
@@ -30,71 +29,44 @@ class NotificationContainer extends React.Component {
                 const promise = this.props.getUser(id);
             }
         })
-        // this.setState({ canHave: window.worker });
-        // navigator.serviceWorker.getRegistrations().then((val) => console.log(val))
+
+        this.setState({
+            canEnable: window.Worker,
+        })
+
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+            if (registrations) {
+                for (var registration of registrations) {
+                    if (registration.active) {
+                        this.setState({ isEnabled: true })
+                    }
+                }
+            }
+        })
     }
 
-    // handleChange = (field, value) => {
-    //     debugger;
-    //     this.setState({ ...this.state, [field]: value });
-    //     if (value) {
-    //         this.enablePushNotifications();
-    //     } else {
-    //         this.removePushNotifications();
-    //     }
-    // };
+    toggleNotifications = ( ) => { 
+        this.state.isEnabled 
+        ? this.removePushNotifications()
+        : this.enablePushNotifications()
+    }
 
-    // removePushNotifications = () => {
-    //     // removeWorkers(); 
-    //     navigator.serviceWorker.getRegistrations().then(function (registrations) {
-    //         for (let registration of registrations) {
-    //             registration.pushManager.getSubscription().then((val) => {
-    //                 console.log(val.endpoint)
-    //                 del(`user/notify?endpoint=${encodeURIComponent(val.endpoint)}`)
-    //             });
-    //             registration.unregister()
-    //         }
-    //     })
-    //     //TODO: We should tell the server that we removed a notification, but we'd have to get the subscription first 
-    //     this.setState({ hasSetup: false })
-    // }
-
-    // enablePushNotifications = () => {
-    //     navigator.serviceWorker.getRegistrations().then((val) => console.log(val))
-    //     //TODO: Check it doesn't already exists
-    //     if (window.Worker) {
-    //         navigator.serviceWorker.register('./notification.js').then(
-    //             (registration) => {
-    //                 return registration.pushManager.getSubscription().then((subscription) => {
-    //                     if (subscription) return subscription;
-    //                     return registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array('BGEPmzJYZExIHNtzZg7k1srPMO0QLL7mg72W9WhgM4peX5U85-LvDGUorbKLmLXdylX1lsPiy2-gnfRV1pLwabI') })
-    //                 }) // - private key
-    //             }).then((subscription) => {
-    //                 console.log(subscription)
-    //                 console.log(JSON.stringify(subscription))
-    //                 //Tell the server about our endpointt   
-    //                 //For now, I'm not going through the Redux Store - In current scope, I don't see any other component\container needing to know if notifications are enabled or not. 
-    //                 post(`user/notify`, subscription).then((response) => {
-    //                     console.log(response);
-    //                     response.success ? this.setState({ hasSetup: true }) : this.setState({ error: response.payload })
-    //                 })
-    //             })
-    //     }
-    // }
 
     render() {
         console.log(this.props);
+        console.log(this.state.isEnabled)
         return (
             <Container>
-                <h1> Notifications </h1>
-                {/* <section>
-                    <p> To {this.state.hasSetup ? "remove" : "enable"} push notifications, click the button below </p>
-                    <Switch
-                        checked={this.state.switch_1}
-                        label="Push notifications"
-                        onChange={this.handleChange.bind(this, 'switch_1')}
-                    />
-                </section> */}
+                <div>
+                    <h1> Notifications </h1>
+                    {this.state.canEnable && 
+                        <Switch 
+                            label="Push Notifications"
+                            checked={this.state.isEnabled}
+                            onChange={this.toggleNotifications}
+                        />
+                    }
+                </div>
                 <List selectable='false' ripple={false}>
                     {this.props.notifications.map((obj) =>
                         <Notification
@@ -108,12 +80,52 @@ class NotificationContainer extends React.Component {
                     ).reverse()}
                 </List>
                 {
-                    this.props.notifications.length == 0 &&
+                    this.props.notifications.length == 0 && 
                     <p> Looks like you don't have any notifications! Why not get started by <Link to="/feed"> posting some links? </Link> </p>
                 }
             </Container>
         )
     }
+
+
+    removePushNotifications = () => {
+        // removeWorkers(); 
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            for (let registration of registrations) {
+                registration.pushManager.getSubscription().then((val) => {
+                    console.log(val.endpoint)
+                    del(`user/notify?endpoint=${encodeURIComponent(val.endpoint)}`)
+                });
+                registration.unregister()
+            }
+        })
+        //TODO: We should tell the server that we removed a notification, but we'd have to get the subscription first 
+        this.setState({ isEnabled: false })
+    }
+
+    enablePushNotifications = () => {
+        navigator.serviceWorker.getRegistrations().then((val) => console.log(val))
+        //TODO: Check it doesn't already exists
+        if (window.Worker) {
+            navigator.serviceWorker.register('./notification.js').then(
+                (registration) => {
+                    return registration.pushManager.getSubscription().then((subscription) => {
+                        if (subscription) return subscription;
+                        return registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array('BGEPmzJYZExIHNtzZg7k1srPMO0QLL7mg72W9WhgM4peX5U85-LvDGUorbKLmLXdylX1lsPiy2-gnfRV1pLwabI') })
+                    }) // - private key
+                }).then((subscription) => {
+                    console.log(subscription)
+                    console.log(JSON.stringify(subscription))
+                    //Tell the server about our endpointt   
+                    //For now, I'm not going through the Redux Store - In current scope, I don't see any other component\container needing to know if notifications are enabled or not. 
+                    post(`user/notify`, subscription).then((response) => {
+                        console.log(response);
+                        response.success ? this.setState({ isEnabled: true }) : this.setState({ error: response.payload })
+                    })
+                })
+        }
+    }
+    
 }
 
 
@@ -156,4 +168,19 @@ const Notification = (props) => {
         onClick={props.onClick}
     />
     )
+}
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
 }

@@ -28,6 +28,8 @@ for (var route in Routes) {
 app.use(express.static(path.join(__dirname, 'static')))
 //Send Static from the Build directory 
 app.use(express.static(path.join(__dirname, "../static")))
+console.log(path.join(__dirname, "../static"));
+console.log("^^^^^^^")
 app.use(express.static(path.join(__dirname, 'build', "static")))
 
 //Handle React Stuff 
