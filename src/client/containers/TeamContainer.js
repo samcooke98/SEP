@@ -120,6 +120,9 @@ class TeamContainer extends React.Component {
                 console.log(value);
                 if(value.payload.success) { 
                     this.setState({resourceFormOpen: false})
+                } else { 
+                    console.log("ERROR")
+                    console.log(value)
                 }
             }
         )
