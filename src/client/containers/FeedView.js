@@ -94,10 +94,10 @@ class FeedView extends React.Component {
         return (
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
                 <h1>Hello {this.props.user.firstName} </h1>
-                <div style={{}}>
+                {/* <div style={{}}>
                     <Button label='Add a new entry' flat primary onMouseUp={this.toggleDialog} />
-                </div>
-                <ResourceForm
+                </div> */}
+                {/* <ResourceForm
                     active={this.state.isDialogOpen}
                     toggleDialog={() => this.setState({ isDialogOpen: !this.state.isDialogOpen })}
                     url={this.state.url}
@@ -107,7 +107,7 @@ class FeedView extends React.Component {
                     description={this.state.description}
                     submit={this.submit}
                     teams={this.state.teams}
-                />
+                /> */}
                 <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: "wrap", flex: 1, flexDirection: 'row' }}>
                     <ResourceList
                         resources={this.props.resourceIDs.map((id) => this.props.resources[id])}
