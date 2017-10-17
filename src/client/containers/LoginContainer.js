@@ -41,6 +41,7 @@ class LoginContainer extends React.Component {
                     <Input type='password' label='Password' name='password' value={this.state.password} onChange={this.handleUpdate.bind(this, "password")} />
                     <Link to='/resetpassword'> Forgot Password? </Link> <br /> <br />
                     <input type='submit' style={{ display: 'none' }} onSubmit={this.submitForm} />
+                    <Button label='Submit' raised primary onClick={this.submitForm}/>
                 </form>
             </div>
         )
