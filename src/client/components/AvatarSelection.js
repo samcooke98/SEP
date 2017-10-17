@@ -27,7 +27,8 @@ class AvatarSelection extends React.Component {
     }
 
     calcSignature = () => {
-        const file = document.getElementById("file-input").files[0]
+        const file = document.getElementById("file-input").files[0];
+        if(file)
         fetch(`/api/sign-s3?file-name=${encodeURIComponent(file.name)}&file-type=${encodeURIComponent(file.type)}`).then((resp) => resp.json()).then(
             (json) => {
                 if (!json.error)

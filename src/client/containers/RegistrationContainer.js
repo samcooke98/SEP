@@ -12,6 +12,8 @@ import Button, { IconButton } from "react-toolbox/lib/button";
 import Autocomplete from 'react-toolbox/lib/autocomplete';
 
 import AvatarSelection from "../components/AvatarSelection.js";
+import isEmail from "validator/lib/isEmail";
+
 
 const categories = [
 	"Business", "School", "Fun", "Friends"
@@ -39,6 +41,11 @@ class RegistrationContainer extends React.Component {
 		this.setState({ [name]: { value, error: this.state[name].error } })
 	}
 
+	calcErrors = ( ) => { 
+
+	}
+
+
 	submitForm = (evt) => {
 		evt.preventDefault();
 		const avatarURI = this.state.avatarURI;
@@ -54,9 +61,8 @@ class RegistrationContainer extends React.Component {
 			}
 		}
 
-		//TODO: Validate email
-		// if(validateEmail(this.state.email) && this.state.email !== "")
-		// 	this.setState( { email: { ...this.state.email, error: "Invalid Email address!"}})
+		if(!isEmail(this.state.email.value) && this.state.email.value !== "")
+			this.setState( { email: { ...this.state.email, error: "Invalid Email address!"}})
 
 		//Check passwords match
 		if (this.state.password.value != this.state.passwordConfirm.value) {
@@ -136,7 +142,7 @@ class RegistrationContainer extends React.Component {
 					<Input type='text' name='firstname' label="First Name" value={this.state.firstname.value} error={this.state.firstname.error} onChange={this.handleChange.bind(this, "firstname")} />
 					<Input type='text' name='lastname' label="Last Name" value={this.state.lastname.value} error={this.state.lastname.error} onChange={this.handleChange.bind(this, "lastname")} />
 					<AvatarSelection
-						URI={this.state.avatarURI}
+						image={this.state.avatarURI}
 						setURI={(uri) => this.setState({ avatarURI: uri })}
 						name={this.state.firstname.value}
 					/>
@@ -153,6 +159,7 @@ class RegistrationContainer extends React.Component {
 						source={categories}
 						onChange={this.handleChange.bind(this, "teamcategory")}
 					/>
+					<input type='submit' style={{display: 'none'}} onSubmit={this.submitForm}/>
 					<Button id='submitBtn' label='Submit' raised primary onClick={this.submitForm} />
 				</form>
 			</div>
