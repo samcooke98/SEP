@@ -59,7 +59,6 @@ class UpdatedDetailsInput extends React.Component {
         }
     }
 
-    // TODO: GET THE PASSWORD CHECK WORKING!!!! THIS DOES NOT WORK @SAM @VISH @JOEY
     calcErrors = () => {
         let hasError = false;
         if(this.state.firstName.value == '') { 
