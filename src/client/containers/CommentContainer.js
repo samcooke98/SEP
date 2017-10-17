@@ -32,6 +32,7 @@ class CommentContainer extends React.Component {
     }
 
     submitForm = (evt) => {
+        evt.preventDefault();
         //Map the Teams that the user belongs to (Just in case there is more stored locally for some reason)
         this.props.createComment(this.props.user._id, this.state.comment, this.state.taggedUsers).then( (val) => { 
             console.log(val);
@@ -99,7 +100,7 @@ class CommentContainer extends React.Component {
                 <CommentInput
                     value={(this.state.comment)}
                     handleChange={this.handleChange}
-
+                    onSubmit={this.submitForm}
                 />
                 {
                     this.state.isTagging && 
