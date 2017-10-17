@@ -11,7 +11,6 @@ import React from "react"
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
-
 import passport from "passport";
 import Account from "./models/account.js";
 import bodyParser from 'body-parser';
@@ -38,7 +37,10 @@ passport.deserializeUser(Account.deserializeUser());
 if (process.env.NODE_ENV === "production") {
     app.use(session({
         secret: 'reacttoolboxjoiajgoigoirahjo',
-        store: new MongoStore(options)
+        store: new MongoStore({
+            // mongooseConnection: mongoose.connection
+            url: process.env.MONGO_URL
+        })
     }));
 } else {
     app.use(require('express-session')({
