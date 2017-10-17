@@ -25,6 +25,10 @@ class UpdatedDetailsInput extends React.Component {
         }
     }
 
+    componentDidMount() { 
+        this.setState({avatarURI: { value: this.props.avatarURI }})
+    }
+
     handleChange = (value, name) => {
         this.setState({ [name]: { value, error: this.state[name].error } }, () => this.calcErrors())
     }
@@ -33,8 +37,8 @@ class UpdatedDetailsInput extends React.Component {
     submitForm = (evt) => {
         console.log("Submitting form");
         evt.preventDefault();
-
-        const shouldSubmit = !this.hasErrors();
+        debugger;
+        const shouldSubmit = !this.calcErrors();
         console.log(shouldSubmit);
 
         if (shouldSubmit) {
@@ -51,26 +55,28 @@ class UpdatedDetailsInput extends React.Component {
             })
             this.clearErrors();
         } else { 
-            // console.log(shouldSubmit)
+            console.log(this.state)
         }
     }
 
     // TODO: GET THE PASSWORD CHECK WORKING!!!! THIS DOES NOT WORK @SAM @VISH @JOEY
     calcErrors = () => {
         let hasError = false;
-        for (var container in this.state) {
-            if (this.state[container].value === '' || this.state[container].value === "") {
-                if(container == "avatarURI") continue;
-                hasError = true;
-                console.log("blank error @ " + container)
-                
-                this.setState({ [container]: { ...this.state[container], error: "Cannot be empty" } })
-            } else {
-                this.setState({ [container]: { ...this.state[container], error: "" } })
-            }
+        if(this.state.firstName.value == '') { 
+            this.setState({firstName: { value: this.state.firstName.value, error: "Cannot be blank!" }})
+            hasError = true;
+        } else { 
+            this.setState({firstName: {value: this.state.firstName.value, error: ''}})
+        }
+        if(this.state.lastName.value == '') { 
+            this.setState({lastName: { value: this.state.lastName.value, error: "Cannot be blank!" }})
+            hasError = true;
+        }else { 
+            this.setState({lastName: {value: this.state.lastName.value, error: ''}})
         }
 
         if (this.state.newPassword.value != this.state.confirmNewPassword.value) {
+            console.log("here");
             this.setState({
                 newPassword: { ...this.state.newPassword, error: "The passwords do not match" },
                 confirmNewPassword: { ...this.state.confirmNewPassword, error: "The passwords do not match" }
@@ -92,16 +98,6 @@ class UpdatedDetailsInput extends React.Component {
         }
         return hasError;      
     }
-
-    hasErrors = () => {
-        for (var container in this.state) {
-            if (this.state[container].error !== '') {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     componentWillReceiveProps(nextProps) {
         this.reset(nextProps);
@@ -148,6 +144,7 @@ class UpdatedDetailsInput extends React.Component {
 const mapStateToProps = (state) => {
     return {
         loggedIn: state.misc.loggedIn,
+        avatarURI: state.data.users[state.misc.userID].avatarURI,
         user: state.data.users[state.misc.userID]
     }
 }

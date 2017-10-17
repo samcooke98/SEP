@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Avatar} from 'react-toolbox';
+import { Avatar } from 'react-toolbox';
 import Button, { IconButton } from "react-toolbox/lib/button";
 
 
@@ -13,7 +13,8 @@ class AvatarSelection extends React.Component {
         super(props);
 
         this.state = {
-            active: undefined
+            active: undefined,
+            error: ''
         }
     }
 
@@ -28,13 +29,18 @@ class AvatarSelection extends React.Component {
 
     calcSignature = () => {
         const file = document.getElementById("file-input").files[0];
-        if(file)
-        fetch(`/api/sign-s3?file-name=${encodeURIComponent(file.name)}&file-type=${encodeURIComponent(file.type)}`).then((resp) => resp.json()).then(
-            (json) => {
-                if (!json.error)
-                    this.uploadFile(file, json.signedRequest, json.url)
-            }
-        )
+        if (file) {
+            this.setState({ error: '' })
+            fetch(`/api/sign-s3?file-name=${encodeURIComponent(file.name)}&file-type=${encodeURIComponent(file.type)}`).then((resp) => resp.json()).then(
+                (json) => {
+                    if (!json.error) {
+                        this.uploadFile(file, json.signedRequest, json.url)
+                    } else {
+                        this.setState({ error: 'Oops! That doesn\'t look like an image' })
+                    }
+                }
+            )
+        }
     }
 
     uploadFile = (file, signedRequest, url) => {
@@ -66,6 +72,7 @@ class AvatarSelection extends React.Component {
                 <Avatar image={this.props.image} title={this.props.name || ""} />
                 <input id='file-input' type='file' />
                 <button onClick={this.onSubmit}> Upload </button>
+                <p style={{ color: 'red' }}> {this.state.error} </p>
             </div>
         )
     }
@@ -83,4 +90,4 @@ export default AvatarSelection;
                             </IconButton>
                         )
                     })
-                }*/ 
+                }*/
